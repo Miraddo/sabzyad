@@ -1,0 +1,76 @@
+baseURL = 'http://localhost:38485'
+theme = "sabztheme"
+defaultContentLanguage = "fa"
+hasCJKLanguage = true
+languageDirection = "rtl"
+title = "سبزیاد - آموزش آنلاین"
+enableRobotsTXT = true
+enableGitInfo = true
+enableEmoji = true
+
+[params]
+  description = "رشد کن، یاد بگیر، سبز بمان! 🌿"
+  keywords = ["آموزش", "برنامه‌نویسی", "هوش مصنوعی", "یادگیری ماشین"]
+  author = "سبزیاد"
+  logo = "/images/logo.png"
+  favicon = "/favicon.ico"
+  rtl = true
+  
+  [params.social]
+    instagram = "https://instagram.com/sabzyad"
+    linkedin = "https://linkedin.com/company/sabzyad"
+    twitter = "https://twitter.com/sabzyad"
+    whatsapp = "https://wa.me/989123456789"
+
+  [params.contact]
+    email = "info@sabzyad.com"
+    phone = "+98 912 345 6789"
+
+[languages]
+  [languages.fa]
+    languageName = "فارسی"
+    languageDirection = "rtl"
+    weight = 1
+    contentDir = "content/fa"
+    title = "سبزیاد - آموزش آنلاین"
+    
+    [languages.fa.params]
+      description = "رشد کن، یاد بگیر، سبز بمان! 🌿"
+      
+    [languages.fa.menu]
+      [[languages.fa.menu.main]]
+        name = "خانه"
+        url = "/"
+        weight = 1
+      [[languages.fa.menu.main]]
+        name = "دوره‌ها"
+        url = "/courses/"
+        weight = 2
+      [[languages.fa.menu.main]]
+        name = "مقالات"
+        url = "/posts/"
+        weight = 3
+      [[languages.fa.menu.main]]
+        name = "درباره ما"
+        url = "/about/"
+        weight = 4
+      [[languages.fa.menu.main]]
+        name = "ارتباط"
+        url = "/contact/"
+        weight = 5
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "github"
+    lineNos = true
+    lineNumbersInTable = false
+    codeFences = true
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  course_category = "course_categories"
+  difficulty = "difficulties"

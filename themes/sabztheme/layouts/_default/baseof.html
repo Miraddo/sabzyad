@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" dir="{{ .Site.Language.LanguageDirection | default "ltr" }}" class="{{ if .Site.Params.rtl }}rtl{{ end }}">
+{{ partial "head.html" . }}
+<body class="learning-platform">
+  {{ partial "header.html" . }}
+  
+  <main id="main-content" role="main">
+    {{ block "main" . }}{{ end }}
+  </main>
+  
+  {{ partial "footer.html" . }}
+  {{ partial "scripts.html" . }}
+</body>
+</html>

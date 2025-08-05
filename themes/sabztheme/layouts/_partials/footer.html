@@ -1,0 +1,245 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <!-- Footer Main -->
+      <div class="footer-main">
+        <div class="footer-brand">
+          <h3>{{ .Site.Title }}</h3>
+          <p>{{ .Site.Params.description }}</p>
+          
+          <!-- Social Links -->
+          <div class="social-links">
+            {{ with .Site.Params.social.instagram }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="social-link instagram">
+                <span>اینستاگرام</span>
+              </a>
+            {{ end }}
+            {{ with .Site.Params.social.linkedin }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="social-link linkedin">
+                <span>لینکدین</span>
+              </a>
+            {{ end }}
+            {{ with .Site.Params.social.twitter }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="social-link twitter">
+                <span>توییتر</span>
+              </a>
+            {{ end }}
+            {{ with .Site.Params.social.whatsapp }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="social-link whatsapp">
+                <span>واتساپ</span>
+              </a>
+            {{ end }}
+          </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+          <div class="footer-section">
+            <h4>دسترسی سریع</h4>
+            <ul>
+              <li><a href="/">خانه</a></li>
+              <li><a href="/fa/courses/">دوره‌ها</a></li>
+              <li><a href="/fa/posts/">مقالات</a></li>
+              <li><a href="/fa/about/">درباره ما</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>پشتیبانی</h4>
+            <ul>
+              <li><a href="/fa/contact/">تماس با ما</a></li>
+              <li><a href="/fa/help/">راهنما</a></li>
+              <li><a href="/fa/faq/">سوالات متداول</a></li>
+              <li><a href="/fa/support/">پشتیبانی</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>اطلاعات تماس</h4>
+            <ul>
+              {{ with .Site.Params.contact.email }}
+                <li>
+                  <span class="contact-icon">📧</span>
+                  <a href="mailto:{{ . }}">{{ . }}</a>
+                </li>
+              {{ end }}
+              {{ with .Site.Params.contact.phone }}
+                <li>
+                  <span class="contact-icon">📞</span>
+                  <a href="tel:{{ . }}">{{ . }}</a>
+                </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          <p>&copy; {{ now.Year }} {{ .Site.Title }}. تمامی حقوق محفوظ است.</p>
+        </div>
+        
+        <div class="footer-extra">
+          <a href="#" class="coffee-link">
+            ☕ حمایت از ما
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #1f2937;
+    color: #f9fafb;
+    padding: 3rem 0 1rem;
+    margin-top: 4rem;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+  }
+
+  .footer-brand h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .footer-brand p {
+    color: #d1d5db;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #374151;
+    color: #f9fafb;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .social-link:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  .social-link.instagram:hover { background: #e4405f; }
+  .social-link.linkedin:hover { background: #0077b5; }
+  .social-link.twitter:hover { background: #1da1f2; }
+  .social-link.whatsapp:hover { background: #25d366; }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .footer-section h4 {
+    color: #f9fafb;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-section li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-section a {
+    color: #d1d5db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-section a:hover {
+    color: var(--primary-color);
+  }
+
+  .contact-icon {
+    font-size: 1rem;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid #374151;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-copy p {
+    color: #9ca3af;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .coffee-link {
+    background: #f59e0b;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .coffee-link:hover {
+    background: #d97706;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .footer-main {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .footer-links {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .social-links {
+      justify-content: center;
+    }
+  }
+</style>

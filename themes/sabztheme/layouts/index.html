@@ -1,0 +1,419 @@
+{{ define "main" }}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">{{ .Site.Params.description }}</h1>
+      <p class="hero-subtitle">
+        اینجا قراره یاد بگیریم، تجربه کنیم و چیزایی رو کشف کنیم که واقعاً به دردمون می‌خوره. 
+        تقریبا هر چیزی که کمک کنه بهتر بفهمیم و قوی‌تر عمل کنیم، توی سبزیاد جاش هست.
+      </p>
+      <div class="hero-cta">
+        <a href="/fa/courses/" class="btn btn-primary">دوره‌ها اینجاست</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🏃‍♂️</div>
+        <h3>یادگیری با انجام تمرین</h3>
+        <p>با انجام پروژه‌های عملی و تمرین‌های کاربردی یاد بگیرید</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎬</div>
+        <h3>ویدیوهای با کیفیت</h3>
+        <p>محتوای آموزشی با کیفیت بالا و قابل فهم برای همه سطوح</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>به روز رسانی رایگان</h3>
+        <p>دسترسی مادام‌العمر به محتوای به‌روزشده دوره‌ها</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>پشتیبانی دوره‌ها</h3>
+        <p>پشتیبانی کامل در تمام مراحل یادگیری</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="courses-section">
+  <div class="container">
+    <h2 class="section-title">دوره‌هایی که ممکنه برات جالب باشه 🌿</h2>
+    <div class="courses-grid">
+      {{ range where .Site.RegularPages "Type" "courses" | first 6 }}
+        <div class="course-card">
+          <div class="course-status">
+            {{ if .Params.completed }}
+              <span class="status-badge completed">تکمیل شده</span>
+            {{ else }}
+              <span class="status-badge progress">در حال انجام</span>
+            {{ end }}
+          </div>
+          
+          <div class="course-content">
+            <h3 class="course-title">
+              <a href="{{ .Permalink }}">{{ .Title }}</a>
+            </h3>
+            
+            {{ if .Params.description }}
+              <p class="course-description">{{ .Params.description }}</p>
+            {{ else }}
+              <p class="course-description">{{ .Summary | truncate 120 }}</p>
+            {{ end }}
+            
+            <div class="course-meta">
+              {{ if .Params.price }}
+                <span class="course-price">{{ .Params.price }}</span>
+              {{ end }}
+              {{ if .Params.difficulty }}
+                <span class="course-difficulty">{{ .Params.difficulty }}</span>
+              {{ end }}
+            </div>
+          </div>
+          
+          <div class="course-footer">
+            <a href="{{ .Permalink }}" class="btn btn-outline">مشاهده دوره &gt;</a>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+    
+    <div class="section-cta">
+      <a href="/fa/courses/" class="btn btn-primary">مشاهده همه دوره‌ها</a>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Section -->
+<section class="blog-section">
+  <div class="container">
+    <h2 class="section-title">جدیدترین مقالات آموزشی 🌿</h2>
+    <div class="blog-grid">
+      {{ range where .Site.RegularPages "Type" "posts" | first 3 }}
+        <article class="blog-card">
+          {{ if .Params.image }}
+            <div class="blog-image">
+              <img src="{{ .Params.image }}" alt="{{ .Title }}">
+            </div>
+          {{ end }}
+          
+          <div class="blog-content">
+            <h3 class="blog-title">
+              <a href="{{ .Permalink }}">{{ .Title }}</a>
+            </h3>
+            
+            <p class="blog-excerpt">{{ .Summary | truncate 100 }}</p>
+            
+            <div class="blog-meta">
+              <time datetime="{{ .Date.Format "2006-01-02" }}">
+                {{ .Date.Format "2 January 2006" }}
+              </time>
+            </div>
+            
+            <a href="{{ .Permalink }}" class="read-more">بیشتر بخوانید ...</a>
+          </div>
+        </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-cta .btn {
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+  }
+
+  /* Features Section */
+  .features-section {
+    padding: 4rem 0;
+    background: white;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .feature-card {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-radius: var(--border-radius);
+    background: var(--bg-light);
+    transition: transform 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+  }
+
+  /* Courses Section */
+  .courses-section {
+    padding: 4rem 0;
+    background: var(--bg-light);
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--text-dark);
+  }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .course-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .course-status {
+    margin-bottom: 1rem;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .status-badge.completed {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-badge.progress {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .course-title a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .course-title a:hover {
+    color: var(--primary-color);
+  }
+
+  .course-description {
+    color: var(--text-light);
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
+
+  .course-meta {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .course-price {
+    font-weight: 600;
+    color: var(--success-color);
+  }
+
+  .course-difficulty {
+    background: var(--bg-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+  }
+
+  .course-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  /* Blog Section */
+  .blog-section {
+    padding: 4rem 0;
+    background: white;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .blog-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .blog-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .blog-content {
+    padding: 1.5rem;
+  }
+
+  .blog-title a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .blog-title a:hover {
+    color: var(--primary-color);
+  }
+
+  .blog-excerpt {
+    color: var(--text-light);
+    margin: 1rem 0;
+  }
+
+  .blog-meta {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .read-more:hover {
+    text-decoration: underline;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--secondary-color);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .section-cta {
+    text-align: center;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+    
+    .courses-grid,
+    .blog-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .features-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .course-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
+{{ end }}

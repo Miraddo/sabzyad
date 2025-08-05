@@ -1,0 +1,524 @@
+{{ define "main" }}
+<div class="courses-page">
+  <div class="container">
+    <!-- Page Header -->
+    <header class="page-header">
+      <h1 class="page-title">{{ .Title }}</h1>
+      <p class="page-description">{{ .Content }}</p>
+    </header>
+
+    <!-- Courses Filter/Search -->
+    <div class="courses-filter">
+      <div class="filter-controls">
+        <div class="search-box">
+          <input type="text" id="courseSearch" placeholder="جستجو در دوره‌ها...">
+        </div>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">همه دوره‌ها</button>
+          <button class="filter-btn" data-filter="free">رایگان</button>
+          <button class="filter-btn" data-filter="premium">پریمیوم</button>
+          <button class="filter-btn" data-filter="completed">تکمیل شده</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-container">
+      {{ if .Pages }}
+        <div class="courses-grid">
+          {{ range .Pages }}
+            <article class="course-card" 
+                     data-category="{{ with .Params.course_categories }}{{ delimit . " " }}{{ end }}"
+                     data-difficulty="{{ .Params.difficulty | default "مبتدی" }}"
+                     data-price="{{ if eq .Params.price "رایگان" }}free{{ else }}premium{{ end }}"
+                     data-status="{{ if .Params.completed }}completed{{ else }}progress{{ end }}">
+              
+              <!-- Course Image -->
+              {{ if .Params.image }}
+                <div class="course-image">
+                  <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+                </div>
+              {{ else }}
+                <div class="course-image placeholder">
+                  <div class="placeholder-content">
+                    <span class="course-icon">📚</span>
+                  </div>
+                </div>
+              {{ end }}
+
+              <!-- Course Status Badge -->
+              <div class="course-status">
+                {{ if .Params.completed }}
+                  <span class="status-badge completed">✓ تکمیل شده</span>
+                {{ else }}
+                  <span class="status-badge progress">🔄 در حال انجام</span>
+                {{ end }}
+              </div>
+
+              <!-- Course Content -->
+              <div class="course-content">
+                <h3 class="course-title">
+                  <a href="{{ .Permalink }}">{{ .Title }}</a>
+                </h3>
+
+                {{ if .Params.description }}
+                  <p class="course-description">{{ .Params.description }}</p>
+                {{ else }}
+                  <p class="course-description">{{ .Summary | truncate 120 }}</p>
+                {{ end }}
+
+                <!-- Course Meta Information -->
+                <div class="course-meta">
+                  {{ if .Params.instructor }}
+                    <div class="meta-item">
+                      <span class="meta-icon">👨‍🏫</span>
+                      <span>{{ .Params.instructor }}</span>
+                    </div>
+                  {{ end }}
+
+                  {{ if .Params.duration }}
+                    <div class="meta-item">
+                      <span class="meta-icon">⏱️</span>
+                      <span>{{ .Params.duration }}</span>
+                    </div>
+                  {{ end }}
+
+                  {{ if .Params.lessons }}
+                    <div class="meta-item">
+                      <span class="meta-icon">📖</span>
+                      <span>{{ .Params.lessons }} درس</span>
+                    </div>
+                  {{ end }}
+
+                  {{ if .Params.difficulty }}
+                    <div class="meta-item">
+                      <span class="meta-icon">📊</span>
+                      <span>{{ .Params.difficulty }}</span>
+                    </div>
+                  {{ end }}
+                </div>
+
+                <!-- Course Categories/Tags -->
+                {{ if .Params.course_categories }}
+                  <div class="course-categories">
+                    {{ range .Params.course_categories }}
+                      <span class="category-tag">{{ . }}</span>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+
+              <!-- Course Footer -->
+              <div class="course-footer">
+                <div class="course-price">
+                  {{ if .Params.price }}
+                    <span class="price-value">{{ .Params.price }}</span>
+                  {{ else }}
+                    <span class="price-value">رایگان</span>
+                  {{ end }}
+                </div>
+                
+                <div class="course-actions">
+                  <a href="{{ .Permalink }}" class="btn btn-primary">
+                    {{ if eq .Params.price "رایگان" }}
+                      شروع دوره
+                    {{ else }}
+                      مشاهده دوره
+                    {{ end }}
+                  </a>
+                </div>
+              </div>
+            </article>
+          {{ end }}
+        </div>
+      {{ else }}
+        <div class="no-courses">
+          <div class="no-courses-content">
+            <span class="no-courses-icon">📚</span>
+            <h3>هنوز دوره‌ای اضافه نشده</h3>
+            <p>به زودی دوره‌های جدید اضافه خواهد شد.</p>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .courses-page {
+    padding: 2rem 0 4rem;
+    min-height: 80vh;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .page-description {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Filter Section */
+  .courses-filter {
+    margin-bottom: 3rem;
+  }
+
+  .filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .search-box input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+  }
+
+  .filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--text-dark);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+
+  /* Courses Grid */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .course-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .course-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .course-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .course-card:hover .course-image img {
+    transform: scale(1.05);
+  }
+
+  .course-image.placeholder {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .placeholder-content .course-icon {
+    font-size: 3rem;
+  }
+
+  .course-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+  }
+
+  .status-badge.completed {
+    background: rgba(34, 197, 94, 0.9);
+    color: white;
+  }
+
+  .status-badge.progress {
+    background: rgba(245, 158, 11, 0.9);
+    color: white;
+  }
+
+  .course-content {
+    padding: 1.5rem;
+  }
+
+  .course-title a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.4;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .course-title a:hover {
+    color: var(--primary-color);
+  }
+
+  .course-description {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .course-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+
+  .meta-icon {
+    font-size: 1rem;
+  }
+
+  .course-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-tag {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .course-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-light);
+  }
+
+  .price-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--success-color);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .btn-primary {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--secondary-color);
+  }
+
+  /* No Courses State */
+  .no-courses {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .no-courses-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .no-courses h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+  }
+
+  .no-courses p {
+    color: var(--text-light);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-box {
+      min-width: auto;
+    }
+
+    .filter-buttons {
+      justify-content: center;
+    }
+
+    .courses-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .course-meta {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .course-footer {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .btn {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .course-meta {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Course filtering and search functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('courseSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const courseCards = document.querySelectorAll('.course-card');
+
+    // Search functionality
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        filterCourses(searchTerm, getActiveFilter());
+      });
+    }
+
+    // Filter functionality
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        const filterValue = this.getAttribute('data-filter');
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        filterCourses(searchTerm, filterValue);
+      });
+    });
+
+    function getActiveFilter() {
+      const activeButton = document.querySelector('.filter-btn.active');
+      return activeButton ? activeButton.getAttribute('data-filter') : 'all';
+    }
+
+    function filterCourses(searchTerm, filter) {
+      courseCards.forEach(card => {
+        const title = card.querySelector('.course-title a').textContent.toLowerCase();
+        const description = card.querySelector('.course-description').textContent.toLowerCase();
+        const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+        
+        let matchesFilter = true;
+        if (filter !== 'all') {
+          if (filter === 'free' || filter === 'premium') {
+            matchesFilter = card.getAttribute('data-price') === filter;
+          } else if (filter === 'completed') {
+            matchesFilter = card.getAttribute('data-status') === 'completed';
+          }
+        }
+
+        if (matchesSearch && matchesFilter) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  });
+</script>
+{{ end }}

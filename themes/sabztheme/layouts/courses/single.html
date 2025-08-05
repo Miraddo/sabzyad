@@ -1,0 +1,896 @@
+{{ define "main" }}
+<div class="course-page">
+  <div class="container">
+    <!-- Course Header -->
+    <header class="course-header">
+      <div class="course-breadcrumb">
+        <nav aria-label="breadcrumb">
+          <a href="/">خانه</a>
+          <span class="separator">/</span>
+          <a href="/fa/courses/">دوره‌ها</a>
+          <span class="separator">/</span>
+          <span class="current">{{ .Title }}</span>
+        </nav>
+      </div>
+
+      <div class="course-hero">
+        <div class="course-info">
+          <div class="course-status">
+            {{ if .Params.completed }}
+              <span class="status-badge completed">✓ تکمیل شده</span>
+            {{ else }}
+              <span class="status-badge progress">🔄 در حال انجام</span>
+            {{ end }}
+          </div>
+
+          <h1 class="course-title">{{ .Title }}</h1>
+          
+          {{ if .Params.description }}
+            <p class="course-description">{{ .Params.description }}</p>
+          {{ end }}
+
+          <!-- Course Meta Info -->
+          <div class="course-meta">
+            {{ if .Params.instructor }}
+              <div class="meta-item">
+                <span class="meta-icon">👨‍🏫</span>
+                <div>
+                  <span class="meta-label">مدرس</span>
+                  <span class="meta-value">{{ .Params.instructor }}</span>
+                </div>
+              </div>
+            {{ end }}
+
+            {{ if .Params.duration }}
+              <div class="meta-item">
+                <span class="meta-icon">⏱️</span>
+                <div>
+                  <span class="meta-label">مدت زمان</span>
+                  <span class="meta-value">{{ .Params.duration }}</span>
+                </div>
+              </div>
+            {{ end }}
+
+            {{ if .Params.lessons }}
+              <div class="meta-item">
+                <span class="meta-icon">📖</span>
+                <div>
+                  <span class="meta-label">تعداد درس</span>
+                  <span class="meta-value">{{ .Params.lessons }} درس</span>
+                </div>
+              </div>
+            {{ end }}
+
+            {{ if .Params.difficulty }}
+              <div class="meta-item">
+                <span class="meta-icon">📊</span>
+                <div>
+                  <span class="meta-label">سطح</span>
+                  <span class="meta-value">{{ .Params.difficulty }}</span>
+                </div>
+              </div>
+            {{ end }}
+
+            {{ if .Params.language }}
+              <div class="meta-item">
+                <span class="meta-icon">🌍</span>
+                <div>
+                  <span class="meta-label">زبان</span>
+                  <span class="meta-value">{{ .Params.language }}</span>
+                </div>
+              </div>
+            {{ end }}
+          </div>
+
+          <!-- Course Categories -->
+          {{ if .Params.course_categories }}
+            <div class="course-categories">
+              {{ range .Params.course_categories }}
+                <span class="category-tag">{{ . }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+
+          <!-- Course Actions -->
+          <div class="course-actions">
+            <div class="price-section">
+              <span class="price-label">قیمت:</span>
+              <span class="price-value">{{ .Params.price | default "رایگان" }}</span>
+            </div>
+            
+            <div class="action-buttons">
+              {{ if eq .Params.price "رایگان" }}
+                <a href="#course-content" class="btn btn-primary btn-lg">شروع دوره رایگان</a>
+              {{ else }}
+                <a href="#" class="btn btn-primary btn-lg">ثبت‌نام در دوره</a>
+              {{ end }}
+              <a href="#" class="btn btn-outline">نمونه رایگان</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course Image/Video -->
+        <div class="course-media">
+          {{ if .Params.video_intro }}
+            <div class="course-video">
+              <video controls poster="{{ .Params.image | default "/images/course-placeholder.jpg" }}">
+                <source src="{{ .Params.video_intro }}" type="video/mp4">
+                مرورگر شما از ویدیو پشتیبانی نمی‌کند.
+              </video>
+            </div>
+          {{ else if .Params.image }}
+            <div class="course-image">
+              <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+            </div>
+          {{ else }}
+            <div class="course-image placeholder">
+              <div class="placeholder-content">
+                <span class="course-icon">📚</span>
+                <p>تصویر دوره</p>
+              </div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Course Content -->
+    <div class="course-body">
+      <div class="course-main">
+        <!-- Course Description -->
+        <section class="course-description" id="course-content">
+          <h2>درباره این دوره</h2>
+          <div class="content">
+            {{ .Content }}
+          </div>
+        </section>
+
+        <!-- Course Curriculum -->
+        {{ if .Params.curriculum }}
+          <section class="course-curriculum">
+            <h2>سرفصل‌های دوره</h2>
+            <div class="curriculum-list">
+              {{ range .Params.curriculum }}
+                <div class="curriculum-item">
+                  <div class="lesson-info">
+                    <h4 class="lesson-title">{{ .title }}</h4>
+                    {{ if .description }}
+                      <p class="lesson-description">{{ .description }}</p>
+                    {{ end }}
+                  </div>
+                  <div class="lesson-meta">
+                    {{ if .duration }}
+                      <span class="lesson-duration">{{ .duration }}</span>
+                    {{ end }}
+                    {{ if .free }}
+                      <span class="lesson-free">رایگان</span>
+                    {{ end }}
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+
+        <!-- Course Lessons from Pages -->
+        {{ $courseLessons := where .Site.Pages "Section" .Section }}
+        {{ $courseLessons = where $courseLessons ".Parent" "eq" . }}
+        {{ if $courseLessons }}
+          <section class="course-lessons">
+            <h2>درس‌های دوره</h2>
+            <div class="lessons-list">
+              {{ range $courseLessons.ByWeight }}
+                <div class="lesson-item">
+                  <div class="lesson-number">{{ .Weight | default "0" }}</div>
+                  <div class="lesson-content">
+                    <h4 class="lesson-title">
+                      <a href="{{ .Permalink }}">{{ .Title }}</a>
+                    </h4>
+                    {{ if .Summary }}
+                      <p class="lesson-summary">{{ .Summary | truncate 100 }}</p>
+                    {{ end }}
+                  </div>
+                  <div class="lesson-actions">
+                    <a href="{{ .Permalink }}" class="btn btn-sm">مطالعه</a>
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </section>
+        {{ end }}
+
+        <!-- What You'll Learn -->
+        {{ if .Params.what_you_learn }}
+          <section class="course-learning">
+            <h2>چه چیزی یاد خواهید گرفت</h2>
+            <ul class="learning-list">
+              {{ range .Params.what_you_learn }}
+                <li class="learning-item">
+                  <span class="check-icon">✓</span>
+                  <span>{{ . }}</span>
+                </li>
+              {{ end }}
+            </ul>
+          </section>
+        {{ end }}
+
+        <!-- Prerequisites -->
+        {{ if .Params.prerequisites }}
+          <section class="course-prerequisites">
+            <h2>پیش‌نیازها</h2>
+            <ul class="prerequisites-list">
+              {{ range .Params.prerequisites }}
+                <li class="prerequisite-item">
+                  <span class="bullet">•</span>
+                  <span>{{ . }}</span>
+                </li>
+              {{ end }}
+            </ul>
+          </section>
+        {{ end }}
+      </div>
+
+      <!-- Course Sidebar -->
+      <aside class="course-sidebar">
+        <!-- Course Info Card -->
+        <div class="info-card">
+          <h3>اطلاعات دوره</h3>
+          
+          {{ if .Date }}
+            <div class="info-item">
+              <span class="info-label">تاریخ انتشار:</span>
+              <span class="info-value">{{ .Date.Format "2 January 2006" }}</span>
+            </div>
+          {{ end }}
+
+          {{ if .Lastmod }}
+            <div class="info-item">
+              <span class="info-label">آخرین بروزرسانی:</span>
+              <span class="info-value">{{ .Lastmod.Format "2 January 2006" }}</span>
+            </div>
+          {{ end }}
+
+          {{ if .Params.students }}
+            <div class="info-item">
+              <span class="info-label">تعداد دانشجویان:</span>
+              <span class="info-value">{{ .Params.students }} نفر</span>
+            </div>
+          {{ end }}
+
+          {{ if .Params.rating }}
+            <div class="info-item">
+              <span class="info-label">امتیاز:</span>
+              <span class="info-value">{{ .Params.rating }}/5 ⭐</span>
+            </div>
+          {{ end }}
+        </div>
+
+        <!-- Related Courses -->
+        {{ $related := where .Site.RegularPages "Section" .Section }}
+        {{ $related = where $related ".Permalink" "!=" .Permalink }}
+        {{ $related = $related | first 3 }}
+        {{ if $related }}
+          <div class="related-courses">
+            <h3>دوره‌های مرتبط</h3>
+            {{ range $related }}
+              <div class="related-course">
+                <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+                <p class="related-price">{{ .Params.price | default "رایگان" }}</p>
+              </div>
+            {{ end }}
+          </div>
+        {{ end }}
+
+        <!-- Share Course -->
+        <div class="share-card">
+          <h3>اشتراک‌گذاری</h3>
+          <div class="share-buttons">
+            <a href="https://t.me/share/url?url={{ .Permalink }}" class="share-btn telegram" target="_blank">تلگرام</a>
+            <a href="https://wa.me/?text={{ .Permalink }}" class="share-btn whatsapp" target="_blank">واتساپ</a>
+            <a href="https://twitter.com/intent/tweet?url={{ .Permalink }}&text={{ .Title }}" class="share-btn twitter" target="_blank">توییتر</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<style>
+  .course-page {
+    padding: 2rem 0;
+  }
+
+  /* Breadcrumb */
+  .course-breadcrumb {
+    margin-bottom: 2rem;
+  }
+
+  .course-breadcrumb nav {
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+
+  .course-breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+
+  .course-breadcrumb .separator {
+    margin: 0 0.5rem;
+  }
+
+  .course-breadcrumb .current {
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  /* Course Hero */
+  .course-hero {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .course-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    width: fit-content;
+  }
+
+  .status-badge.completed {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-badge.progress {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .course-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+  }
+
+  .course-description {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+
+  .course-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+  }
+
+  .meta-icon {
+    font-size: 1.5rem;
+  }
+
+  .meta-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  .meta-value {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .course-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .category-tag {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .course-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    border: 2px solid var(--border-color);
+  }
+
+  .price-section {
+    text-align: center;
+  }
+
+  .price-label {
+    font-size: 1rem;
+    color: var(--text-light);
+  }
+
+  .price-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--success-color);
+    margin-right: 0.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Course Media */
+  .course-media {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .course-video,
+  .course-image {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+  }
+
+  .course-video video,
+  .course-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .course-image.placeholder {
+    height: 300px;
+    background: var(--bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .placeholder-content .course-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  /* Course Body */
+  .course-body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+  }
+
+  .course-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .course-main section {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+
+  .course-main h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  /* Curriculum */
+  .curriculum-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .curriculum-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+  }
+
+  .lesson-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .lesson-description {
+    color: var(--text-light);
+    margin: 0;
+  }
+
+  .lesson-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+
+  .lesson-duration {
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+
+  .lesson-free {
+    background: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+  }
+
+  /* Lessons List */
+  .lessons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    transition: background 0.3s ease;
+  }
+
+  .lesson-item:hover {
+    background: #e5e7eb;
+  }
+
+  .lesson-number {
+    background: var(--primary-color);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .lesson-content {
+    flex: 1;
+  }
+
+  .lesson-content .lesson-title a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .lesson-content .lesson-title a:hover {
+    color: var(--primary-color);
+  }
+
+  .lesson-summary {
+    color: var(--text-light);
+    margin: 0.5rem 0 0 0;
+  }
+
+  /* Learning Outcomes */
+  .learning-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .learning-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .check-icon {
+    background: var(--success-color);
+    color: white;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* Prerequisites */
+  .prerequisites-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .prerequisite-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .bullet {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: -0.1rem;
+  }
+
+  /* Sidebar */
+  .course-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .info-card,
+  .related-courses,
+  .share-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+
+  .info-card h3,
+  .related-courses h3,
+  .share-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .info-label {
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+
+  .info-value {
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+  }
+
+  /* Related Courses */
+  .related-course {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .related-course:last-child {
+    border-bottom: none;
+  }
+
+  .related-course h4 {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .related-course a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .related-course a:hover {
+    color: var(--primary-color);
+  }
+
+  .related-price {
+    color: var(--success-color);
+    font-weight: 600;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  /* Share Buttons */
+  .share-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .share-btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .share-btn.telegram {
+    background: #0088cc;
+    color: white;
+  }
+
+  .share-btn.whatsapp {
+    background: #25d366;
+    color: white;
+  }
+
+  .share-btn.twitter {
+    background: #1da1f2;
+    color: white;
+  }
+
+  .share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-primary {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--secondary-color);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .course-hero {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .course-media {
+      position: static;
+      order: -1;
+    }
+
+    .course-body {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .course-title {
+      font-size: 2rem;
+    }
+
+    .course-meta {
+      grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+      gap: 0.5rem;
+    }
+
+    .course-main section {
+      padding: 1.5rem;
+    }
+
+    .curriculum-item {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .lesson-meta {
+      align-items: flex-start;
+      flex-direction: row;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .course-page {
+      padding: 1rem 0;
+    }
+
+    .course-title {
+      font-size: 1.8rem;
+    }
+
+    .course-description {
+      font-size: 1rem;
+    }
+
+    .lesson-item {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .lesson-number {
+      align-self: center;
+    }
+  }
+</style>
+{{ end }}

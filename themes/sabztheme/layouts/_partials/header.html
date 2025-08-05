@@ -1,0 +1,40 @@
+<header class="site-header">
+  <nav class="navbar container" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item brand-logo" href="{{ .Site.BaseURL }}">
+        {{ if .Site.Params.logo }}
+          <img src="{{ .Site.Params.logo }}" alt="{{ .Site.Title }}">
+        {{ else }}
+          <span class="brand-text">{{ .Site.Title }}</span>
+        {{ end }}
+      </a>
+      
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasic" class="navbar-menu">
+      <div class="navbar-start">
+        {{ range .Site.Menus.main }}
+          <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+        {{ end }}
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" href="/panel/">
+              <strong>حساب کاربری</strong>
+            </a>
+            <a class="button is-light" href="/help/">
+              راهنما
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
