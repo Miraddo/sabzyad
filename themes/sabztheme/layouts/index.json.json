@@ -1,0 +1,5 @@
+{
+  "title": "SabzLearn Home",
+  "description": "Static JSON feed placeholder. Replace with dynamic template later if needed.",
+  "note": "This static file exists to satisfy Hugo's JSON output requirement and remove the missing layout warning."
+}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+{{ partial "head.html" . }}
+<body>
+    {{ partial "header.html" . }}
+
+    {{/* Collect lessons for this course (section) */}}
+    {{ $lessons := where .Pages "Type" "lessons" }}
+    {{ if not (gt (len $lessons) 0) }}
+        {{ $lessons = where .CurrentSection.Pages "Type" "lessons" }}
+    {{ end }}
+    {{ $sorted := sort $lessons "Params.lesson_number" }}
+    {{ $first := cond (gt (len $sorted) 0) (index $sorted 0) nil }}
+
+    <main class="course-overview">
+        <!-- Hero -->
+        <section class="course-hero">
+            <div class="container">
+                <div class="course-hero-content">
+                    <div class="course-info">
+                        {{ with .Params.difficulty }}<div class="course-badge">{{ . }}</div>{{ end }}
+                        <h1 class="course-title">{{ .Title }}</h1>
+                        {{ with .Params.description }}<p class="course-description">{{ . }}</p>{{ end }}
+
+                        <div class="course-meta">
+                            {{ with .Params.author }}
+                            <div class="meta-item">
+                                <i class="fa-solid fa-user-tie"></i>
+                                <span>{{ . }}</span>
+                            </div>
+                            {{ end }}
+                            {{ with .Date }}
+                            <div class="meta-item">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                <span data-date="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</span>
+                            </div>
+                            {{ end }}
+                            <div class="meta-item">
+                                <i class="fa-solid fa-list-ol"></i>
+                                <span>{{ len $sorted }} درس</span>
+                            </div>
+                        </div>
+
+                        <div class="course-actions">
+                            {{ if $first }}
+                            <a class="btn btn-primary" href="{{ $first.RelPermalink }}">شروع یادگیری</a>
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    <div class="course-image">
+                        {{ if .Params.image }}
+                            <img src="{{ .Params.image }}" alt="{{ .Title }}">
+                        {{ else }}
+                            <div class="course-placeholder">📘</div>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content -->
+        <section class="course-content">
+            <div class="container">
+                <div class="course-sections">
+                    <article class="course-description-full">
+                        {{ .Content }}
+                    </article>
+                </div>
+
+                <aside class="course-sidebar">
+                    <div class="sidebar-card">
+                        <h3>اطلاعات دوره</h3>
+                        <div class="course-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">تعداد دروس</span>
+                                <span class="stat-value">{{ len $sorted }}</span>
+                            </div>
+                            {{ with .Params.difficulty }}
+                            <div class="stat-item">
+                                <span class="stat-label">سطح</span>
+                                <span class="stat-value">{{ . }}</span>
+                            </div>
+                            {{ end }}
+                            {{ with .Params.duration }}
+                            <div class="stat-item">
+                                <span class="stat-label">مدت زمان</span>
+                                <span class="stat-value">{{ . }}</span>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    {{/* Contributors card: show if contributors param exists, else optional placeholder (commented) */}}
+                    {{/* Robust contributors resolution: page -> current section -> parent */}}
+                    {{ $contributors := .Params.contributors }}
+                    {{ if not $contributors }}{{ $contributors = .CurrentSection.Params.contributors }}{{ end }}
+                    {{ if and (not $contributors) .Parent }}{{ $contributors = .Parent.Params.contributors }}{{ end }}
+                    <div class="sidebar-card">
+                        <h3>مشارکت‌کنندگان دوره</h3>
+                        {{ if and $contributors (gt (len $contributors) 0) }}
+                        <div class="contributors-list">
+                            {{ range $i, $c := $contributors }}
+                                {{ $username := $c.username | default $c }}
+                                {{ $name := $c.name | default $username }}
+                                {{ $url := $c.url | default (printf "https://github.com/%s" $username) }}
+                                {{ $avatar := $c.avatar | default (printf "https://github.com/%s.png" $username) }}
+                                <a class="contrib-mini" data-index="{{ $i }}" href="{{ $url }}" title="{{ $name }}" aria-label="{{ $name }}" target="_blank" rel="noopener">
+                                    <img src="{{ $avatar }}" alt="{{ $name }}">
+                                </a>
+                            {{ end }}
+                        </div>
+                        {{ else }}
+                        <p class="contributors-empty" style="font-size:.85rem;color:var(--text-light);margin:0;">هیچ مشارکت‌کننده‌ای ثبت نشده.</p>
+                        {{ end }}
+                    </div>
+
+                    {{ with .Params.tags }}
+                    <div class="sidebar-card">
+                        <h3>برچسب‌ها</h3>
+                        <div class="course-tags">
+                            {{ range . }}<span class="tag"># {{ . }}</span>{{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    {{ with .Params.references }}
+                    <div class="sidebar-card references-card">
+                        <h3>منابع</h3>
+                        {{ with .free }}
+                        <div class="ref-section">
+                            <div class="ref-section-title">
+                                <span class="ref-badge free"><i class="fa-solid fa-gift"></i> رایگان</span>
+                            </div>
+                            <ul class="references-list">
+                                {{ range . }}
+                                                                <li class="reference-item">
+                                                                        <span class="ref-leading">
+                                                                                {{ $t := lower .type }}
+                                                                                {{ if eq $t "video" }}<i class="fa-solid fa-video"></i>{{ end }}
+                                                                                {{ if eq $t "blog" }}<i class="fa-solid fa-blog"></i>{{ end }}
+                                                                                {{ if eq $t "book" }}<i class="fa-solid fa-book"></i>{{ end }}
+                                                                                {{ if or (eq $t "article") (eq $t "articles") }}<i class="fa-solid fa-file-lines"></i>{{ end }}
+                                                                        </span>
+                                                                        <a class="ref-link" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+                                                                        <span class="ref-meta-wrap">
+                                                                            {{ with .language }}<span class="ref-lang" title="زبان">{{ . }}</span>{{ end }}
+                                                                            {{ with .type }}<span class="ref-type">{{ . }}</span>{{ end }}
+                                                                        </span>
+                                                                </li>
+                                {{ end }}
+                            </ul>
+                        </div>
+                        {{ end }}
+
+                        {{ with .paid }}
+                        <div class="ref-section">
+                            <div class="ref-section-title">
+                                <span class="ref-badge paid"><i class="fa-solid fa-coins"></i> پولی</span>
+                            </div>
+                            <ul class="references-list">
+                                {{ range . }}
+                                                                <li class="reference-item">
+                                                                        <span class="ref-leading">
+                                                                                {{ $t := lower .type }}
+                                                                                {{ if eq $t "video" }}<i class="fa-solid fa-video"></i>{{ end }}
+                                                                                {{ if eq $t "blog" }}<i class="fa-solid fa-blog"></i>{{ end }}
+                                                                                {{ if eq $t "book" }}<i class="fa-solid fa-book"></i>{{ end }}
+                                                                                {{ if or (eq $t "article") (eq $t "articles") }}<i class="fa-solid fa-file-lines"></i>{{ end }}
+                                                                        </span>
+                                                                        <a class="ref-link" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
+                                                                        <span class="ref-meta-wrap">
+                                                                            {{ with .language }}<span class="ref-lang" title="زبان">{{ . }}</span>{{ end }}
+                                                                            {{ with .type }}<span class="ref-type">{{ . }}</span>{{ end }}
+                                                                        </span>
+                                                                </li>
+                                {{ end }}
+                            </ul>
+                        </div>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    {{ partial "footer.html" . }}
+
+    {{ partial "scripts.html" . }}
+    </body>
+    </html>

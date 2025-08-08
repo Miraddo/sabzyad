@@ -1,0 +1,1194 @@
+/* Learn Page - Modern LearnDash Style Layout */
+
+// Variables mapped to CSS custom properties for theming
+$sidebar-width: 350px;
+$sidebar-width-collapsed: 60px;
+$header-height: 70px;
+$content-padding: 2rem;
+$primary-color: var(--primary-color);
+$primary-dark: var(--secondary-color);
+$text-dark: var(--text-dark);
+$text-medium: var(--text-medium);
+$text-light: var(--text-light);
+$bg-white: var(--bg-white);
+$bg-light: var(--bg-light);
+$bg-lighter: var(--bg-lighter);
+$border-color: var(--border-color);
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+// Main learn page container
+.learn-page {
+  min-height: 100vh;
+  background: $bg-light;
+  display: flex;
+  flex-direction: column;
+  
+  &.focus-mode {
+    .site-header,
+    .site-footer {
+      display: none;
+    }
+    
+    .learn-sidebar {
+      width: 0 !important;
+      max-width: 0 !important;
+      opacity: 0;
+      pointer-events: none !important;
+      transform: translateX(-100%) !important;
+      transition: none;
+    }
+    /* Allow temporary opening while in focus mode */
+    .learn-sidebar.mobile-open {
+      width: 82% !important;
+      max-width: 400px !important;
+      opacity: 1;
+      pointer-events: auto !important;
+      transform: translateX(0) !important;
+      transition: transform .3s ease, opacity .25s ease;
+    }
+    /* Overlay hidden by default, but active state can still show */
+    .sidebar-overlay { opacity:0 !important; visibility:hidden !important; }
+    .sidebar-overlay.active { opacity:1 !important; visibility:visible !important; display:block !important; }
+    
+    .learn-main {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+}
+
+// Learn header with focus mode toggle
+.learn-header {
+  background: $bg-white;
+  border-bottom: 1px solid $border-color;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow: hidden; /* prevent child flex items from causing horizontal scroll */
+  
+  .learn-header-content {
+    max-width: 1400px;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+      /* Allow some breathing room on very wide screens while keeping readable line lengths */
+      padding-inline: clamp(.25rem, 2vw, .75rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+      overflow-wrap: anywhere;
+      word-break: normal;
+  }
+  
+  .learn-breadcrumb {
+  display: flex;
+  align-items: center;
+        overflow-wrap: anywhere;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: $text-light;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+
+    /* Fluid down-scaling for medium widths before mobile breakpoints */
+    @media (max-width: 980px) {
+      h1 { font-size: clamp(1.55rem, 3.2vw, 1.9rem); }
+      h2 { font-size: clamp(1.3rem, 2.6vw, 1.45rem); }
+      h3 { font-size: clamp(1.15rem, 2.2vw, 1.25rem); }
+    }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: .25rem;
+  &::-webkit-scrollbar { display: none; }
+    
+    a {
+      color: $primary-color;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: $primary-dark;
+      }
+    }
+    
+    .separator {
+      color: $text-light;
+    }
+  }
+  
+  .learn-controls {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-shrink: 0;
+  flex-wrap: wrap; /* allow wrapping to avoid horizontal overflow */
+  max-width: 100%;
+  overflow: visible; /* remove independent scroll */
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+  }
+}
+
+// Control buttons
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: $bg-lighter;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  color: $text-medium;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: $bg-white;
+    border-color: $primary-color;
+    color: $text-dark;
+  }
+  
+  &.active {
+    background: $primary-color;
+    border-color: $primary-color;
+    color: white;
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+}
+
+// Main content area
+.learn-content {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+// Sidebar
+.learn-sidebar {
+  width: $sidebar-width;
+  background: $bg-white;
+  border-right: 1px solid $border-color;
+  position: fixed;
+  left: 0;
+  // Offset below global site header + learn header (approx). We'll compute exact in JS if needed.
+  top: 0;
+  height: 100vh;
+  z-index: 200; /* above overlay */
+  display: flex;
+  flex-direction: column;
+  transform: translateX(0);
+  transition: transform 0.3s ease, width 0.3s ease;
+  /* Fixed site header height 42px + learn header static 72px */
+  padding-top: calc(var(--site-header-height, 42px) + 72px);
+  
+  &.collapsed {
+  /* New behavior: fully off-canvas (desktop) */
+  transform: translateX(-100%);
+  width: $sidebar-width; /* keep original width for return */
+  .sidebar-content { opacity: 0; }
+  }
+  
+  .sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid $border-color;
+    
+    .sidebar-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .collapse-btn {
+      background: none;
+      border: none;
+      color: $text-light;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: $bg-lighter;
+        color: $text-dark;
+      }
+      
+      svg {
+        width: 20px;
+        height: 20px;
+        transition: transform 0.2s ease;
+      }
+    }
+    
+  /* rotation handled on parent .learn-sidebar.collapsed */
+  }
+  
+  .sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 1rem 1rem;
+  }
+}
+
+/* Adjust main area when sidebar collapsed (correct sibling selector) */
+.learn-sidebar.collapsed + .learn-main {
+  margin-left: 0;
+}
+
+@media (max-width: 1024px) {
+  /* On mobile keep content full width regardless of collapsed state */
+  .learn-sidebar.collapsed + .learn-main {
+    margin-left: 0;
+  }
+}
+
+// When in focus mode we hide site & learn headers, so remove extra top padding
+.learn-page.focus-mode .learn-sidebar {
+  padding-top: 1rem;
+}
+
+// Course header in sidebar
+.course-header {
+  margin-bottom: 1.5rem;
+  
+  .course-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  
+  .course-progress {
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: $bg-lighter;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, $primary-color, $primary-dark);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+    }
+    
+    .course-progress-text {
+      font-size: 0.875rem;
+      color: $text-light;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+// Lessons list
+.lessons-list {
+  .section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    padding: 0 0.75rem;
+  }
+  
+  .section-group {
+    margin-bottom: .5rem;
+    
+    &.collapsed {
+      .section-lessons { display: none; }
+      .section-header .chevron { transform: rotate(0deg); }
+    }
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: $text-dark;
+    background: $bg-lighter;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: .5rem .75rem;
+    margin: .5rem 0;
+    cursor: pointer;
+    user-select: none;
+    
+    .chevron {
+      display: inline-flex;
+      transition: transform .2s ease;
+      transform: rotate(180deg);
+      
+      svg { width: 16px; height: 16px; }
+    }
+    
+    .section-title-text {
+      font-size: .9rem;
+      font-weight: 600;
+    }
+  }
+  
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    
+    &:hover {
+      background: $bg-lighter;
+    }
+    
+    &.active {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      
+      .lesson-number {
+        background: $primary-color;
+        color: white;
+      }
+      
+      .lesson-title {
+        color: $primary-dark;
+        font-weight: 600;
+      }
+    }
+    
+    &.completed {
+      .lesson-number {
+        background: $primary-color;
+        color: white;
+        
+        &::after {
+          content: '✓';
+          font-size: 0.75rem;
+        }
+        
+        .number {
+          display: none;
+        }
+      }
+    }
+    
+    .lesson-number {
+      width: 32px;
+      height: 32px;
+      background: $bg-lighter;
+      color: $text-medium;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    
+    .lesson-info {
+      flex: 1;
+      min-width: 0;
+      
+      .lesson-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $text-dark;
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      
+      .lesson-duration {
+        font-size: 0.75rem;
+        color: $text-light;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        
+        svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+  }
+}
+
+// Main content area
+.learn-main {
+  margin-left: $sidebar-width;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  
+  .learn-sidebar.collapsed + & {
+    margin-left: $sidebar-width-collapsed;
+  }
+}
+
+// Lesson content
+.lesson-content {
+  flex: 1;
+  background: $bg-white;
+  margin: 2rem;
+  border-radius: 12px;
+  box-shadow: $shadow-sm;
+  display: flex;
+  flex-direction: column;
+  /* Prevent internal wide elements from forcing page horizontal scroll */
+  overflow-x: hidden;
+  
+  .lesson-header {
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid $border-color;
+    
+    .lesson-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    
+    .lesson-meta {
+      display: flex;
+      gap: 1.5rem;
+      color: $text-light;
+      font-size: 0.875rem;
+      
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: inherit;
+        
+        svg {
+          width: 16px;
+          height: 16px;
+          color: inherit;
+          opacity: .9;
+        }
+      }
+    }
+
+    /* Dark mode: bump contrast for lesson meta */
+    [data-theme="dark"] & .lesson-meta,
+    [data-theme="dark"] & .lesson-meta .meta-item {
+      color: var(--text-medium);
+    }
+    [data-theme="dark"] & .lesson-meta .meta-item {
+      background: rgba(0,0,0,.55);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: .35rem .6rem;
+    }
+  }
+  
+  .lesson-body {
+    flex: 1;
+    padding: 2rem;
+  overflow-x: hidden; /* contain any accidental wide children */
+    
+    .lesson-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    
+    // Content styling
+    h1, h2, h3, h4, h5, h6 {
+      color: $text-dark;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    
+    p {
+      color: $text-medium;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    
+    ul, ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      
+      li {
+        color: $text-medium;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    pre {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid $border-color;
+      direction: ltr;
+      unicode-bidi: embed;
+      text-align: left;
+      
+      code {
+        background: transparent;
+        padding: 0;
+        font-size: 0.875rem;
+        color: var(--code-fg);
+        direction: ltr;
+        unicode-bidi: embed;
+        text-align: left;
+      }
+    }
+    
+    code {
+      background: var(--code-bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+      font-size: 0.875rem;
+      color: var(--code-fg);
+      direction: ltr;
+      unicode-bidi: embed;
+      text-align: left;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+    }
+    
+    blockquote {
+      border-left: 4px solid $primary-color;
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: $text-medium;
+      font-style: italic;
+    }
+
+    /* Responsive media */
+    img, video, iframe { max-width: 100%; height: auto; display: block; margin: 1.25rem auto; }
+    iframe { border: 1px solid $border-color; border-radius: 8px; }
+
+    /* Table responsiveness */
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .9rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .9rem; table-layout: fixed; }
+    table thead { background: $bg-lighter; }
+    table th, table td { padding: .65rem .75rem; border: 1px solid $border-color; text-align: right; vertical-align: top; }
+    table th { font-weight:600; color: $text-dark; }
+    .table-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling: touch; }
+    .table-scroll::-webkit-scrollbar { height: 6px; }
+    .table-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,.25); border-radius:3px; }
+    .lesson-inner > table { /* wrap loose tables - ensure it doesn't widen layout */
+      display: block; overflow-x: auto; border: 1px solid $border-color; border-radius: 8px; max-width: 100%; }
+
+    /* Inline code inside headings scaling */
+    h1 code, h2 code, h3 code { font-size: .85em; }
+  }
+}
+
+/* Utility: narrow screen adjustments inside lesson body */
+@media (max-width: 768px) {
+  .lesson-body pre { padding: 1.1rem; font-size: .8rem; }
+  .lesson-body code { font-size: .8rem; }
+}
+@media (max-width: 540px) {
+  .lesson-body { padding: 1rem 0.85rem 1.35rem; }
+  .lesson-body .lesson-inner { width: 100%; }
+  .lesson-body table th, .lesson-body table td { padding: .5rem .55rem; }
+}
+@media (max-width: 400px) {
+  .lesson-body pre { padding: .9rem; font-size: .75rem; }
+  .lesson-body img, .lesson-body iframe, .lesson-body video { margin: 1rem auto; }
+}
+
+.lesson-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid $border-color;
+  background: $bg-light;
+  border-radius: 0 0 12px 12px;
+}
+
+// Navigation controls
+.lesson-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  
+  .nav-spacer { flex: 1; }
+  
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: $bg-white;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    color: $text-medium;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  min-width: 180px;
+  justify-content: center;
+  text-align: center;
+  svg { width: 20px; height: 20px; flex-shrink: 0; }
+    
+    &:hover {
+      background: $primary-color;
+      border-color: $primary-color;
+      color: white;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      
+      &:hover {
+        background: $bg-white;
+        border-color: $border-color;
+        color: $text-medium;
+      }
+    }
+
+  &.prev { direction: ltr; }
+  &.next { direction: ltr; }
+  html[dir='rtl'] &.prev, html[dir='rtl'] &.next { direction: rtl; }
+
+  /* Provide subtle focus ring */
+  &:focus-visible { outline: 2px solid $primary-color; outline-offset: 2px; }
+    
+    .nav-info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      
+      .nav-label {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        margin-bottom: 0.25rem;
+      }
+      
+      .nav-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    
+    &.next .nav-info {
+      text-align: right;
+    }
+  }
+}
+
+// Mobile sidebar overlay
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  /* Raised above header (1000) but below sidebar (1110) */
+  z-index: 1090;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Responsive design – unified mobile sidebar behaviour
+@media (max-width: 1024px) {
+  .learn-sidebar {
+    left: 0; right: auto;
+    width: 82%; max-width: 400px; height: 100dvh;
+  /* Initial large padding replaced below with a tighter variant (override follows) */
+  /* Removed --learn-header-height variable; assume ~64px learn header height */
+  padding-top: calc(64px + .5rem);
+  /* Elevate above header when open */
+  z-index: 1110;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    background: $bg-white;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06);
+    transform: translateX(-100%);
+    transition: transform .34s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
+    pointer-events: none;
+  }
+  .learn-sidebar.mobile-open { transform: translateX(0); pointer-events: auto; }
+  html[dir='rtl'] .learn-sidebar { left: auto; right: 0; transform: translateX(100%); }
+  html[dir='rtl'] .learn-sidebar.mobile-open { transform: translateX(0); }
+  .learn-main { margin-left: 0; }
+  .learn-header .learn-controls .mobile-menu-btn { display: flex; }
+  .sidebar-overlay { cursor: pointer; }
+  @media (prefers-reduced-motion: reduce) { .learn-sidebar { transition: none; } }
+  /* Hide desktop collapse button on mobile; keep close (X) */
+  #collapseSidebar { display: none !important; }
+  .mobile-close-btn { display: inline-flex !important; }
+}
+
+/* Fine-tune: on mobile reduce extra gap above sidebar header when not in focus mode */
+@media (max-width: 1024px) {
+  .learn-page:not(.focus-mode) .learn-sidebar { padding-top: calc(64px + .35rem) !important; }
+}
+
+@media (max-width: 768px) {
+  .learn-header { padding: .75rem 0; }
+  .learn-header .learn-header-content { padding: 0 1rem; }
+  .learn-header .learn-breadcrumb { font-size: .75rem; gap: .35rem; }
+  .learn-header .learn-controls { width: 100%; justify-content: flex-start; order: 2; flex-wrap: wrap; }
+  .learn-header .learn-controls .control-btn { flex: 1 1 calc(50% - .6rem); justify-content: center; min-height: 42px; font-size: .7rem; min-width: 0; }
+  .learn-header .learn-controls .control-btn:nth-child(3n) { flex-basis: 100%; }
+  .lesson-content {
+  margin: 0.75rem 0.75rem 1.25rem;
+    
+    .lesson-header {
+      padding: 1.5rem 1.5rem 1rem;
+      
+      .lesson-title {
+        font-size: 1.5rem;
+      }
+      
+      .lesson-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+    
+    .lesson-body {
+  padding: 1.1rem .9rem 1.65rem;
+        .lesson-inner { padding-inline: 0; max-width: 100%; }
+    }
+    
+    .lesson-footer {
+      padding: 1rem 1.5rem;
+    }
+  }
+  
+  .lesson-navigation {
+    flex-direction: column;
+    gap: 1rem;
+    
+    .nav-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .lesson-actions {
+      width: 100%;
+      
+      .action-btn {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/* Inline reopen button (next to focus mode) */
+.sidebar-reopen-btn {
+  position: static;
+  background: $primary-color;
+  color: #fff;
+  border: none;
+  padding: .55rem .8rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  cursor: pointer;
+  font-size: .75rem;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  transition: background .2s ease, transform .2s ease;
+  white-space: nowrap;
+}
+.sidebar-reopen-btn:hover { background: $primary-dark; }
+@media (max-width:1024px){
+  .sidebar-reopen-btn { display:none !important; }
+}
+
+/* Body no-scroll helper (in case global base.scss lacks it) */
+body.no-scroll { overflow: hidden; touch-action: none; }
+@media (max-width: 480px) {
+  .learn-header .learn-controls { flex-direction: row; }
+  .learn-header .learn-controls .control-btn { flex: 1 1 100%; width: 100%; }
+}
+@media (max-width: 540px) {
+  .lesson-content { margin: 0.5rem 0.5rem 1rem; }
+  .lesson-content .lesson-header { padding: 1.1rem 1.1rem .85rem; }
+  .lesson-content .lesson-header .lesson-title { font-size: 1.35rem; }
+  .lesson-content .lesson-body { padding: 1rem 1rem 1.5rem; }
+  .lesson-content .lesson-body .lesson-inner { padding-inline: 0; }
+  .lesson-content .lesson-body h1 { font-size: 1.6rem; }
+  .lesson-content .lesson-body h2 { font-size: 1.3rem; }
+  .lesson-content .lesson-body h3 { font-size: 1.15rem; }
+  .lesson-content pre { font-size: .8rem; }
+  .lesson-content code { font-size: .8rem; }
+  .lesson-footer { padding: 1rem; }
+}
+@media (max-width: 400px) {
+  .lesson-content .lesson-header .lesson-meta { flex-direction: column; gap: .5rem; }
+  .lesson-content { border-radius: 10px; }
+  .lesson-content .lesson-body { padding: .9rem .75rem 1.3rem; }
+  .lesson-content .lesson-body .lesson-inner { padding-inline: 0; }
+}
+
+/* Additional mobile overflow guards for exceedingly long code lines or tables */
+@media (max-width: 600px) {
+  .lesson-body pre code { white-space: pre-wrap; word-break: break-word; }
+  .lesson-body pre { max-width: 100%; }
+}
+
+/* Generic safeguard: never allow any direct child to exceed container width */
+.lesson-body > * { max-width: 100%; }
+.lesson-body .lesson-inner > * { max-width: 100%; }
+
+@media (max-width: 480px) {
+  .learn-header {
+    .learn-header-content {
+      padding: 0 1rem;
+    }
+    
+    .learn-breadcrumb {
+      font-size: 0.75rem;
+      
+      .breadcrumb-item {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  .learn-sidebar {
+    width: 100%;
+  }
+}
+
+// ===== LOADING & TRANSITIONS =====
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .loading-spinner {
+    text-align: center;
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border-color);
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    p {
+      color: $text-light;
+      font-size: 0.875rem;
+      margin: 0;
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Content transitions
+.lesson-content {
+  transition: opacity 0.3s ease;
+}
+
+.lesson-placeholder {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+  
+  .placeholder-icon {
+    margin-bottom: 1.5rem;
+    
+    svg {
+      width: 64px;
+      height: 64px;
+      color: #d1d5db;
+    }
+  }
+  
+  h2 {
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+// Enhanced lesson items
+.lesson-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  
+  &:hover {
+    background: #f9fafb;
+    
+    .lesson-title {
+      color: #3b82f6;
+    }
+  }
+  
+  &.active {
+    background: #eff6ff;
+    border-right: 3px solid #3b82f6;
+    
+    .lesson-title {
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+  }
+  
+  &.completed {
+    .lesson-number {
+      .check-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        color: white;
+      }
+    }
+  }
+}
+
+// Navigation improvements
+.nav-btn {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #f3f4f6;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Action button states scoped to lesson actions to avoid leaking into header
+.lesson-actions .action-btn {
+  &.completed {
+    background: $primary-color;
+    color: white;
+    
+    &:hover {
+      background: $primary-dark;
+    }
+  }
+  
+  &.bookmarked {
+    background: #f59e0b;
+    color: white;
+    
+    &:hover {
+      background: #d97706;
+    }
+  }
+}
+
+// Toast notifications
+.toast {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: auto;
+  background: #111827;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  box-shadow: $shadow-lg;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  &.error { background: #ef4444; }
+  &.success { background: $primary-color; }
+  &.info { background: #3b82f6; }
+}
+
+// Code examples in content
+.lesson-content-placeholder {
+  .code-example {
+    background: $bg-light;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    
+    h4 {
+      margin: 0 0 0.5rem 0;
+      color: $text-medium;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    pre {
+      margin: 0;
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+  }
+  
+  .lesson-resources {
+    background: #e0f2fe;
+    border-left: 4px solid #0ea5e9;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+    
+    h4 {
+      margin: 0 0 0.5rem 0;
+      color: #0c4a6e;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    ul {
+      margin: 0;
+      padding-right: 1rem;
+    }
+    
+    a {
+      color: #0369a1;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Responsive improvements
+@media (max-width: 768px) {
+  .lesson-placeholder {
+    padding: 2rem 1rem;
+    
+    .placeholder-icon svg {
+      width: 48px;
+      height: 48px;
+    }
+    
+    h2 {
+      font-size: 1.25rem;
+    }
+    
+    p {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+/* --- Unified persistent active lesson styling (overrides earlier conflicting blocks) --- */
+.learn-sidebar .lesson-item.active {
+  background: linear-gradient(90deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05));
+  border: 1px solid rgba(16,185,129,0.35);
+  border-right: 4px solid var(--primary-color);
+  position: relative;
+}
+
+/* Global safeguard: prevent any accidental horizontal overflow */
+html, body { max-width: 100%; overflow-x: hidden; }
+.learn-sidebar .lesson-item.active .lesson-number {
+  background: var(--primary-color);
+  color: #fff;
+}
+.learn-sidebar .lesson-item.active .lesson-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+.learn-sidebar .lesson-item.completed:not(.active) .lesson-number {
+  background: var(--primary-color);
+  color: #fff;
+}

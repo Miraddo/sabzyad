@@ -1,0 +1,65 @@
+{{ define "main" }}
+<section class="page-hero contact-hero container">
+  <div class="hero-card">
+    <div class="hero-content">
+      <h1 class="title">{{ .Title }}</h1>
+      <p class="lead">از یکی از کانال‌های زیر پیام بده. فرم تماس نداریم تا سریع‌تر به هم برسیم.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container contact-grid">
+  <div class="cards">
+    {{ with .Params.telegram }}
+    <a class="card contact-card tg" href="{{ . }}" target="_blank" rel="noopener">
+      <i class="fa-brands fa-telegram"></i>
+      <div>
+        <div class="card-title">تلگرام</div>
+        <div class="card-desc">کانال/آی‌دی در تلگرام</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    {{ end }}
+
+    {{ with .Params.discord }}
+    <a class="card contact-card dc" href="{{ . }}" target="_blank" rel="noopener">
+      <i class="fa-brands fa-discord"></i>
+      <div>
+        <div class="card-title">دیسچورد</div>
+        <div class="card-desc">سرور یا دعوت‌نامه</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    {{ end }}
+
+    {{ with .Params.linkedin }}
+    <a class="card contact-card li" href="{{ . }}" target="_blank" rel="noopener">
+      <i class="fa-brands fa-linkedin"></i>
+      <div>
+        <div class="card-title">لینکدین</div>
+        <div class="card-desc">پروفایل حرفه‌ای</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    {{ end }}
+
+    {{ with .Params.email }}
+    <a class="card contact-card em" href="mailto:{{ . }}">
+      <i class="fa-regular fa-envelope"></i>
+      <div>
+        <div class="card-title">ایمیل</div>
+        <div class="card-desc">ارسال ایمیل مستقیم</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    {{ end }}
+  </div>
+
+  <article class="prose extra">
+    {{ .Content }}
+  </article>
+  {{ with site.Data.contributors }}
+    {{ partial "contributors.html" (dict "contributors" . "title" "مشارکت‌کنندگان") }}
+  {{ end }}
+</section>
+{{ end }}

@@ -1,0 +1,401 @@
+/* Posts List Layout - Alia Style SCSS */
+
+// Variables mapped to CSS custom properties for theming
+$primary-color: var(--primary-color);
+$primary-dark: var(--secondary-color);
+$text-dark: var(--text-dark);
+$text-medium: var(--text-medium);
+$text-light: var(--text-light);
+$bg-light: var(--bg-light);
+$bg-white: var(--bg-white);
+$border-light: var(--border-color);
+$shadow-light: rgba(0, 0, 0, 0.08);
+$shadow-medium: rgba(0, 0, 0, 0.12);
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 4px 20px $shadow-light;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px $shadow-medium;
+  }
+}
+
+@mixin button-style {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $primary-color !important;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  border: 2px solid $primary-color;
+  background: white;
+  
+  &:hover {
+    background: $primary-color !important;
+    color: white !important;
+    border-color: $primary-color;
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  }
+}
+
+// Main container
+.posts-list-container {
+  background: var(--bg-light);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+// Header section
+.posts-list-header {
+  text-align: center;
+  padding: 3rem 0 4rem;
+  background: linear-gradient(135deg, $bg-light 0%, var(--bg-lighter) 100%);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+  }
+  
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.posts-list-title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-family: 'Vazirmatn', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.posts-list-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+// Posts container
+.posts-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+// Individual post article
+.post-article {
+  background: $bg-white;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--box-shadow);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.post-article:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-lg);
+  border-color: rgba(16,185,129,.35);
+}
+
+// Post content
+.post-content {
+  padding: 1.5rem 1.25rem;
+  background: $bg-white;
+}
+
+// Categories
+.post-categories {
+  margin-bottom: 1.5rem;
+}
+
+.post-category {
+  display: inline-block;
+  background: $primary-color;
+  color: white !important;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+  
+  &:hover {
+    background: $primary-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    color: white !important;
+  }
+}
+
+// Post title
+.post-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: $text-dark; // Themed text color
+  margin-bottom: .5rem;
+  line-height: 1.3;
+  font-family: 'Vazirmatn', sans-serif;
+  
+  a {
+    color: $text-dark; // Ensure themed text
+    text-decoration: none;
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}
+
+// Post meta
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: .75rem 1rem;
+  margin-bottom: .75rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $text-light;
+  font-size: 0.875rem;
+  font-weight: 500;
+  
+  svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  
+  a {
+  color: $text-light; // Themed visible text
+    text-decoration: none;
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}
+
+/* Dark mode: chip background for post list meta items */
+[data-theme="dark"] .posts-list .post-meta .meta-item {
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 0.35rem 0.6rem;
+  color: var(--text-dark);
+}
+[data-theme="dark"] .posts-list .post-meta .meta-item a { color: inherit; }
+[data-theme="dark"] .posts-list .post-meta .meta-item svg { color: inherit; opacity: .9; }
+
+// Post excerpt
+.post-excerpt {
+  color: $text-medium;
+  line-height: 1.8;
+  font-size: .975rem;
+  margin-bottom: 1rem;
+}
+
+// Post footer
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: .75rem;
+  border-top: 1px dashed var(--border-color);
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.read-more {
+  @include button-style;
+  font-size: 0.85rem;
+  color: white !important;
+  background: linear-gradient(135deg, $primary-color, $primary-dark);
+  border: 0;
+  padding: .6rem 1rem;
+  border-radius: 10px;
+  
+  &:hover {
+    filter: brightness(1.05);
+  }
+}
+
+// Post tags
+.post-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.post-tag {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1; /* tighten vertical metrics */
+  background: var(--bg-lighter);
+  color: var(--text-dark) !important;
+  padding: 0.35rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+  
+  &:hover {
+    background: $primary-color;
+    color: white !important;
+    border-color: $primary-color;
+    transform: translateY(-2px);
+  }
+}
+
+// Load more section
+.load-more-section {
+  text-align: center;
+  margin-top: 4rem;
+  padding: 2rem;
+}
+
+.load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, $primary-color, $primary-dark);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  }
+}
+
+// No posts message
+.no-posts {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-medium);
+  
+  h2 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-family: 'Vazirmatn', sans-serif;
+  }
+}
+
+// Animation classes
+.fade-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Staggered animation delays
+.post-article {
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .posts-container {
+  padding: 0 .75rem;
+  }
+  
+  .posts-list {
+  gap: 1rem;
+  }
+  
+  .post-content {
+  padding: 1rem .75rem;
+  }
+  
+  .post-title {
+  font-size: 1.25rem;
+  }
+  
+  .post-meta {
+  gap: .5rem .75rem;
+  }
+  
+  .post-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  gap: .75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .posts-list-header {
+    padding: 2rem 0 3rem;
+  }
+  
+  .posts-container {
+    padding: 0 0.5rem;
+  }
+  
+  .post-content {
+    padding: 1rem;
+  }
+  
+  .post-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+// Dark mode handled via CSS variables ([data-theme="dark"]) in main.scss

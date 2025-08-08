@@ -1,0 +1,30 @@
+/* About page (expanded spacing & hierarchy) */
+.about-hero{margin-top:2rem;margin-bottom:1.75rem}
+.about-hero .hero-card{background:var(--bg-white);border:1px solid var(--border-color);border-radius:26px;padding:2.75rem 2.4rem;box-shadow:var(--box-shadow-md);position:relative;overflow:hidden}
+.about-hero .title{font-size:2.35rem;margin:0 0 .85rem;font-weight:800;line-height:1.12}
+.about-hero .subtitle{margin:0 0 .5rem;font-weight:600;color:var(--text-medium);font-size:1.05rem}
+.about-hero .lead{color:var(--text-medium);margin:.35rem 0 1.35rem;font-size:1.05rem;line-height:1.75;max-width:60ch}
+.hero-actions{display:flex;gap:.9rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.55rem;padding:.72rem 1.15rem;border-radius:14px;border:1px solid var(--border-color);text-decoration:none;color:var(--text-dark);background:var(--bg-white);transition:var(--transition);font-weight:600;font-size:.95rem}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07)}
+.btn-coffee{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none}
+.btn-coffee:hover{box-shadow:0 8px 24px rgba(239,68,68,.35)}
+.btn-secondary{background:var(--bg-lighter)}
+section.about-body.container, .about-body{margin-top:2.5rem;display:grid;row-gap:2rem;padding-top:1.5rem}
+.about-body .prose{background:var(--bg-white);border:1px solid var(--border-color);border-radius:20px;padding:1.75rem 1.5rem;line-height:1.9}
+.chips{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.75rem}
+.chip{padding:.42rem .75rem;border-radius:999px;background:var(--bg-lighter);border:1px solid var(--border-color);font-size:.82rem;color:var(--text-medium);font-weight:500;letter-spacing:.2px}
+
+/* Dark mode subtle adjustments */
+[data-theme="dark"] .btn-secondary{background:#0f172a}
+[data-theme="dark"] .about-body .prose{background:var(--bg-white)}
+
+/* Responsive tweaks */
+@media (max-width:700px){
+	.about-hero .hero-card{padding:2rem 1.5rem}
+	.about-hero .title{font-size:2rem}
+		section.about-body.container, .about-body{margin-top:2rem;row-gap:1.5rem;padding-top:1.1rem}
+	.about-body .prose{padding:1.35rem 1.1rem}
+	.hero-actions{gap:.6rem}
+	.btn{padding:.65rem 1rem;font-size:.9rem}
+}

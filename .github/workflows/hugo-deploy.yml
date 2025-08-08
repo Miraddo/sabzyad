@@ -1,0 +1,86 @@
+name: Deploy Hugo site
+
+on:
+  push:
+    branches:
+      - '**'          # run build checks on every branch
+  pull_request:       # build checks on PRs
+  workflow_dispatch: {}
+
+# Required for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: hugo-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Hugo (extended)
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: latest
+          extended: true
+
+      - name: Cache Hugo modules & resources
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/hugo
+            resources/_gen
+          key: ${{ runner.os }}-hugo-${{ hashFiles('**/hugo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-hugo-
+
+      - name: Compute production baseURL
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY_OWNER}"
+          if [[ "$REPO_NAME" == *.github.io ]]; then
+            HUGO_BASE="https://$REPO_NAME/"
+          else
+            HUGO_BASE="https://$OWNER.github.io/$REPO_NAME/"
+          fi
+          echo "Using baseURL=$HUGO_BASE"
+          echo "HUGO_BASE=$HUGO_BASE" >> $GITHUB_ENV
+
+      - name: Build site
+        run: |
+          # Use full minify only on main for slightly faster CI on feature branches
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            hugo --minify --baseURL "$HUGO_BASE"
+          else
+            hugo --baseURL "$HUGO_BASE"
+          fi
+
+      - name: Upload artifact (only main)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+# Notes:
+# 1. Ensure Pages is set to Source: GitHub Actions in repository settings.
+# 2. If you use a custom domain, add a static/CNAME file with your domain.
+# 3. Adjust the branches list above if you deploy from a different branch.
+# 4. For environment-specific params, you can add HUGO_ENV=production.

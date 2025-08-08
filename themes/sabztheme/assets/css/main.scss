@@ -1,0 +1,202 @@
+// Modern Light Theme Variables
+:root {
+  --primary-color: #10b981;
+  --secondary-color: #059669;
+  --accent-color: #34d399;
+  --text-dark: #111827;
+  --text-medium: #374151;
+  --text-light: #6b7280;
+  --text-muted: #9ca3af;
+  --bg-white: #ffffff;
+  --bg-light: #f9fafb;
+  --bg-lighter: #f3f4f6;
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+  --border-radius: 12px;
+  --border-radius-sm: 8px;
+  --border-radius-lg: 16px;
+  --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Code surfaces */
+  --code-bg: #f3f4f6; /* light surface for code in light mode */
+  --code-fg: #111827; /* dark text for readability */
+}
+
+/* Dark theme variables */
+[data-theme="dark"] {
+  --text-dark: #e5e7eb;
+  --text-medium: #cbd5e1;
+  --text-light: #94a3b8;
+  --text-muted: #64748b;
+  --bg-white: #0f172a;
+  --bg-light: #0b1220;
+  --bg-lighter: #111827;
+  --border-color: #1f2937;
+  --border-light: #111827;
+  --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.6), 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  /* Code surfaces in dark */
+  --code-bg: #0b1220; /* deep dark */
+  --code-fg: #e5e7eb;
+}
+
+/* Base app surfaces pick from variables */
+body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* Global horizontal overflow guard (site-wide) */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* Any direct layout containers should never overflow viewport */
+.container, header, footer, main, section, nav { max-width: 100%; overflow-x: clip; }
+
+/* Media & tables responsive guarantees */
+img, video, iframe { max-width: 100%; height: auto; }
+table { width: 100%; max-width: 100%; }
+pre { max-width: 100%; }
+
+/* Prevent long inline code / URLs from forcing overflow */
+code, pre, kbd, samp { word-break: break-word; overflow-wrap: anywhere; }
+
+.site-header,
+.site-footer,
+.lesson-content,
+.learn-sidebar,
+.sidebar-card,
+.course-sections {
+  background: var(--bg-white);
+  color: var(--text-dark);
+}
+
+/* Syntax highlighting wrappers */
+.highlight,
+.chroma {
+  background: var(--code-bg);
+  color: var(--code-fg);
+}
+
+/* Ensure all Chroma internals adopt code colors */
+.highlight pre,
+.highlight code,
+.chroma pre,
+.chroma code {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.chroma .lntable,
+.chroma .lnt,
+.chroma .ln,
+.chroma td,
+.chroma tr {
+  background: transparent !important;
+  color: inherit !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Prefer system dark if not set explicitly */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --text-dark: #e5e7eb;
+    --text-medium: #cbd5e1;
+    --text-light: #94a3b8;
+    --text-muted: #64748b;
+    --bg-white: #0f172a;
+    --bg-light: #0b1220;
+    --bg-lighter: #111827;
+    --border-color: #1f2937;
+    --border-light: #111827;
+    --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.6), 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+    --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --code-bg: #0b1220;
+  --code-fg: #e5e7eb;
+  }
+}
+
+// Import all SCSS modules
+@import 'base';
+@import 'components/header';
+@import 'components/footer';
+@import 'components/buttons';
+@import 'components/cards';
+@import 'components/contributors';
+@import 'components/learning-interface';
+@import 'pages/home';
+@import 'pages/courses';
+// Use the newer course single styles (migrated from inline styles)
+@import 'pages/course-single-new';
+@import 'pages/about';
+@import 'pages/contact';
+// The learn page has its own dedicated bundle (pages/learn.scss). Avoid importing the legacy _learn.scss here to prevent conflicts.
+/* Neutralize legacy learn partial (if compiled elsewhere) to avoid hidden off-canvas widths */
+.learning-sidebar.open, .learning-sidebar { transform: none !important; left: 0 !important; }
+.learning-layout { overflow-x: hidden; }
+@import 'pages/404';
+@import 'utils/rtl';
+@import 'utils/responsive';
+
+/* Force code blocks to be LTR across the site */
+pre,
+code,
+kbd,
+samp,
+.chroma,
+.highlight {
+  direction: ltr;
+  unicode-bidi: embed;
+  text-align: left;
+}
+
+pre {
+  overflow-x: auto;
+  background: var(--code-bg);
+  color: var(--code-fg);
+}
+
+pre code {
+  white-space: pre;
+  background: transparent;
+  color: inherit;
+}
+
+/* Global meta-item readability */
+.meta-item {
+  color: var(--text-light);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.meta-item a {
+  color: inherit;
+  text-decoration: none;
+}
+.meta-item svg,
+.meta-item i {
+  color: inherit;
+  opacity: .9;
+}
+
+[data-theme="dark"] .meta-item {
+  color: var(--text-medium);
+}
+
+/* Dark chip backgrounds for header/hero areas */
+[data-theme="dark"] .learn-header .meta-item,
+[data-theme="dark"] .course-hero .meta-item,
+[data-theme="dark"] header .meta-item {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: .35rem .75rem;
+}

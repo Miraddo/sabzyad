@@ -1,0 +1,108 @@
+// RTL Support Utilities
+.rtl {
+  direction: rtl;
+  text-align: right;
+
+  // Navbar RTL fixes
+  .navbar-start {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  .navbar-end {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .buttons {
+    flex-direction: row-reverse;
+
+    &.is-right {
+      justify-content: flex-start;
+    }
+  }
+
+  // Card RTL fixes
+  .course-status {
+    right: auto;
+    left: 1rem;
+  }
+
+  .curriculum-item {
+    border-left: none;
+    border-right: 4px solid var(--primary-color);
+  }
+
+  // Text alignment utilities
+  .text-left {
+    text-align: right;
+  }
+
+  .text-right {
+    text-align: left;
+  }
+
+  // Float utilities
+  .float-left {
+    float: right;
+  }
+
+  .float-right {
+    float: left;
+  }
+
+  // Margin and padding adjustments
+  .mr-auto {
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  .ml-auto {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .pr-0 { padding-right: 0; }
+  .pr-1 { padding-right: 0.5rem; }
+  .pr-2 { padding-right: 1rem; }
+  .pr-3 { padding-right: 1.5rem; }
+  .pr-4 { padding-right: 2rem; }
+
+  .pl-0 { padding-left: 0; }
+  .pl-1 { padding-left: 0.5rem; }
+  .pl-2 { padding-left: 1rem; }
+  .pl-3 { padding-left: 1.5rem; }
+  .pl-4 { padding-left: 2rem; }
+
+  // Border radius adjustments
+  .rounded-r {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+  }
+
+  .rounded-l {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+  }
+}
+
+// Text direction utilities
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+// Persian number utilities
+.persian-numbers {
+  font-feature-settings: "lnum" 0;
+  font-variant-numeric: normal;
+}
+
+.english-numbers {
+  font-feature-settings: "lnum" 1;
+  font-variant-numeric: lining-nums;
+}

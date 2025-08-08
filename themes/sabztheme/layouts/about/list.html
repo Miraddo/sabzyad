@@ -1,0 +1,38 @@
+{{ define "main" }}
+<section class="page-hero about-hero container">
+  <div class="hero-card">
+    <div class="hero-content">
+      <h1 class="title">{{ .Title }}</h1>
+      {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+      <p class="lead">{{ .Summary | default ( .Site.Params.description ) }}</p>
+      <div class="hero-actions">
+        {{ $bmc := .Params.buymeacoffee | default "https://www.buymeacoffee.com/" }}
+        <a class="btn btn-coffee" href="{{ $bmc }}" target="_blank" rel="noopener">
+          <i class="fa-solid fa-mug-hot"></i>
+          <span>حمایت از من</span>
+        </a>
+        <a class="btn btn-secondary" href="/fa/contact/">
+          <i class="fa-regular fa-paper-plane"></i>
+          <span>تماس با من</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container about-body">
+  <article class="prose">
+    {{ .Content }}
+  </article>
+
+  {{ with .Params.skills }}
+  <div class="chips">
+    {{ range . }}<span class="chip">{{ . }}</span>{{ end }}
+  </div>
+  {{ end }}
+
+  {{ with site.Data.contributors }}
+    {{ partial "contributors.html" (dict "contributors" . "title" "مشارکت‌کنندگان پروژه") }}
+  {{ end }}
+</section>
+{{ end }}

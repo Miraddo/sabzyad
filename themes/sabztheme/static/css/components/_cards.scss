@@ -1,0 +1,274 @@
+// Card Components
+.card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Course Cards
+.course-card {
+  @extend .card;
+  position: relative;
+
+  .course-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    &.placeholder {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      .course-icon {
+        font-size: 3rem;
+      }
+    }
+  }
+
+  &:hover .course-image img {
+    transform: scale(1.05);
+  }
+
+  .course-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+  }
+
+  .course-content {
+    padding: 1.5rem;
+  }
+
+  .course-title {
+    a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1.4;
+      display: block;
+      margin-bottom: 1rem;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .course-description {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .course-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+
+    .meta-icon {
+      font-size: 1rem;
+    }
+  }
+
+  .course-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-tag {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .course-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-light);
+
+    .price-value {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--success-color);
+    }
+  }
+}
+
+// Feature Cards
+.feature-card {
+  @extend .card;
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--bg-light);
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+  }
+
+  p {
+    color: var(--text-light);
+    line-height: 1.6;
+  }
+}
+
+// Blog Cards
+.blog-card {
+  @extend .card;
+
+  .blog-image {
+    height: 200px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .blog-content {
+    padding: 1.5rem;
+  }
+
+  .blog-title {
+    a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 600;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .blog-excerpt {
+    color: var(--text-light);
+    margin: 1rem 0;
+  }
+
+  .blog-meta {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Status Badges
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  &.completed {
+    background: rgba(34, 197, 94, 0.9);
+    color: white;
+  }
+
+  &.progress {
+    background: rgba(245, 158, 11, 0.9);
+    color: white;
+  }
+
+  &.free {
+    background: var(--success-color);
+    color: white;
+  }
+
+  &.premium {
+    background: var(--warning-color);
+    color: white;
+  }
+}
+
+// Info Cards for sidebars
+.info-card,
+.related-courses,
+.share-card {
+  @extend .card;
+  padding: 1.5rem;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+
+  .info-label {
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+
+  .info-value {
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+  }
+}

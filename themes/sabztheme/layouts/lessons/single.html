@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+{{ partial "head.html" . }}
+<body class="learn-page" id="learnPage">
+    {{ partial "header.html" . }}
+    
+    <!-- Learn Header -->
+    <header class="learn-header">
+        <div class="learn-header-content">
+            <nav class="learn-breadcrumb">
+                <a href="/fa/">خانه</a>
+                <span class="separator">/</span>
+                <a href="/fa/courses/">دوره‌ها</a>
+                <span class="separator">/</span>
+                <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a>
+                <span class="separator">/</span>
+                <span class="current">{{ .Title }}</span>
+            </nav>
+            
+            <div class="learn-controls">
+                <button class="control-btn mobile-menu-btn" id="mobileMenuBtn" aria-controls="learnSidebar" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    فهرست دروس
+                </button>
+                
+                <button class="control-btn" id="focusModeBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                    حالت تمرکز
+                </button>
+                <button id="sidebarReopen" class="control-btn sidebar-reopen-btn" style="display:none;" aria-label="باز کردن فهرست دروس">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                    فهرست دروس
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Loading Indicator -->
+    <div class="loading-overlay" id="loadingIndicator" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>در حال بارگذاری...</p>
+        </div>
+    </div>
+    
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Main Content Area -->
+    <div class="learn-content">
+        <!-- Sidebar -->
+        <aside class="learn-sidebar" id="learnSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-controls">
+                    <div class="sidebar-title-wrapper">
+                        <h2 class="sidebar-title-text" style="margin:0;font-size:1rem;color:#1f2937;">فهرست دروس</h2>
+                        <span class="collapsed-arrow" aria-hidden="true" title="باز کردن فهرست" style="display:none;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <polyline points="9,18 15,12 9,6"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <button class="collapse-btn" id="collapseSidebar" aria-label="جمع کردن فهرست" aria-expanded="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="11,17 6,12 11,7"></polyline>
+                            <polyline points="18,17 13,12 18,7"></polyline>
+                        </svg>
+                    </button>
+                    <button class="collapse-btn mobile-close-btn" id="mobileCloseMenu" aria-label="بستن فهرست" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="course-header">
+                    <h3 class="course-title">{{ .Parent.Title }}</h3>
+                    <div class="course-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="course-progress-text">
+                            <span>پیشرفت دوره</span>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lessons-list">
+                    <h4 class="section-title">دروس دوره</h4>
+                    <div id="lessonsList">
+                        <!-- Lessons will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="learn-main">
+            <article class="lesson-content" id="lessonContent">
+                <!-- Content will be loaded dynamically -->
+                <div class="lesson-placeholder">
+                    <div class="placeholder-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </div>
+                    <h2>یک درس را انتخاب کنید</h2>
+                    <p>برای شروع یادگیری، یکی از دروس را از فهرست سمت راست انتخاب کنید.</p>
+                </div>
+            </article>
+        </main>
+    </div>
+    
+    {{ partial "footer.html" . }}
+    
+    <!-- Lesson Data -->
+    {{ $currentPage := . }}
+    {{ $siblings := where .Parent.Pages "Type" "lessons" }}
+    {{ $courseLessons := sort $siblings "Params.lesson_number" }}
+    <script>
+    // Hugo injected lesson data
+        
+        window.lessonData = [
+            {{ range $index, $lesson := $courseLessons }}
+            {
+                id: '{{ $lesson.File.ContentBaseName }}',
+                slug: '{{ $lesson.File.ContentBaseName }}',
+                title: '{{ $lesson.Title }}',
+                description: '{{ $lesson.Params.description | default $lesson.Summary }}',
+                duration: '{{ $lesson.Params.duration }}',
+                difficulty: '{{ $lesson.Params.difficulty }}',
+                section: '{{ $lesson.Params.section | default `بدون دسته` }}',
+                date: '{{ with $lesson.Date }}{{ .Format "2006-01-02" }}{{ end }}',
+                url: '{{ $lesson.RelPermalink }}',
+                content: `{{ $lesson.Content | safeJS }}`,
+                lessonNumber: {{ $lesson.Params.lesson_number | default (add $index 1) }},
+                resources: {{ ($lesson.Params.resources | default (slice)) | jsonify | safeJS }}
+            }{{ if not (eq $index (sub (len $courseLessons) 1)) }},{{ end }}
+            {{ end }}
+        ];
+        
+        // Set current lesson
+        window.currentLessonSlug = "{{ .File.ContentBaseName }}";
+    </script>
+    
+    <!-- Learn SPA JavaScript -->
+    {{ $learnJS := resources.Get "js/learn.js" }}
+    {{ if hugo.IsProduction }}
+        {{ $learnJS = $learnJS | resources.Minify | resources.Fingerprint }}
+    {{ end }}
+    <script src="{{ $learnJS.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $learnJS.Data.Integrity }}"{{ end }}></script>
+
+    {{ partial "scripts.html" . }}
+</body>
+</html>

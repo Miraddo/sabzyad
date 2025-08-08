@@ -1,0 +1,186 @@
+// Responsive Design Utilities
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$widescreen: 1200px;
+
+// Mobile First Media Queries
+@mixin mobile {
+  @media (max-width: #{$mobile - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: #{$tablet - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop}) {
+    @content;
+  }
+}
+
+@mixin widescreen {
+  @media (min-width: #{$widescreen}) {
+    @content;
+  }
+}
+
+// Responsive visibility utilities
+.is-hidden-mobile {
+  @include mobile {
+    display: none !important;
+  }
+}
+
+.is-hidden-tablet {
+  @include tablet {
+    display: none !important;
+  }
+}
+
+.is-hidden-desktop {
+  @media (min-width: #{$desktop}) {
+    display: none !important;
+  }
+}
+
+// Responsive text alignment
+@include tablet {
+  .has-text-centered-mobile {
+    text-align: center;
+  }
+
+  .has-text-left-mobile {
+    text-align: left;
+  }
+
+  .has-text-right-mobile {
+    text-align: right;
+  }
+}
+
+// Responsive grid utilities
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .column {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &.is-mobile {
+    @include mobile {
+      flex-direction: column;
+    }
+  }
+
+  &.is-tablet {
+    @include tablet {
+      flex-direction: column;
+    }
+  }
+}
+
+// Container responsive behavior
+.container {
+  width: 100%;
+  padding: 0 1rem;
+  margin: 0 auto;
+
+  @media (min-width: #{$tablet}) {
+    max-width: 768px;
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: #{$desktop}) {
+    max-width: 1024px;
+    padding: 0 2rem;
+  }
+
+  @media (min-width: #{$widescreen}) {
+    max-width: 1200px;
+  }
+}
+
+// Responsive spacing
+@include tablet {
+  .p-mobile-0 { padding: 0 !important; }
+  .p-mobile-1 { padding: 0.5rem !important; }
+  .p-mobile-2 { padding: 1rem !important; }
+  .p-mobile-3 { padding: 1.5rem !important; }
+  .p-mobile-4 { padding: 2rem !important; }
+
+  .m-mobile-0 { margin: 0 !important; }
+  .m-mobile-1 { margin: 0.5rem !important; }
+  .m-mobile-2 { margin: 1rem !important; }
+  .m-mobile-3 { margin: 1.5rem !important; }
+  .m-mobile-4 { margin: 2rem !important; }
+}
+
+// Responsive font sizes
+@include mobile {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+  }
+}
+
+// Grid system responsive behavior
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: #{$tablet}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: #{$desktop}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: #{$widescreen}) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Course grid responsive
+.courses-grid-responsive {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: #{$tablet}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: #{$desktop}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Blog grid responsive
+.blog-grid-responsive {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: #{$tablet}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: #{$desktop}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

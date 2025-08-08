@@ -1,0 +1,7 @@
+# Global list of contributors. Add GitHub usernames and optional name, role, avatar, and custom url.
+- username: miraddo
+  name: Mir Addo
+  role: Maintainer
+- username: octocat
+  name: The Octocat
+  role: Contributor

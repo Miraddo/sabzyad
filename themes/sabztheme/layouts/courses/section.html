@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+{{ partial "head.html" . }}
+<body>
+    {{ partial "header.html" . }}
+
+    {{/* Render the courses list for this section; nested course sections will use type-based template at layouts/course/section.html */}}
+    {{/* BEGIN: list view (copied from courses/list.html) */}}
+    <div class="course-list-page">
+        <section class="page-header">
+            <div class="container">
+                <div class="header-content">
+                    <h1>دوره‌های آموزشی رایگان</h1>
+                    <p>یادگیری بدون محدودیت، همه دوره‌ها کاملاً رایگان و در دسترس همگان</p>
+                    {{ $section := .CurrentSection | default . }}
+                    {{ $pages := $section.RegularPages }}
+                    {{ $children := $section.Sections }}
+                    {{ $sectionLinks := slice }}
+                    {{ range $children }}
+                        {{ $sectionLinks = $sectionLinks | append .RelPermalink }}
+                    {{ end }}
+                    {{ $pagesFiltered := slice }}
+                    {{ range $pages }}
+                        {{ if not (in $sectionLinks .RelPermalink) }}
+                            {{ $pagesFiltered = $pagesFiltered | append . }}
+                        {{ end }}
+                    {{ end }}
+                    {{ $allCourses := union $pagesFiltered $children }}
+                    <div class="header-stats">
+                        <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-info"><div class="stat-number">{{ len $allCourses }}</div><div class="stat-label">دوره موجود</div></div></div>
+                        <div class="stat-card"><div class="stat-icon">🆓</div><div class="stat-info"><div class="stat-number">100%</div><div class="stat-label">رایگان</div></div></div>
+                        <div class="stat-card"><div class="stat-icon">⏰</div><div class="stat-info"><div class="stat-number">24/7</div><div class="stat-label">دسترسی</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="course-filters-section">
+            <div class="container">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>دسته‌بندی:</label>
+                        <div class="filter-options">
+                            <a href="#" class="filter-btn active" data-filter="all">همه</a>
+                            {{ range .Site.Taxonomies.course_categories }}
+                                <a href="#" class="filter-btn" data-filter="{{ .Page.Title }}">{{ .Page.Title }}</a>
+                            {{ end }}
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>سطح:</label>
+                        <div class="filter-options">
+                            <a href="#" class="filter-btn" data-level="all">همه سطوح</a>
+                            <a href="#" class="filter-btn" data-level="مبتدی">مبتدی</a>
+                            <a href="#" class="filter-btn" data-level="متوسط">متوسط</a>
+                            <a href="#" class="filter-btn" data-level="پیشرفته">پیشرفته</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="courses-content">
+            <div class="container">
+                <div class="courses-grid">
+                    {{ range $allCourses }}
+                        {{ $isLesson := or (eq .Type "lessons") (eq (lower .Section) "lessons") (eq .Params.type "lessons") }}
+                        {{ if not $isLesson }}
+                        <div class="course-card" data-category="{{ range .Params.course_categories }}{{ . }} {{ end }}" data-level="{{ .Params.difficulty }}">
+                            <div class="course-image">
+                                {{ if .Params.image }}
+                                    <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+                                {{ else }}
+                                    <div class="image-placeholder"><div class="placeholder-icon">📚</div></div>
+                                {{ end }}
+                                {{ if .Params.difficulty }}<div class="course-level">{{ .Params.difficulty }}</div>{{ end }}
+                                {{ if .Params.duration }}
+                                    <div class="course-duration"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12,6 12,12 16,14"></polyline></svg>{{ .Params.duration }}</div>
+                                {{ end }}
+                            </div>
+                            <div class="course-content">
+                                <h3 class="course-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+                                {{ if .Params.description }}
+                                    <p class="course-description">{{ .Params.description }}</p>
+                                {{ else }}
+                                    <p class="course-description">{{ .Summary | truncate 120 }}</p>
+                                {{ end }}
+                            </div>
+                            <div class="course-footer">
+                                <a href="{{ .Permalink }}" class="course-btn"><span class="btn-text">شروع یادگیری</span><svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+                            </div>
+                        </div>
+                        {{ end }}
+                    {{ end }}
+                </div>
+                {{ if eq (len $allCourses) 0 }}
+                <div class="no-courses"><div class="no-courses-icon">📚</div><h3>هنوز دوره‌ای موجود نیست</h3><p>به زودی دوره‌های جدید اضافه خواهد شد</p></div>
+                {{ end }}
+            </div>
+        </section>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded',function(){const e=document.querySelectorAll('.filter-btn'),t=document.querySelectorAll('.course-card');function a(){const a=document.querySelector('[data-filter].active')?.dataset.filter||'all',r=document.querySelector('[data-level].active')?.dataset.level||'all';t.forEach(e=>{const t=e.dataset.category,n=e.dataset.level,i=('all'===a||t.includes(a))&&('all'===r||n===r);e.style.display=i?'block':'none'})}
+    e.forEach(t=>{t.addEventListener('click',function(t){t.preventDefault();const n=this.closest('.filter-group');n.querySelectorAll('.filter-btn').forEach(e=>e.classList.remove('active')),this.classList.add('active'),a()})});});
+    </script>
+    {{/* END: list view */}}
+
+    {{ partial "footer.html" . }}
+    {{ partial "scripts.html" . }}
+</body>
+</html>

@@ -1,0 +1,417 @@
+// Modern Card Components
+.course-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  
+  .course-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    // Image placeholder with animated background
+    &:not(:has(img)), &:has(img[src=""]) {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          #f9fafb 25%,
+          transparent 25%,
+          transparent 75%,
+          #f9fafb 75%,
+          #f9fafb
+        );
+        background-size: 20px 20px;
+        animation: movePattern 2s linear infinite;
+      }
+      
+      &::after {
+        content: '📚';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        opacity: 0.6;
+        z-index: 1;
+      }
+    }
+    
+    &:hover img {
+      transform: scale(1.05);
+    }
+  }
+  
+  .course-status {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .course-content {
+    padding: 24px;
+    
+    .course-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .course-description {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .course-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: rgba(16, 185, 129, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.1);
+      
+      .stat {
+        text-align: center;
+        
+        .value {
+          font-weight: 700;
+          color: var(--primary-color);
+          font-size: 1.1rem;
+          display: block;
+        }
+        
+        .label {
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          margin-top: 4px;
+        }
+      }
+    }
+    
+    .course-actions {
+      display: flex;
+      gap: 12px;
+      
+      .btn {
+        flex: 1;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+        
+        &.btn-primary {
+          background: linear-gradient(135deg, var(--primary-color), #059669);
+          color: white;
+          border: none;
+          
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+          }
+        }
+        
+        &.btn-secondary {
+          background: white;
+          color: var(--primary-color);
+          border: 2px solid var(--primary-color);
+          
+          &:hover {
+            background: var(--primary-color);
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Card Grid Layout
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+// Animations
+@keyframes movePattern {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+// Featured Course Card
+ .featured-course {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+  border: 2px solid rgba(16, 185, 129, 0.2);
+ }
+
+// Blog Card Component
+.blog-card {
+  background: var(--bg-white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  
+  .blog-image {
+    position: relative;
+  /* Uniform fixed cover height for consistent sizing */
+  height: 220px;
+  max-height: 220px;
+    overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-lighter) 0%, var(--bg-light) 100%);
+  border-bottom: 1px solid var(--border-color);
+    
+    img {
+      width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+      transition: transform 0.3s ease;
+    }
+    
+    // Image placeholder with animated background - same as course-image
+    &:empty {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          #f9fafb 25%,
+          transparent 25%,
+          transparent 75%,
+          #f9fafb 75%,
+          #f9fafb
+        );
+        background-size: 20px 20px;
+        animation: movePattern 2s linear infinite;
+      }
+      
+      &::after {
+        content: '📝';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        opacity: 0.6;
+        z-index: 1;
+        color: var(--primary-color);
+      }
+    }
+    
+    &:hover img {
+      transform: scale(1.05);
+    }
+  }
+  
+  .blog-content {
+    padding: 1.25rem 1.25rem 1.5rem;
+    background: var(--bg-white);
+    
+    .blog-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-dark) !important;
+      margin-bottom: .5rem;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      
+      a {
+        color: var(--text-dark) !important;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        
+        &:hover {
+          color: var(--primary-color) !important;
+        }
+      }
+    }
+    
+    .blog-excerpt {
+      color: var(--text-medium) !important;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      color: var(--text-light) !important;
+      font-size: 0.875rem;
+      
+      time {
+        color: var(--text-light) !important;
+      }
+      
+      &::before {
+        content: '📅';
+        font-size: 0.875rem;
+        opacity: 0.7;
+      }
+    }
+    
+  .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-color) !important;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--primary-color);
+      border-radius: 20px;
+  background: var(--bg-white);
+      transition: all 0.3s ease;
+      
+      &::after {
+        content: '←';
+        transition: transform 0.3s ease;
+        font-size: 0.75rem;
+      }
+      
+      &:hover {
+        background: var(--primary-color) !important;
+        color: #fff !important;
+        transform: translateX(3px);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+        
+        &::after {
+          transform: translateX(2px);
+        }
+      }
+    }
+  }
+}
+/* Dark mode refinements for blog cards */
+[data-theme="dark"] .blog-card {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .blog-card .blog-image { background: linear-gradient(135deg, var(--bg-lighter) 0%, var(--bg-light) 100%); }
+[data-theme="dark"] .blog-card .blog-content { background: var(--bg-white); }
+[data-theme="dark"] .blog-card .read-more { background: var(--bg-white); color: var(--primary-color) !important; }
+[data-theme="dark"] .blog-card .read-more:hover { background: var(--primary-color) !important; color: #fff !important; }
+/* Responsive tweak: slightly shorter covers on small screens */
+@media (max-width: 640px) {
+  .blog-card .blog-image { height: 190px; max-height:190px; }
+}
+
+// Progress Card
+.progress-card {
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 12px;
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), #059669);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+  }
+  
+  .progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+}
+
+// Animation for placeholder emoji
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
+
+/* Simple global rule: ensure blog image fills container width */
+.blog-image img { width: 100%; }

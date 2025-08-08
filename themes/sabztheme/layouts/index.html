@@ -1,43 +1,182 @@
 {{ define "main" }}
-<!-- Hero Section -->
+{{/* Build a language-aware collection of courses (sections + leaf pages), excluding lessons */}}
+{{ $prefix := .Site.LanguagePrefix }}
+{{ $coursesPath := printf "%s/courses" $prefix }}
+{{ $coursesSection := $.Site.GetPage $coursesPath }}
+{{ if not $coursesSection }}
+  {{ $coursesSection = $.Site.GetPage "/courses" }}
+{{ end }}
+{{ $pages := cond $coursesSection $coursesSection.RegularPages (slice) }}
+{{ $children := cond $coursesSection $coursesSection.Sections (slice) }}
+{{ $sectionLinks := slice }}
+{{ range $children }}
+  {{ $sectionLinks = $sectionLinks | append .RelPermalink }}
+{{ end }}
+{{ $pagesFiltered := slice }}
+{{ range $pages }}
+  {{ if not (in $sectionLinks .RelPermalink) }}
+    {{ $pagesFiltered = $pagesFiltered | append . }}
+  {{ end }}
+{{ end }}
+{{ $allCourses := union $pagesFiltered $children }}
+<!-- Hero Section (Enhanced) -->
 <section class="hero-section">
+  <div class="hero-bg-shapes" aria-hidden="true">
+    <span class="shape s1"></span>
+    <span class="shape s2"></span>
+    <span class="shape s3"></span>
+  </div>
   <div class="container">
     <div class="hero-content">
-      <h1 class="hero-title">{{ .Site.Params.description }}</h1>
+      <div class="hero-badge">
+        <span class="badge-icon">🚀</span>
+        <span>رشد مهارت واقعی — نه حفظ کردن</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="hero-title-top">یادگیری عمیق و تدریجی</span>
+        <span class="hero-title-accent"> برای ساختن مهارت پایدار</span>
+      </h1>
       <p class="hero-subtitle">
-        اینجا قراره یاد بگیریم، تجربه کنیم و چیزایی رو کشف کنیم که واقعاً به دردمون می‌خوره. 
-        تقریبا هر چیزی که کمک کنه بهتر بفهمیم و قوی‌تر عمل کنیم، توی سبزیاد جاش هست.
+        سبزیاد مجموعه‌ای آزاد از مسیرهای یادگیری، تمرین‌های مرحله‌ای و منابع قابل اعتماد است؛
+        تمرکز روی فهم، تمرین و تکرار — بدون حواس‌پرتی اضافه.
       </p>
-      <div class="hero-cta">
-        <a href="/fa/courses/" class="btn btn-primary">دوره‌ها اینجاست</a>
+
+      <form id="heroSearchForm" class="hero-search" role="search" aria-label="جستجوی دوره یا موضوع">
+        <div class="hero-search-inner">
+          <input id="heroSearchInput" type="search" placeholder="چی می‌خوای یاد بگیری؟ مثلا: پایتون، گیت، الگوریتم..." aria-label="جستجو" autocomplete="off" />
+          <button type="submit" class="hero-search-btn" aria-label="جستجو">جستجو</button>
+        </div>
+        <div class="hero-pill-list" aria-hidden="true">
+          <button type="button" class="pill" data-q="python">پایتون</button>
+          <button type="button" class="pill" data-q="git">گیت</button>
+          <button type="button" class="pill" data-q="linux">لینوکس</button>
+          <button type="button" class="pill" data-q="sql">SQL</button>
+          <button type="button" class="pill" data-q="docker">Docker</button>
+        </div>
+      </form>
+
+      <div class="hero-actions">
+        <a href="/fa/courses/" class="btn btn-primary btn-large">
+          <span>شروع سریع</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        <a href="/fa/about/" class="btn btn-outline btn-large">
+          <span>چطور کار می‌کنیم؟</span>
+        </a>
+      </div>
+
+      <div class="hero-benefits">
+        <div class="benefit-item">🧭 مسیرهای شفاف</div>
+        <div class="benefit-item">🧪 تمرین عملی</div>
+        <div class="benefit-item">🔁 به‌روزرسانی مداوم</div>
+        <div class="benefit-item">💬 اشتراک تجربه</div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">{{ len $allCourses }}+</div>
+          <div class="stat-label">دوره / مسیر</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">رایگان</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">دسترسی دائم</div>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', ()=> {
+    const form = document.getElementById('heroSearchForm');
+    const input = document.getElementById('heroSearchInput');
+    const pills = form?.querySelectorAll('.pill');
+    function triggerSearch(q){
+      if(!q) return;
+      const openBtn = document.querySelector('[data-search-open]');
+      if(openBtn){
+        openBtn.dispatchEvent(new Event('click', {bubbles:true}));
+        setTimeout(()=>{
+          const overlayInput = document.getElementById('siteSearchInput');
+          if(overlayInput){ overlayInput.value = q; overlayInput.dispatchEvent(new Event('input')); }
+        }, 140);
+      }
+    }
+    form?.addEventListener('submit', e=>{ e.preventDefault(); triggerSearch(input.value.trim()); });
+    pills?.forEach(p=> p.addEventListener('click', ()=>{ const q = p.getAttribute('data-q'); input.value = q; triggerSearch(q); }));
+  });
+  </script>
 </section>
 
 <!-- Features Section -->
 <section class="features-section">
   <div class="container">
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🏃‍♂️</div>
-        <h3>یادگیری با انجام تمرین</h3>
-        <p>با انجام پروژه‌های عملی و تمرین‌های کاربردی یاد بگیرید</p>
+    <header class="features-header">
+      <span class="features-badge">چرا سبزیاد؟</span>
+      <h2 class="features-title">هر چیزی که برای یادگیری عمیق نیاز داری 🌱</h2>
+      <p class="features-subtitle">از ویدیو و تمرین تا مسیر یادگیری، همه رایگان و در یک جا. تمرکز روی تجربه واقعی و رشد مرحله‌ای.</p>
+    </header>
+
+    <div class="features-grid enhanced">
+      <div class="feature-card fx-rise">
+        <div class="feature-head">
+          <div class="feature-icon">🏃‍♂️</div>
+          <span class="feature-tag">Practice First</span>
+        </div>
+        <h3 class="feature-title">یادگیری با تمرین عملی</h3>
+        <p class="feature-text">هر درس با یک تمرین یا مثال کاربردی همراهه تا سریع‌تر به مهارت تبدیل بشه.</p>
+        <ul class="feature-points">
+          <li>تمرین‌های مرحله‌ای</li>
+          <li>حل نمونه + توضیح</li>
+          <li>سناریوهای واقعی</li>
+        </ul>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎬</div>
-        <h3>ویدیوهای با کیفیت</h3>
-        <p>محتوای آموزشی با کیفیت بالا و قابل فهم برای همه سطوح</p>
+
+      <div class="feature-card fx-rise">
+        <div class="feature-head">
+          <div class="feature-icon">🧭</div>
+          <span class="feature-tag alt">Path</span>
+        </div>
+        <h3 class="feature-title">مسیرهای یادگیری مرحله‌ای</h3>
+        <p class="feature-text">به جای گم شدن در منابع پراکنده، نقشه راه شفاف داری که قدم به قدم تو رو جلو می‌بره.</p>
+        <ul class="feature-points">
+          <li>نقشه راه واضح</li>
+          <li>پیش‌نیازهای مشخص</li>
+          <li>ارتقا تدریجی مهارت</li>
+        </ul>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔄</div>
-        <h3>به روز رسانی رایگان</h3>
-        <p>دسترسی مادام‌العمر به محتوای به‌روزشده دوره‌ها</p>
+
+      <div class="feature-card fx-rise">
+        <div class="feature-head">
+          <div class="feature-icon">🔄</div>
+          <span class="feature-tag accent">Alive</span>
+        </div>
+        <h3 class="feature-title">به‌روزرسانی پیوسته</h3>
+        <p class="feature-text">مطالب ثابت نمی‌مونن؛ با تغییر ابزارها و نسخه‌ها، محتوای جدید اضافه می‌شه.</p>
+        <ul class="feature-points">
+          <li>بازبینی منظم</li>
+          <li>افزودن مثال‌های تازه</li>
+          <li>هماهنگ با نسخه‌های جدید</li>
+        </ul>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">💬</div>
-        <h3>پشتیبانی دوره‌ها</h3>
-        <p>پشتیبانی کامل در تمام مراحل یادگیری</p>
+
+      <div class="feature-card fx-rise">
+        <div class="feature-head">
+          <div class="feature-icon">💬</div>
+          <span class="feature-tag support">Support</span>
+        </div>
+        <h3 class="feature-title">جامعه و همراهی</h3>
+        <p class="feature-text">قرار نیست تنها باشی؛ مسیر یادگیری با بازخورد، پیشنهاد و تبادل تجربه کامل می‌شه.</p>
+        <ul class="feature-points">
+          <li>پیشنهاد منابع تکمیلی</li>
+          <li>گفتگو پیرامون چالش‌ها</li>
+          <li>اشتراک تجربه سایر یادگیرنده‌ها</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -46,15 +185,25 @@
 <!-- Featured Courses Section -->
 <section class="courses-section">
   <div class="container">
-    <h2 class="section-title">دوره‌هایی که ممکنه برات جالب باشه 🌿</h2>
+    <h2 class="section-title">دوره‌های رایگان آموزشی 🎓</h2>
+    <p class="section-subtitle">همه دوره‌ها کاملاً رایگان و در دسترس همگان</p>
+    
     <div class="courses-grid">
-      {{ range where .Site.RegularPages "Type" "courses" | first 6 }}
+      {{ range $allCourses }}
+        {{ $isLesson := or (eq .Type "lessons") (eq (lower .Section) "lessons") (eq .Params.type "lessons") }}
+        {{ if not $isLesson }}
         <div class="course-card">
-          <div class="course-status">
-            {{ if .Params.completed }}
-              <span class="status-badge completed">تکمیل شده</span>
+          <div class="course-image">
+            {{ if .Params.image }}
+              <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
             {{ else }}
-              <span class="status-badge progress">در حال انجام</span>
+              <div class="image-placeholder">
+                <div class="placeholder-icon">📚</div>
+              </div>
+            {{ end }}
+            
+            {{ if .Params.difficulty }}
+              <div class="course-level">{{ .Params.difficulty }}</div>
             {{ end }}
           </div>
           
@@ -68,21 +217,18 @@
             {{ else }}
               <p class="course-description">{{ .Summary | truncate 120 }}</p>
             {{ end }}
-            
-            <div class="course-meta">
-              {{ if .Params.price }}
-                <span class="course-price">{{ .Params.price }}</span>
-              {{ end }}
-              {{ if .Params.difficulty }}
-                <span class="course-difficulty">{{ .Params.difficulty }}</span>
-              {{ end }}
-            </div>
           </div>
           
           <div class="course-footer">
-            <a href="{{ .Permalink }}" class="btn btn-outline">مشاهده دوره &gt;</a>
+            <a href="{{ .Permalink }}" class="course-btn">
+              <span class="btn-text">مشاهده دوره</span>
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </a>
           </div>
         </div>
+        {{ end }}
       {{ end }}
     </div>
     
@@ -99,11 +245,11 @@
     <div class="blog-grid">
       {{ range where .Site.RegularPages "Type" "posts" | first 3 }}
         <article class="blog-card">
-          {{ if .Params.image }}
-            <div class="blog-image">
-              <img src="{{ .Params.image }}" alt="{{ .Title }}">
-            </div>
-          {{ end }}
+          <div class="blog-image">
+            {{ if .Params.image }}
+              <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+            {{ end }}
+          </div>
           
           <div class="blog-content">
             <h3 class="blog-title">
@@ -113,7 +259,7 @@
             <p class="blog-excerpt">{{ .Summary | truncate 100 }}</p>
             
             <div class="blog-meta">
-              <time datetime="{{ .Date.Format "2006-01-02" }}">
+              <time datetime="{{ .Date.Format "2006-01-02" }}" data-date="{{ .Date.Format "2006-01-02" }}">
                 {{ .Date.Format "2 January 2006" }}
               </time>
             </div>
@@ -125,295 +271,4 @@
     </div>
   </div>
 </section>
-
-<style>
-  /* Hero Section */
-  .hero-section {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    padding: 4rem 0;
-    text-align: center;
-  }
-
-  .hero-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: 1rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.2rem;
-    color: var(--text-light);
-    max-width: 600px;
-    margin: 0 auto 2rem;
-    line-height: 1.6;
-  }
-
-  .hero-cta .btn {
-    font-size: 1.1rem;
-    padding: 1rem 2rem;
-  }
-
-  /* Features Section */
-  .features-section {
-    padding: 4rem 0;
-    background: white;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .feature-card {
-    text-align: center;
-    padding: 2rem 1rem;
-    border-radius: var(--border-radius);
-    background: var(--bg-light);
-    transition: transform 0.3s ease;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .feature-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-
-  .feature-card h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--text-dark);
-  }
-
-  /* Courses Section */
-  .courses-section {
-    padding: 4rem 0;
-    background: var(--bg-light);
-  }
-
-  .section-title {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 3rem;
-    color: var(--text-dark);
-  }
-
-  .courses-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .course-card {
-    background: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .course-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  .course-status {
-    margin-bottom: 1rem;
-  }
-
-  .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .status-badge.completed {
-    background: #dcfce7;
-    color: #166534;
-  }
-
-  .status-badge.progress {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .course-title a {
-    color: var(--text-dark);
-    text-decoration: none;
-    font-size: 1.3rem;
-    font-weight: 600;
-  }
-
-  .course-title a:hover {
-    color: var(--primary-color);
-  }
-
-  .course-description {
-    color: var(--text-light);
-    margin: 1rem 0;
-    line-height: 1.6;
-  }
-
-  .course-meta {
-    display: flex;
-    gap: 1rem;
-    margin: 1rem 0;
-  }
-
-  .course-price {
-    font-weight: 600;
-    color: var(--success-color);
-  }
-
-  .course-difficulty {
-    background: var(--bg-light);
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--border-radius);
-    font-size: 0.875rem;
-  }
-
-  .course-footer {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-  }
-
-  /* Blog Section */
-  .blog-section {
-    padding: 4rem 0;
-    background: white;
-  }
-
-  .blog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .blog-card {
-    background: white;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease;
-  }
-
-  .blog-card:hover {
-    transform: translateY(-3px);
-  }
-
-  .blog-image img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  .blog-content {
-    padding: 1.5rem;
-  }
-
-  .blog-title a {
-    color: var(--text-dark);
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  .blog-title a:hover {
-    color: var(--primary-color);
-  }
-
-  .blog-excerpt {
-    color: var(--text-light);
-    margin: 1rem 0;
-  }
-
-  .blog-meta {
-    font-size: 0.875rem;
-    color: var(--text-light);
-    margin-bottom: 1rem;
-  }
-
-  .read-more {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .read-more:hover {
-    text-decoration: underline;
-  }
-
-  /* Buttons */
-  .btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    background: var(--primary-color);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: var(--secondary-color);
-  }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-  }
-
-  .btn-outline:hover {
-    background: var(--primary-color);
-    color: white;
-  }
-
-  .section-cta {
-    text-align: center;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2rem;
-    }
-    
-    .hero-subtitle {
-      font-size: 1rem;
-    }
-    
-    .courses-grid,
-    .blog-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .features-grid {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-    
-    .course-meta {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  }
-</style>
 {{ end }}

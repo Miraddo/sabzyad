@@ -1,12 +1,57 @@
-baseURL = 'http://localhost:38485'
+baseURL = 'http://localhost:1313'
 theme = "sabztheme"
 defaultContentLanguage = "fa"
+defaultContentLanguageInSubdir = true
 hasCJKLanguage = true
 languageDirection = "rtl"
 title = "سبزیاد - آموزش آنلاین"
 enableRobotsTXT = true
 enableGitInfo = true
 enableEmoji = true
+
+[outputFormats]
+  [outputFormats.JSON]
+    mediaType = "application/json"
+    baseName = "index"
+    isPlainText = true
+    notAlternative = true
+
+[outputs]
+  home = ["HTML", "JSON"]
+
+[server]
+  [[server.redirects]]
+    from = "/courses/"
+    to = "/fa/courses/"
+    status = 301
+  [[server.redirects]]
+    from = "/courses/**"
+    to = "/fa/courses/:splat"
+    status = 301
+  [[server.redirects]]
+    from = "/posts/"
+    to = "/fa/posts/"
+    status = 301
+  [[server.redirects]]
+    from = "/posts/**"
+    to = "/fa/posts/:splat"
+    status = 301
+  [[server.redirects]]
+    from = "/about/"
+    to = "/fa/about/"
+    status = 301
+  [[server.redirects]]
+    from = "/contact/"
+    to = "/fa/contact/"
+    status = 301
+  [[server.redirects]]
+    from = "/fa/cookies"
+    to = "/fa/cookies/"
+    status = 301
+  [[server.redirects]]
+    from = "/fa/privacy"
+    to = "/fa/privacy/"
+    status = 301
 
 [params]
   description = "رشد کن، یاد بگیر، سبز بمان! 🌿"
@@ -15,6 +60,8 @@ enableEmoji = true
   logo = "/images/logo.png"
   favicon = "/favicon.ico"
   rtl = true
+  debug404 = false
+
   
   [params.social]
     instagram = "https://instagram.com/sabzyad"

@@ -1,0 +1,92 @@
+{{ define "main" }}
+<div class="error-page">
+  <div class="container">
+    <div class="error-content">
+      <!-- Error Animation -->
+      <div class="error-animation">
+        <div class="error-number">4</div>
+        <div class="error-icon">🔍</div>
+        <div class="error-number">4</div>
+      </div>
+      
+      <!-- Error Message -->
+      <div class="error-message">
+        <h1>صفحه پیدا نشد!</h1>
+        <p>متأسفیم، صفحه‌ای که به دنبال آن می‌گردید وجود ندارد.</p>
+        <p class="error-subtext">شاید لینک اشتباه است یا صفحه منتقل شده باشد.</p>
+      </div>
+      
+      <!-- Suggestions -->
+      <div class="error-suggestions">
+        <h3>پیشنهادات:</h3>
+        <ul>
+          <li><a href="/">🏠 بازگشت به صفحه اصلی</a></li>
+          <li><a href="/fa/courses/">📚 مشاهده دوره‌های آموزشی</a></li>
+          <li><a href="/fa/posts/">📝 خواندن مقالات</a></li>
+          <li><a href="/fa/contact/">📞 ارتباط با ما</a></li>
+        </ul>
+      </div>
+      
+      <!-- Search Box -->
+      <div class="error-search">
+        <h4>یا آنچه می‌خواهید جستجو کنید:</h4>
+        <div class="search-box">
+          <input type="text" placeholder="جستجوی دوره‌ها و مطالب..." id="errorSearch">
+          <button type="button" onclick="performSearch()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Fun Element -->
+      <div class="error-fun">
+        <div class="floating-icons">
+          <span class="icon">💻</span>
+          <span class="icon">📚</span>
+          <span class="icon">🎓</span>
+          <span class="icon">🌟</span>
+          <span class="icon">🚀</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function performSearch() {
+  const searchInput = document.getElementById('errorSearch');
+  const query = searchInput.value.trim();
+  
+  if (query) {
+    window.location.href = '/fa/courses/?search=' + encodeURIComponent(query);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const errorSearch = document.getElementById('errorSearch');
+  if (errorSearch) {
+    errorSearch.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+  }
+
+  const icons = document.querySelectorAll('.floating-icons .icon');
+  icons.forEach(function(icon) {
+    icon.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.5) rotate(15deg)';
+      this.style.opacity = '0.3';
+    });
+    
+    icon.addEventListener('mouseleave', function() {
+      this.style.transform = '';
+      this.style.opacity = '0.1';
+    });
+  });
+});
+</script>
+{{ end }}

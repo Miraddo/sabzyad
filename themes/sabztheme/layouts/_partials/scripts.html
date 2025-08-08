@@ -1,6 +1,15 @@
 <script>
-  // Mobile menu functionality
+  // Consent helper (exposed early so other scripts can check before DOM ready)
+  (function(){
+    const CONSENT_KEY='cookieConsent:choice:v1';
+    function choice(){ try { return JSON.parse(localStorage.getItem(CONSENT_KEY)||'').value || null; } catch(e){ return null; } }
+    window.__optionalStorageAllowed = function(){ return choice()==='accept'; };
+  })();
+
+  // Mobile menu functionality & rest of site scripts
   document.addEventListener('DOMContentLoaded', function() {
+    const optionalAllowed = window.__optionalStorageAllowed || (()=>false);
+
     const burger = document.querySelector('.navbar-burger');
     const menu = document.querySelector('.navbar-menu');
 
@@ -8,6 +17,7 @@
       burger.addEventListener('click', function() {
         burger.classList.toggle('is-active');
         menu.classList.toggle('is-active');
+  document.body.classList.toggle('no-scroll', menu.classList.contains('is-active'));
       });
     }
 
@@ -43,33 +53,193 @@
         backToTop.classList.remove('show');
       }
     });
+
+    // Theme handling
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const storedTheme = (optionalAllowed() ? localStorage.getItem('theme') : null);
+    // Always set an explicit theme attribute (binary toggle) for predictable UX
+    if (storedTheme === 'dark' || storedTheme === 'light') {
+      root.setAttribute('data-theme', storedTheme);
+    } else {
+      const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', sys);
+    }
+
+    const updateToggleIcon = () => {
+      if (!toggle) return;
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      toggle.title = isDark ? 'حالت روشن' : 'حالت تیره';
+    };
+    updateToggleIcon();
+
+    toggle?.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      if(optionalAllowed()) {
+        try { localStorage.setItem('theme', next); } catch(e){}
+      }
+      updateToggleIcon();
+    });
+
+    // Overlay Search (modal)
+    const searchOverlay = document.createElement('div');
+    searchOverlay.className = 'search-overlay';
+    searchOverlay.innerHTML = `
+      <div class="search-backdrop" data-search-close></div>
+      <div class="search-panel" role="dialog" aria-modal="true" aria-label="جستجو">
+        <div class="search-header">
+          <input id="siteSearchInput" type="search" placeholder="چی می‌خوای یاد بگیری؟" aria-label="جستجو" autocomplete="off" />
+          <button class="search-close" data-search-close aria-label="بستن">×</button>
+        </div>
+        <div id="siteSearchResults" class="search-results"></div>
+      </div>`;
+    document.body.appendChild(searchOverlay);
+
+    const openBtns = document.querySelectorAll('[data-search-open]');
+    const closeEls = searchOverlay.querySelectorAll('[data-search-close]');
+    const inputEl = searchOverlay.querySelector('#siteSearchInput');
+    const resultsEl = searchOverlay.querySelector('#siteSearchResults');
+    const indexUrl = (document.documentElement.lang?.startsWith('fa') ? '/fa' : '') + '/index.json';
+    let searchIndex = [];
+
+    function openSearch(){
+      searchOverlay.classList.add('show');
+      setTimeout(()=> inputEl?.focus(), 0);
+    }
+    function closeSearch(){
+      searchOverlay.classList.remove('show');
+      inputEl.value='';
+      resultsEl.innerHTML='';
+    }
+    openBtns.forEach(b=> b.addEventListener('click', (e)=>{ e.preventDefault(); openSearch(); }));
+    closeEls.forEach(el=> el.addEventListener('click', closeSearch));
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeSearch(); });
+
+    const norm = s => (s||'').toString().toLowerCase();
+    function render(items){
+      if(!items.length){ resultsEl.innerHTML = '<p class="muted">نتیجه‌ای یافت نشد.</p>'; return; }
+      resultsEl.innerHTML = items.map(it => `
+        <a class="search-row" href="${it.permalink}">
+          <div class="row-title">${it.title}</div>
+          <div class="row-desc">${it.description||''}</div>
+          <div class="row-meta">${it.type==='posts'?'مقاله':(it.type==='lessons'?'درس':'دوره')}${it.date?` · ${it.date}`:''}</div>
+        </a>`).join('');
+    }
+    function doSearch(q){
+      const n = norm(q);
+      if(!n){ render([]); return; }
+      const res = searchIndex.filter(it => {
+        const hay = [it.title, it.description, it.content, ...(it.tags||[]), ...(it.categories||[]), (it.course?.title||'')]
+          .map(norm).join(' ');
+        return hay.includes(n);
+      }).slice(0, 25);
+      render(res);
+    }
+    fetch(indexUrl).then(r=> r.ok ? r.json() : []).then(async d=>{
+      searchIndex = Array.isArray(d)? d: [];
+      if(searchIndex.length < 2){
+        // Fallback: build a lightweight index from sitemap.xml (client-side crawl)
+        try {
+          const smUrl = (document.documentElement.lang?.startsWith('fa') ? '/fa' : '') + '/sitemap.xml';
+          const smResp = await fetch(smUrl);
+          if(smResp.ok){
+            const smText = await smResp.text();
+            const urls = Array.from(smText.matchAll(/<loc>(.*?)<\/loc>/g)).map(m=> m[1])
+              .filter(u=> /\/fa\//.test(u) && !/\.xml$/.test(u) && !/\/tags\//.test(u) && !/\/categories\//.test(u));
+            const limited = urls.slice(0, 60); // cap to avoid overload
+            const fetched = await Promise.all(limited.map(async rawUrl=>{
+              try {
+                // Normalize to same-origin path to avoid CORS when running dev on a different port
+                let localPath = rawUrl;
+                try {
+                  const parsed = new URL(rawUrl, window.location.origin);
+                  // Always use just pathname (and search if present) so we stay same-origin
+                  localPath = parsed.pathname + parsed.search;
+                } catch { /* ignore parsing errors */ }
+                const res = await fetch(localPath);
+                if(!res.ok) return null;
+                const html = await res.text();
+                const title = (html.match(/<title>(.*?)<\/title>/i)||[])[1]||'';
+                const desc = (html.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']+)["']/i)||[])[1]||'';
+                return { title, description: desc, permalink: localPath, content: '', date: '', type: /\/posts\//.test(localPath)?'posts':(/\/courses\//.test(localPath)?'courses':'other'), tags:[], categories:[], difficulty:null, course:null };
+              } catch { return null; }
+            }));
+            const extra = fetched.filter(Boolean);
+            if(extra.length) searchIndex = extra; // replace only if we built something
+          }
+        } catch {}
+      }
+    }).catch(()=>{});
+    // debounce input
+    let tId;
+    inputEl?.addEventListener('input', (e)=> {
+      const v = e.target.value;
+      clearTimeout(tId);
+      tId = setTimeout(()=> doSearch(v), 180);
+    });
   });
 
   // Progress tracking for course pages
-  function trackCourseProgress() {
-    const lessonItems = document.querySelectorAll('.lesson-item');
-    const progressBar = document.querySelector('.course-progress');
-    
-    if (lessonItems.length > 0 && progressBar) {
-      let completedLessons = 0;
-      
-      lessonItems.forEach(item => {
-        if (item.classList.contains('completed')) {
-          completedLessons++;
-        }
-      });
-      
-      const progressPercentage = (completedLessons / lessonItems.length) * 100;
-      progressBar.style.width = progressPercentage + '%';
-      progressBar.setAttribute('aria-valuenow', progressPercentage);
+  // (function with Jalali conversion inserted AFTER definitions below)
+  // Call progress tracking on page load after defining helper
+  // Jalali (Shamsi) date conversion for Persian pages (pure JS immediate version)
+  (function(){
+    const lang = document.documentElement.lang || '';
+    if(!lang.startsWith('fa')) return;
+    const nodes = document.querySelectorAll('[data-date]');
+    if(!nodes.length) return;
+    function toJalali(gYear,gMonth,gDay){
+      const gdm=[31,28,31,30,31,30,31,31,30,31,30,31];
+      const jdm=[31,31,31,31,31,31,30,30,30,30,30,29];
+      const leap=y=> (y%4===0&&y%100!==0)||(y%400===0);
+      let gy=gYear-1600, gm=gMonth-1, gd=gDay-1;
+      let gDayNo=365*gy+Math.floor((gy+3)/4)-Math.floor((gy+99)/100)+Math.floor((gy+399)/400);
+      for(let i=0;i<gm;i++) gDayNo+=gdm[i];
+      if(gm>1 && leap(gYear)) gDayNo++;
+      gDayNo+=gd;
+      let jDayNo=gDayNo-79;
+      const jNp=Math.floor(jDayNo/12053); jDayNo%=12053;
+      let jy=979+33*jNp+4*Math.floor(jDayNo/1461); jDayNo%=1461;
+      if(jDayNo>=366){ jy+=Math.floor((jDayNo-366)/365); jDayNo=(jDayNo-366)%365; }
+      let jm; for(jm=0; jm<11 && jDayNo>=jdm[jm]; jm++) jDayNo-=jdm[jm];
+      return {jy, jm:jm+1, jd:jDayNo+1};
     }
-  }
+    const pad=n=> n<10?('0'+n):n;
+    nodes.forEach(el=>{
+      const iso=el.getAttribute('data-date');
+      const m=iso&&iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if(!m) return;
+      const {jy,jm,jd}=toJalali(+m[1],+m[2],+m[3]);
+      el.setAttribute('data-date-original', iso);
+      el.textContent = `${jy}/${pad(jm)}/${pad(jd)}`;
+    });
+  })();
 
-  // Call progress tracking on page load
-  document.addEventListener('DOMContentLoaded', trackCourseProgress);
+  // Removed dangling trackCourseProgress call (function not defined)
 </script>
 
 <style>
+  /* Theme toggle */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-white);
+    color: var(--text-medium);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-inline-end: .5rem;
+  }
+  .theme-toggle:hover {
+    background: var(--bg-lighter);
+  }
+
   .back-to-top {
     position: fixed;
     bottom: 2rem;
@@ -102,5 +272,41 @@
   .rtl .back-to-top {
     right: auto;
     left: 2rem;
+  }
+
+  /* Search overlay */
+  .search-overlay{position:fixed;inset:0;display:none;z-index:1100}
+  .search-overlay.show{display:block}
+  .search-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+  .search-panel{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(900px,92vw);max-height:84vh;display:flex;flex-direction:column;background:var(--bg-white);border:1px solid var(--border-color);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+  [data-theme="dark"] .search-panel{background:var(--bg-elevated)}
+  .search-header{display:flex;gap:.5rem;padding:.75rem;border-bottom:1px solid var(--border-color)}
+  .search-header input{flex:1;padding:.75rem 1rem;border:1px solid var(--border-color);border-radius:10px;background:transparent;color:var(--text-main)}
+  .search-close{border:1px solid var(--border-color);background:var(--bg-white);color:var(--text-main);padding:0 .75rem;border-radius:10px}
+  .search-results{overflow:auto;padding:.5rem 0}
+  .search-row{display:block;padding:.75rem 1rem;border-bottom:1px solid var(--border-color);text-decoration:none;color:inherit}
+  .search-row:hover{background:var(--bg-lighter)}
+  .row-title{font-weight:600;margin-bottom:.25rem}
+  .row-desc{color:var(--text-medium);font-size:.95rem}
+  .row-meta{color:var(--text-dim);font-size:.85rem;margin-top:.25rem}
+  /* Cookie consent banner */
+  .cookie-consent{position:fixed;inset-inline:1rem;bottom:1rem;max-width:520px;margin-inline:auto;background:var(--bg-white);border:1px solid var(--border-color);border-radius:12px;box-shadow:0 10px 25px -5px rgba(0,0,0,.1),0 8px 16px -8px rgba(0,0,0,.06);padding:1rem 1.25rem;font-size:.9rem;line-height:1.5;z-index:1200;opacity:0;transform:translateY(15px);pointer-events:none;transition:.4s ease}
+  .cookie-consent.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .cookie-consent .cookie-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
+  .cookie-consent .cc-btn{border:none;cursor:pointer;padding:.55rem 1rem;border-radius:8px;font-weight:600;font-size:.8rem}
+  .cookie-consent .cc-btn.accept{background:var(--primary-color);color:#fff}
+  .cookie-consent .cc-btn.accept:hover{background:var(--secondary-color)}
+  .cookie-consent .cc-btn.decline{background:var(--bg-lighter);color:var(--text-dark)}
+  [data-theme="dark"] .cookie-consent .cc-btn.decline{background:var(--bg-lighter);color:var(--text-light)}
+  .cookie-consent .cc-btn.decline:hover{background:var(--border-color)}
+  .cookie-consent .cc-link{display:inline-block;padding:.55rem .85rem;background:transparent;border:1px solid var(--border-color);border-radius:8px;font-size:.7rem;line-height:1;text-decoration:none;color:var(--text-medium)}
+  .cookie-consent .cc-link:hover{background:var(--bg-lighter)}
+  [data-theme="dark"] .cookie-consent{background:var(--bg-lighter)}
+  [data-theme="dark"] .cookie-consent .cc-link{color:var(--text-light)}
+  [data-theme="dark"] .cookie-consent .cc-link:hover{background:var(--border-color)}
+  @media (max-width:600px){
+    .cookie-consent{inset-inline:.75rem;bottom:.75rem;padding:.85rem .9rem}
+    .cookie-consent .cookie-actions{flex-direction:column;align-items:stretch}
+    .cookie-consent .cc-btn,.cookie-consent .cc-link{width:100%;text-align:center}
   }
 </style>

@@ -1,0 +1,64 @@
+{{ define "main" }}
+<section class="search-page">
+  <div class="container">
+    <h1>جستجو</h1>
+    <div class="search-box">
+      <input id="searchInput" type="search" placeholder="چی می‌خوای یاد بگیری؟" aria-label="جستجو" autofocus>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const input = document.getElementById('searchInput');
+  const resultsEl = document.getElementById('searchResults');
+  const indexUrl = '{{ .Site.LanguagePrefix }}/index.json';
+  let index = [];
+
+  function normalize(s){
+    return (s||'').toString().toLowerCase();
+  }
+
+  function render(items){
+    if(!items.length){
+      resultsEl.innerHTML = '<p class="muted">نتیجه‌ای یافت نشد.</p>';
+      return;
+    }
+    resultsEl.innerHTML = items.map(it => `
+      <article class="search-card">
+        <h3 class="title"><a href="${it.permalink}">${it.title}</a></h3>
+        <p class="desc">${it.description||''}</p>
+        <div class="meta">
+          <span>${it.type==='posts'?'مقاله':'دوره'}</span>
+          ${it.date?`<time datetime="${it.date}">${it.date}</time>`:''}
+        </div>
+      </article>
+    `).join('');
+  }
+
+  function search(q){
+    const n = normalize(q);
+    if(!n){ render([]); return; }
+    const res = index.filter(it => {
+      const hay = [it.title, it.description, ...(it.tags||[]), ...(it.categories||[])].map(normalize).join(' ');
+      return hay.includes(n);
+    }).slice(0, 50);
+    render(res);
+  }
+
+  fetch(indexUrl).then(r=>r.json()).then(data=>{ index = data; });
+  input?.addEventListener('input', (e)=> search(e.target.value));
+})();
+</script>
+
+<style>
+.search-box{margin:1rem 0}
+.search-box input{width:100%;padding:0.75rem 1rem;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-white);color:var(--text-main)}
+.search-results{display:grid;gap:1rem;margin-top:1rem}
+.search-card{padding:1rem;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-white)}
+.search-card .title{margin:0 0 .25rem}
+.search-card .desc{margin:.25rem 0 .5rem;color:var(--text-medium)}
+.search-card .meta{font-size:.85rem;color:var(--text-dim);display:flex;gap:.75rem}
+</style>
+{{ end }}

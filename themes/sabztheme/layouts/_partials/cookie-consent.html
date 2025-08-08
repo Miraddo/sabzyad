@@ -1,0 +1,38 @@
+<div id="cookieConsent" class="cookie-consent" role="dialog" aria-live="polite" aria-label="کوکی‌ها" hidden>
+  <div class="cookie-inner">
+    <p class="cookie-text">برای بهبود تجربه شما از کوکی‌ها و ذخیره‌سازی محلی استفاده می‌کنیم. شما می‌توانید کوکی‌های اختیاری را بپذیرید یا رد کنید.</p>
+    <div class="cookie-actions">
+      <button type="button" class="cc-btn accept" id="ccAccept">پذیرفتن</button>
+      <button type="button" class="cc-btn decline" id="ccDecline">رد</button>
+      <a href="/fa/cookies/" class="cc-link">جزئیات</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const KEY='cookieConsent:choice:v1';
+  const el=document.getElementById('cookieConsent');
+  if(!el) return;
+  const stored=localStorage.getItem(KEY);
+  if(stored){return;} // already chosen
+  // show after small delay to avoid CLS
+  setTimeout(()=>{el.hidden=false; el.classList.add('show');}, 700);
+  function save(val){
+    localStorage.setItem(KEY, JSON.stringify({value:val, ts: Date.now()}));
+    el.classList.remove('show');
+    setTimeout(()=>{el.remove();}, 400);
+    if(val==='accept'){
+      // migrate temporary in-memory preferences if present
+      try {
+        if(window.learnSPA && window.learnSPA._memoryStore){
+          const mem = window.learnSPA._memoryStore;
+          Object.keys(mem).forEach(k=>{ localStorage.setItem(k, mem[k]); });
+        }
+      } catch(e){}
+      window.dispatchEvent(new CustomEvent('analytics:enable'));
+    }
+  }
+  document.getElementById('ccAccept').addEventListener('click', ()=> save('accept'));
+  document.getElementById('ccDecline').addEventListener('click', ()=> save('decline'));
+})();
+</script>

@@ -4,7 +4,7 @@ date = 2025-08-04
 description = "آشنایی جامع با مفاهیم یادگیری ماشین، انواع آن و کاربردهای عملی"
 categories = ["یادگیری ماشین", "هوش مصنوعی"]
 tags = ["Machine Learning", "AI", "Data Science", "Algorithm"]
-image = "/images/posts/machine-learning.jpg"
+image = "/images/posts/1.png"
 author = "تیم سبزیاد"
 +++
 

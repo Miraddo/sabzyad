@@ -1,0 +1,147 @@
+{{ define "main" }}
+<div class="posts-list-container">
+  <!-- Header Section -->
+  <header class="posts-list-header">
+    <div class="container">
+      <h1 class="posts-list-title">{{ .Title }}</h1>
+      <p class="posts-list-subtitle">
+        آخرین مقالات و آموزش‌های تخصصی در زمینه برنامه‌نویسی و تکنولوژی
+      </p>
+    </div>
+  </header>
+
+  <!-- Posts Container -->
+  <div class="posts-container">
+    {{ if .Pages }}
+      <div class="posts-list">
+        {{ range .Pages }}
+          <article class="post-article fade-in">
+            <!-- Post Content -->
+            <div class="post-content">
+              <!-- Categories -->
+              {{ if .Params.categories }}
+                <div class="post-categories">
+                  {{ range .Params.categories }}
+                    {{ $cat := . }}
+                    {{ $slug := $cat | urlize }}
+                    {{ with $.Site.GetPage (printf "/categories/%s" $slug) }}
+                      <a href="{{ .RelPermalink }}" class="post-category">{{ $cat }}</a>
+                    {{ else }}
+                      <a href="{{ (printf "/categories/%s/" $slug) | relLangURL }}" class="post-category">{{ $cat }}</a>
+                    {{ end }}
+                  {{ end }}
+                </div>
+              {{ end }}
+
+              <!-- Title -->
+              <h2 class="post-title">
+                <a href="{{ .Permalink }}">{{ .Title }}</a>
+              </h2>
+
+              <!-- Meta Information -->
+              <div class="post-meta">
+                {{ if .Date }}
+                  <div class="meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>{{ .Date.Format "2 ژانویه 2006" }}</span>
+                  </div>
+                {{ end }}
+                
+                {{ if .Params.author }}
+                  <div class="meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    {{ $author := .Params.author }}
+                    {{ $aslug := $author | urlize }}
+                    {{ with $.Site.GetPage (printf "/authors/%s" $aslug) }}
+                      <a href="{{ .RelPermalink }}">{{ $author }}</a>
+                    {{ else }}
+                      <a href="{{ (printf "/authors/%s/" $aslug) | relLangURL }}">{{ $author }}</a>
+                    {{ end }}
+                  </div>
+                {{ end }}
+
+                <div class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                  <span>{{ .ReadingTime }} دقیقه مطالعه</span>
+                </div>
+              </div>
+
+              <!-- Excerpt -->
+              <div class="post-excerpt">
+                {{ if .Params.description }}
+                  {{ .Params.description }}
+                {{ else }}
+                  {{ .Summary | truncate 200 }}
+                {{ end }}
+              </div>
+
+              <!-- Post Footer -->
+              <div class="post-footer">
+                <a href="{{ .Permalink }}" class="read-more">
+                  ادامه مطالعه
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                  </svg>
+                </a>
+
+                {{ if .Params.tags }}
+                  <div class="post-tags">
+                    {{ range first 3 .Params.tags }}
+                      {{ $tag := . }}
+                      {{ $tslug := $tag | urlize }}
+                      {{ with $.Site.GetPage (printf "/tags/%s" $tslug) }}
+                        <a href="{{ .RelPermalink }}" class="post-tag"># {{ $tag }}</a>
+                      {{ else }}
+                        <a href="{{ (printf "/tags/%s/" $tslug) | relLangURL }}" class="post-tag"># {{ $tag }}</a>
+                      {{ end }}
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+            </div>
+          </article>
+        {{ end }}
+      </div>
+
+      <!-- Pagination -->
+      {{ if .Paginator.HasPrev }}
+        <div class="load-more-section">
+          <a href="{{ .Paginator.Prev.URL }}" class="load-more-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+            مقالات قبلی
+          </a>
+        </div>
+      {{ end }}
+
+      {{ if .Paginator.HasNext }}
+        <div class="load-more-section">
+          <a href="{{ .Paginator.Next.URL }}" class="load-more-btn">
+            مقالات بیشتر
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </a>
+        </div>
+      {{ end }}
+    {{ else }}
+      <div class="no-posts">
+        <h2>هنوز مقاله‌ای منتشر نشده است</h2>
+        <p>به زودی مقالات جدید اضافه خواهند شد.</p>
+      </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

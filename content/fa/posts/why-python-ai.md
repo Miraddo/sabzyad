@@ -4,7 +4,7 @@ date = 2025-08-05
 description = "بررسی دلایل محبوبیت زبان پایتون در حوزه هوش مصنوعی و یادگیری ماشین"
 categories = ["هوش مصنوعی", "پایتون"]
 tags = ["AI", "Machine Learning", "Python", "Programming"]
-image = "/images/posts/python-ai.jpg"
+image = "/images/posts/3.jpg"
 author = "تیم سبزیاد"
 +++
 

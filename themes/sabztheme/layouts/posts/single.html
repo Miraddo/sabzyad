@@ -1,0 +1,167 @@
+{{ define "main" }}
+<article class="post-container">
+  <div class="container">
+    <!-- Post Header -->
+    <header class="post-header">
+      <!-- Categories -->
+      {{ if .Params.categories }}
+        <div class="post-categories">
+          {{ range .Params.categories }}
+            <span class="category-tag">{{ . }}</span>
+          {{ end }}
+        </div>
+      {{ end }}
+
+      <!-- Title -->
+      <h1 class="post-title">{{ .Title }}</h1>
+
+      <!-- Meta Information -->
+      <div class="post-meta">
+        {{ if .Date }}
+          <div class="meta-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>{{ .Date.Format "2 ژانویه 2006" }}</span>
+          </div>
+        {{ end }}
+        
+        {{ if .Params.author }}
+          <div class="meta-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>{{ .Params.author }}</span>
+          </div>
+        {{ end }}
+
+        <div class="meta-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <span>{{ .ReadingTime }} دقیقه مطالعه</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      {{ if .Params.description }}
+        <div class="post-description">
+          {{ .Params.description }}
+        </div>
+      {{ end }}
+    </header>
+
+    <!-- Featured Image -->
+    <div class="post-featured-image">
+      {{ if .Params.image }}
+        {{ $placeholderText := "Blog+Post" }}
+        {{ if or (in .Title "Machine Learning") (in .Title "یادگیری ماشین") }}
+          {{ $placeholderText = "Machine+Learning" }}
+        {{ else if or (in .Title "Python") (in .Title "پایتون") }}
+          {{ $placeholderText = "Python" }}
+        {{ else if or (in .Title "Deep Learning") (in .Title "Neural") }}
+          {{ $placeholderText = "Deep+Learning" }}
+        {{ else if or (in .Params.categories "Programming") (in .Params.categories "AI") }}
+          {{ $placeholderText = "Programming" }}
+        {{ else if or (in .Params.tags "Algorithm") (in .Title "Algorithm") (in .Title "الگوریتم") }}
+          {{ $placeholderText = "Algorithm" }}
+        {{ else if or (in .Params.tags "Data Science") (in .Title "Data") }}
+          {{ $placeholderText = "Data+Science" }}
+        {{ else if or (in .Title "Web") (in .Title "وب") }}
+          {{ $placeholderText = "Web+Development" }}
+        {{ end }}
+        <img src="{{ .Params.image }}" alt="{{ .Title }}" 
+             onerror="this.src='https://placehold.co/800x400/e2e8f0/64748b?text={{ $placeholderText }}';">
+      {{ else }}
+        <div class="featured-image-placeholder">
+          <div class="placeholder-content">
+            <div class="placeholder-icon">
+              {{ if or (in .Title "Machine Learning") (in .Title "یادگیری ماشین") }}
+                🤖
+              {{ else if or (in .Title "Python") (in .Title "پایتون") }}
+                🐍
+              {{ else if or (in .Title "Deep Learning") (in .Title "Neural") }}
+                🧠
+              {{ else if or (in .Params.categories "Programming") (in .Params.categories "AI") }}
+                💻
+              {{ else if or (in .Params.tags "Algorithm") (in .Title "Algorithm") (in .Title "الگوریتم") }}
+                ⚙️
+              {{ else if or (in .Params.tags "Data Science") (in .Title "Data") }}
+                📊
+              {{ else if or (in .Title "Web") (in .Title "وب") }}
+                🌐
+              {{ else }}
+                📝
+              {{ end }}
+            </div>
+            <h3>تصویر شاخص</h3>
+            <p>تصویر این مقاله در دسترس نیست</p>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+
+    <!-- Post Content -->
+    <div class="post-content">
+      {{ .Content }}
+    </div>
+
+    <!-- Post Footer -->
+    <footer class="post-footer">
+      <!-- Tags -->
+      {{ if .Params.tags }}
+        <div class="post-tags">
+          <h4>برچسب‌ها:</h4>
+          <div class="tags-list">
+            {{ range .Params.tags }}
+              <span class="tag">{{ . }}</span>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+
+      <!-- Navigation -->
+      <div class="post-navigation">
+        {{ with .NextInSection }}
+          <a href="{{ .Permalink }}" class="nav-link next">
+            <div class="nav-content">
+              <div class="nav-direction">مقاله بعدی</div>
+              <div class="nav-title">{{ .Title }}</div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </a>
+        {{ end }}
+
+        {{ with .PrevInSection }}
+          <a href="{{ .Permalink }}" class="nav-link prev">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+            <div class="nav-content">
+              <div class="nav-direction">مقاله قبلی</div>
+              <div class="nav-title">{{ .Title }}</div>
+            </div>
+          </a>
+        {{ end }}
+      </div>
+
+      <!-- Back to Blog -->
+      <div class="back-to-blog">
+        <a href="/fa/posts/" class="back-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+          بازگشت به فهرست مقالات
+        </a>
+      </div>
+    </footer>
+  </div>
+</article>
+{{ end }}

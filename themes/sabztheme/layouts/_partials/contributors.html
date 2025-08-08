@@ -1,0 +1,21 @@
+{{- $list := .contributors -}}
+{{- if gt (len $list) 0 -}}
+<section class="contributors container">
+  <h2 class="section-title">{{ or .title "مشارکت‌کنندگان" }}</h2>
+  <div class="contributors-grid">
+    {{- range $list -}}
+    {{- $name := .name | default .username | default "Contributor" -}}
+    {{- $url := .url | default (printf "https://github.com/%s" (.username | default "")) -}}
+    {{- $avatar := .avatar | default (printf "https://github.com/%s.png" (.username | default "")) -}}
+    <a class="contrib-card" href="{{ $url }}" target="_blank" rel="noopener">
+      <img class="contrib-avatar" src="{{ $avatar }}" alt="{{ $name }}">
+      <div class="contrib-meta">
+        <div class="contrib-name">{{ $name }}</div>
+        {{ with .role }}<div class="contrib-role">{{ . }}</div>{{ end }}
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    {{- end -}}
+  </div>
+</section>
+{{- end -}}
