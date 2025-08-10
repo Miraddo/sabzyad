@@ -1,0 +1,36 @@
+# Development overrides
+# Use: hugo server --config hugo.toml,hugo.dev.toml
+
+[server]
+  [[server.redirects]]
+    from = "/courses/"
+    to = "/fa/courses/"
+    status = 301
+  [[server.redirects]]
+    from = "/courses/**"
+    to = "/fa/courses/:splat"
+    status = 301
+  [[server.redirects]]
+    from = "/posts/"
+    to = "/fa/posts/"
+    status = 301
+  [[server.redirects]]
+    from = "/posts/**"
+    to = "/fa/posts/:splat"
+    status = 301
+  [[server.redirects]]
+    from = "/about/"
+    to = "/fa/about/"
+    status = 301
+  [[server.redirects]]
+    from = "/contact/"
+    to = "/fa/contact/"
+    status = 301
+  [[server.redirects]]
+    from = "/fa/cookies"
+    to = "/fa/cookies/"
+    status = 301
+  [[server.redirects]]
+    from = "/fa/privacy"
+    to = "/fa/privacy/"
+    status = 301
