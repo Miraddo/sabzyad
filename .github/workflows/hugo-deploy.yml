@@ -54,21 +54,21 @@ jobs:
 
       - name: Build site
         run: |
-          # Use full minify only on main for slightly faster CI on feature branches
-          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+          # Use full minify only on develop for slightly faster CI on feature branches
+          if [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
             hugo --minify --baseURL "$HUGO_BASE"
           else
             hugo --baseURL "$HUGO_BASE"
           fi
 
-      - name: Upload artifact (only main)
-        if: github.ref == 'refs/heads/main'
+      - name: Upload artifact (only develop)
+        if: github.ref == 'refs/heads/develop'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/develop'
     needs: build
     runs-on: ubuntu-latest
     environment:
