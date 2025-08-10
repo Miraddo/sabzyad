@@ -28,9 +28,9 @@
         <h3>پیشنهادات:</h3>
         <ul>
           <li><a href="/">🏠 بازگشت به صفحه اصلی</a></li>
-          <li><a href="/fa/courses/">📚 مشاهده دوره‌های آموزشی</a></li>
-          <li><a href="/fa/posts/">📝 خواندن مقالات</a></li>
-          <li><a href="/fa/contact/">📞 ارتباط با ما</a></li>
+          <li><a href="{{ "/courses/" | relLangURL }}">📚 مشاهده دوره‌های آموزشی</a></li>
+          <li><a href="{{ "/posts/" | relLangURL }}">📝 خواندن مقالات</a></li>
+          <li><a href="{{ "/contact/" | relLangURL }}">📞 ارتباط با ما</a></li>
         </ul>
       </div>
       
@@ -68,7 +68,7 @@ function performSearch() {
   const query = searchInput.value.trim();
   
   if (query) {
-    window.location.href = '/fa/courses/?search=' + encodeURIComponent(query);
+  window.location.href = '{{ "/courses/" | relLangURL }}?search=' + encodeURIComponent(query);
   }
 }
 

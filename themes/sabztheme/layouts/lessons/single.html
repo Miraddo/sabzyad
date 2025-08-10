@@ -8,9 +8,9 @@
     <header class="learn-header">
         <div class="learn-header-content">
             <nav class="learn-breadcrumb">
-                <a href="/fa/">خانه</a>
+                <a href="{{ "/" | relLangURL }}">خانه</a>
                 <span class="separator">/</span>
-                <a href="/fa/courses/">دوره‌ها</a>
+                <a href="{{ "/courses/" | relLangURL }}">دوره‌ها</a>
                 <span class="separator">/</span>
                 <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a>
                 <span class="separator">/</span>
