@@ -1,7 +1,7 @@
 <header class="site-header">
   <nav class="navbar container" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item brand-logo" href="{{ .Site.BaseURL }}" aria-label="{{ .Site.Title }}">
+  <a class="navbar-item brand-logo" href="{{ "/" | relLangURL }}" aria-label="{{ .Site.Title }}">
         {{ $logo := .Site.Params.logo }}
         {{ $logoExists := and $logo (fileExists (printf "static%s" $logo)) }}
         {{ if $logoExists }}
@@ -31,7 +31,11 @@
           {{ $isExact := eq $u $current.RelPermalink }}
           {{ $isSection := and (ne $u "/") (hasPrefix $current.RelPermalink $u) }}
           {{ $active := or $isExact $isSection }}
-          <a class="navbar-item{{ if $active }} is-active{{ end }}" href="{{ .URL }}" aria-current="{{ if $active }}page{{ end }}">
+          {{/* Build safe localized href: external URLs untouched, internal passed through relLangURL */}}
+          {{ $raw := .URL }}
+          {{ $isExternal := or (hasPrefix $raw "http://") (hasPrefix $raw "https://") (hasPrefix $raw "//") }}
+          {{ $href := cond $isExternal $raw (relLangURL $raw) }}
+          <a class="navbar-item{{ if $active }} is-active{{ end }}" href="{{ $href }}" aria-current="{{ if $active }}page{{ end }}">
             <span class="menu-text">{{ .Name }}</span>
           </a>
         {{ end }}
