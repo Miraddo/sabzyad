@@ -1,4 +1,4 @@
-baseURL = 'http://localhost:1313'
+baseURL = 'https://miraddo.github.io/sabzyad/'
 theme = "sabztheme"
 defaultContentLanguage = "fa"
 defaultContentLanguageInSubdir = true
@@ -34,11 +34,10 @@ enableEmoji = true
     instagram = "https://instagram.com/sabzyad"
     linkedin = "https://linkedin.com/company/sabzyad"
     twitter = "https://twitter.com/sabzyad"
-    whatsapp = "https://wa.me/989123456789"
+    whatsapp = "https://wa.me/#"
 
   [params.contact]
     email = "info@sabzyad.com"
-    phone = "+98 912 345 6789"
 
 [languages]
   [languages.fa]
