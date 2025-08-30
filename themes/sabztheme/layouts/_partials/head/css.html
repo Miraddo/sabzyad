@@ -3,26 +3,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Variable weight (100..900) Vazirmatn -->
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
-<!-- Fallback self-hosted style via CDN (loads if Google Fonts blocked) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.min.css" media="print" onload="this.media='all'" integrity="sha384-vazirmatn-fallback" referrerpolicy="no-referrer" />
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.min.css"></noscript>
-
-<!-- Utility classes for applying Vazirmatn with optical sizing -->
-<style>
-  .vazirmatn { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight: 400; }
-  .vazirmatn-100 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:100; }
-  .vazirmatn-200 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:200; }
-  .vazirmatn-300 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:300; }
-  .vazirmatn-400 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:400; }
-  .vazirmatn-500 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:500; }
-  .vazirmatn-600 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:600; }
-  .vazirmatn-700 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:700; }
-  .vazirmatn-800 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:800; }
-  .vazirmatn-900 { font-family: "Vazirmatn", sans-serif; font-optical-sizing: auto; font-style: normal; font-weight:900; }
-</style>
-
-<!-- Icons: Font Awesome (no SRI to avoid blocking in dev) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
 
 <!-- Main CSS -->
 {{ $options := dict "targetPath" "css/main.css" "outputStyle" "expanded" }}
@@ -64,5 +44,10 @@
   {{ $learnCSS = $learnCSS | resources.Minify | resources.Fingerprint }}
 {{ end }}
 <link rel="stylesheet" href="{{ $learnCSS.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $learnCSS.Data.Integrity }}"{{ end }}>
+
+
+<!-- Icons: Font Awesome (no SRI to avoid blocking in dev) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+
 
 <!-- Critical CSS removed to avoid overriding theme variables; styles come from main.css -->

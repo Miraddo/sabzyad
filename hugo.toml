@@ -1,4 +1,4 @@
-baseURL = 'https://miraddo.github.io/sabzyad/'
+baseURL = 'https://blog.sabzyad.com'
 theme = "sabztheme"
 defaultContentLanguage = "fa"
 defaultContentLanguageInSubdir = true
