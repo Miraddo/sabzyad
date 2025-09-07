@@ -10,19 +10,19 @@
   <meta property="og:url" content="{{ .Permalink }}">
   <meta property="og:title" content="{{ .Title }} | {{ .Site.Title }}">
   <meta property="og:description" content="{{ .Description | default .Site.Params.description }}">
-  <meta property="og:image" content="{{ .Site.BaseURL }}{{ .Site.Params.logo }}">
+  <meta property="og:image" content="{{ .Site.Params.logo | relURL }}">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ .Permalink }}">
   <meta property="twitter:title" content="{{ .Title }} | {{ .Site.Title }}">
   <meta property="twitter:description" content="{{ .Description | default .Site.Params.description }}">
-  <meta property="twitter:image" content="{{ .Site.BaseURL }}{{ .Site.Params.logo }}">
+  <meta property="twitter:image" content="{{ .Site.Params.logo | relURL }}">
 
   <title>{{ if .Title }}{{ .Title }} | {{ end }}{{ .Site.Title }}</title>
   
   <!-- Favicon -->
-  <link rel="icon" href="{{ .Site.BaseURL }}favicon.ico">
+  <link rel="icon" href="{{ "/favicon.ico" | relURL }}">
   
   <!-- CSS -->
   {{ partial "head/css.html" . }}
@@ -34,8 +34,8 @@
     "@type": "EducationalOrganization",
     "name": "{{ .Site.Title }}",
     "description": "{{ .Site.Params.description }}",
-    "url": "{{ .Site.BaseURL }}",
-    "logo": "{{ .Site.BaseURL }}{{ .Site.Params.logo }}"
+  "url": "{{ .Site.BaseURL }}",
+  "logo": "{{ .Site.Params.logo | relURL }}"
   }
   </script>
 </head>

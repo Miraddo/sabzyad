@@ -1,9 +1,9 @@
 {{ define "main" }}
 <section class="search-page">
   <div class="container">
-    <h1>جستجو</h1>
+  <h1>{{ i18n "search.title" }}</h1>
     <div class="search-box">
-      <input id="searchInput" type="search" placeholder="چی می‌خوای یاد بگیری؟" aria-label="جستجو" autofocus>
+  <input id="searchInput" type="search" placeholder="{{ i18n "search.placeholder" }}" aria-label="{{ i18n "search.title" }}" autofocus>
     </div>
     <div id="searchResults" class="search-results"></div>
   </div>
@@ -22,7 +22,7 @@
 
   function render(items){
     if(!items.length){
-      resultsEl.innerHTML = '<p class="muted">نتیجه‌ای یافت نشد.</p>';
+    resultsEl.innerHTML = '<p class="muted">{{ i18n "search.no_results" }}</p>';
       return;
     }
     resultsEl.innerHTML = items.map(it => `
@@ -30,7 +30,7 @@
         <h3 class="title"><a href="${it.permalink}">${it.title}</a></h3>
         <p class="desc">${it.description||''}</p>
         <div class="meta">
-          <span>${it.type==='posts'?'مقاله':'دوره'}</span>
+      <span>${it.type==='posts'?'{{ i18n "types.post" }}':(it.type==='lessons'?'{{ i18n "types.lesson" }}':'{{ i18n "types.course" }}')}</span>
           ${it.date?`<time datetime="${it.date}">${it.date}</time>`:''}
         </div>
       </article>

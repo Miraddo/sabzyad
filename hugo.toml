@@ -72,6 +72,38 @@ enableEmoji = true
         url = "/contact/"
         weight = 5
 
+  [languages.en]
+    languageName = "English"
+    languageDirection = "ltr"
+    weight = 2
+    contentDir = "content/en"
+    title = "Sabzyad - Online Learning"
+
+    [languages.en.params]
+      description = "Grow, learn, stay green!"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        name = "Home"
+        url = "/"
+        weight = 1
+      [[languages.en.menu.main]]
+        name = "Courses"
+        url = "/courses/"
+        weight = 2
+      [[languages.en.menu.main]]
+        name = "Posts"
+        url = "/posts/"
+        weight = 3
+      [[languages.en.menu.main]]
+        name = "About"
+        url = "/about/"
+        weight = 4
+      [[languages.en.menu.main]]
+        name = "Contact"
+        url = "/contact/"
+        weight = 5
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]

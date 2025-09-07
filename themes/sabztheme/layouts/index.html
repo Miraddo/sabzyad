@@ -30,63 +30,62 @@
     <div class="hero-content">
       <div class="hero-badge">
         <span class="badge-icon">🚀</span>
-        <span>رشد مهارت واقعی — نه حفظ کردن</span>
+        <span>{{ i18n "home.badge" }}</span>
       </div>
 
       <h1 class="hero-title">
-        <span class="hero-title-top">یادگیری عمیق و تدریجی</span>
-        <span class="hero-title-accent"> برای ساختن مهارت پایدار</span>
+        <span class="hero-title-top">{{ i18n "home.title_top" }}</span>
+        <span class="hero-title-accent"> {{ i18n "home.title_accent" }}</span>
       </h1>
       <p class="hero-subtitle">
-        سبزیاد مجموعه‌ای آزاد از مسیرهای یادگیری، تمرین‌های مرحله‌ای و منابع قابل اعتماد است؛
-        تمرکز روی فهم، تمرین و تکرار — بدون حواس‌پرتی اضافه.
+        {{ i18n "home.subtitle" }}
       </p>
 
-      <form id="heroSearchForm" class="hero-search" role="search" aria-label="جستجوی دوره یا موضوع">
+    <form id="heroSearchForm" class="hero-search" role="search" aria-label="{{ i18n "home.search.aria" }}">
         <div class="hero-search-inner">
-          <input id="heroSearchInput" type="search" placeholder="چی می‌خوای یاد بگیری؟ مثلا: پایتون، گیت، الگوریتم..." aria-label="جستجو" autocomplete="off" />
-          <button type="submit" class="hero-search-btn" aria-label="جستجو">جستجو</button>
+      <input id="heroSearchInput" type="search" placeholder="{{ i18n "home.search.placeholder" }}" aria-label="{{ i18n "search.title" }}" autocomplete="off" />
+      <button type="submit" class="hero-search-btn" aria-label="{{ i18n "search.title" }}">{{ i18n "home.search.button" }}</button>
         </div>
         <div class="hero-pill-list" aria-hidden="true">
-          <button type="button" class="pill" data-q="python">پایتون</button>
-          <button type="button" class="pill" data-q="git">گیت</button>
-          <button type="button" class="pill" data-q="linux">لینوکس</button>
-          <button type="button" class="pill" data-q="sql">SQL</button>
-          <button type="button" class="pill" data-q="docker">Docker</button>
+      <button type="button" class="pill" data-q="python">{{ i18n "home.search.pill.python" }}</button>
+      <button type="button" class="pill" data-q="git">{{ i18n "home.search.pill.git" }}</button>
+      <button type="button" class="pill" data-q="linux">{{ i18n "home.search.pill.linux" }}</button>
+      <button type="button" class="pill" data-q="sql">{{ i18n "home.search.pill.sql" }}</button>
+      <button type="button" class="pill" data-q="docker">{{ i18n "home.search.pill.docker" }}</button>
         </div>
       </form>
 
       <div class="hero-actions">
   <a href="{{ "/courses/" | relLangURL }}" class="btn btn-primary btn-large">
-          <span>شروع سریع</span>
+          <span>{{ i18n "home.actions.start_quick" }}</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"></path>
           </svg>
         </a>
   <a href="{{ "/about/" | relLangURL }}" class="btn btn-outline btn-large">
-          <span>چطور کار می‌کنیم؟</span>
+          <span>{{ i18n "home.actions.how_we_work" }}</span>
         </a>
       </div>
 
       <div class="hero-benefits">
-        <div class="benefit-item">🧭 مسیرهای شفاف</div>
-        <div class="benefit-item">🧪 تمرین عملی</div>
-        <div class="benefit-item">🔁 به‌روزرسانی مداوم</div>
-        <div class="benefit-item">💬 اشتراک تجربه</div>
+        <div class="benefit-item">🧭 {{ i18n "home.benefits.paths" }}</div>
+        <div class="benefit-item">🧪 {{ i18n "home.benefits.practice" }}</div>
+        <div class="benefit-item">🔁 {{ i18n "home.benefits.updates" }}</div>
+        <div class="benefit-item">💬 {{ i18n "home.benefits.community" }}</div>
       </div>
 
-      <div class="hero-stats">
+    <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-number">{{ len $allCourses }}+</div>
-          <div class="stat-label">دوره / مسیر</div>
+      <div class="stat-label">{{ i18n "home.stats.courses" }}</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">100%</div>
-          <div class="stat-label">رایگان</div>
+      <div class="stat-label">{{ i18n "home.stats.free" }}</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">∞</div>
-          <div class="stat-label">دسترسی دائم</div>
+      <div class="stat-label">{{ i18n "home.stats.access" }}</div>
         </div>
       </div>
     </div>
@@ -117,65 +116,65 @@
 <section class="features-section">
   <div class="container">
     <header class="features-header">
-      <span class="features-badge">چرا سبزیاد؟</span>
-      <h2 class="features-title">هر چیزی که برای یادگیری عمیق نیاز داری 🌱</h2>
-      <p class="features-subtitle">از ویدیو و تمرین تا مسیر یادگیری، همه رایگان و در یک جا. تمرکز روی تجربه واقعی و رشد مرحله‌ای.</p>
+  <span class="features-badge">{{ i18n "home.features.badge" }}</span>
+  <h2 class="features-title">{{ i18n "home.features.title" }}</h2>
+  <p class="features-subtitle">{{ i18n "home.features.subtitle" }}</p>
     </header>
 
     <div class="features-grid enhanced">
       <div class="feature-card fx-rise">
         <div class="feature-head">
           <div class="feature-icon">🏃‍♂️</div>
-          <span class="feature-tag">Practice First</span>
+          <span class="feature-tag">{{ i18n "home.features.cards.practice.tag" }}</span>
         </div>
-        <h3 class="feature-title">یادگیری با تمرین عملی</h3>
-        <p class="feature-text">هر درس با یک تمرین یا مثال کاربردی همراهه تا سریع‌تر به مهارت تبدیل بشه.</p>
+        <h3 class="feature-title">{{ i18n "home.features.cards.practice.title" }}</h3>
+        <p class="feature-text">{{ i18n "home.features.cards.practice.text" }}</p>
         <ul class="feature-points">
-          <li>تمرین‌های مرحله‌ای</li>
-          <li>حل نمونه + توضیح</li>
-          <li>سناریوهای واقعی</li>
+          <li>{{ i18n "home.features.cards.practice.point1" }}</li>
+          <li>{{ i18n "home.features.cards.practice.point2" }}</li>
+          <li>{{ i18n "home.features.cards.practice.point3" }}</li>
         </ul>
       </div>
 
       <div class="feature-card fx-rise">
         <div class="feature-head">
           <div class="feature-icon">🧭</div>
-          <span class="feature-tag alt">Path</span>
+          <span class="feature-tag alt">{{ i18n "home.features.cards.path.tag" }}</span>
         </div>
-        <h3 class="feature-title">مسیرهای یادگیری مرحله‌ای</h3>
-        <p class="feature-text">به جای گم شدن در منابع پراکنده، نقشه راه شفاف داری که قدم به قدم تو رو جلو می‌بره.</p>
+        <h3 class="feature-title">{{ i18n "home.features.cards.path.title" }}</h3>
+        <p class="feature-text">{{ i18n "home.features.cards.path.text" }}</p>
         <ul class="feature-points">
-          <li>نقشه راه واضح</li>
-          <li>پیش‌نیازهای مشخص</li>
-          <li>ارتقا تدریجی مهارت</li>
+          <li>{{ i18n "home.features.cards.path.point1" }}</li>
+          <li>{{ i18n "home.features.cards.path.point2" }}</li>
+          <li>{{ i18n "home.features.cards.path.point3" }}</li>
         </ul>
       </div>
 
       <div class="feature-card fx-rise">
         <div class="feature-head">
           <div class="feature-icon">🔄</div>
-          <span class="feature-tag accent">Alive</span>
+          <span class="feature-tag accent">{{ i18n "home.features.cards.alive.tag" }}</span>
         </div>
-        <h3 class="feature-title">به‌روزرسانی پیوسته</h3>
-        <p class="feature-text">مطالب ثابت نمی‌مونن؛ با تغییر ابزارها و نسخه‌ها، محتوای جدید اضافه می‌شه.</p>
+        <h3 class="feature-title">{{ i18n "home.features.cards.alive.title" }}</h3>
+        <p class="feature-text">{{ i18n "home.features.cards.alive.text" }}</p>
         <ul class="feature-points">
-          <li>بازبینی منظم</li>
-          <li>افزودن مثال‌های تازه</li>
-          <li>هماهنگ با نسخه‌های جدید</li>
+          <li>{{ i18n "home.features.cards.alive.point1" }}</li>
+          <li>{{ i18n "home.features.cards.alive.point2" }}</li>
+          <li>{{ i18n "home.features.cards.alive.point3" }}</li>
         </ul>
       </div>
 
       <div class="feature-card fx-rise">
         <div class="feature-head">
           <div class="feature-icon">💬</div>
-          <span class="feature-tag support">Support</span>
+          <span class="feature-tag support">{{ i18n "home.features.cards.support.tag" }}</span>
         </div>
-        <h3 class="feature-title">جامعه و همراهی</h3>
-        <p class="feature-text">قرار نیست تنها باشی؛ مسیر یادگیری با بازخورد، پیشنهاد و تبادل تجربه کامل می‌شه.</p>
+        <h3 class="feature-title">{{ i18n "home.features.cards.support.title" }}</h3>
+        <p class="feature-text">{{ i18n "home.features.cards.support.text" }}</p>
         <ul class="feature-points">
-          <li>پیشنهاد منابع تکمیلی</li>
-          <li>گفتگو پیرامون چالش‌ها</li>
-          <li>اشتراک تجربه سایر یادگیرنده‌ها</li>
+          <li>{{ i18n "home.features.cards.support.point1" }}</li>
+          <li>{{ i18n "home.features.cards.support.point2" }}</li>
+          <li>{{ i18n "home.features.cards.support.point3" }}</li>
         </ul>
       </div>
     </div>
@@ -185,8 +184,8 @@
 <!-- Featured Courses Section -->
 <section class="courses-section">
   <div class="container">
-    <h2 class="section-title">دوره‌های رایگان آموزشی 🎓</h2>
-    <p class="section-subtitle">همه دوره‌ها کاملاً رایگان و در دسترس همگان</p>
+  <h2 class="section-title">{{ i18n "home.courses.title" }}</h2>
+  <p class="section-subtitle">{{ i18n "home.courses.subtitle" }}</p>
     
     <div class="courses-grid">
       {{ range $allCourses }}
@@ -221,7 +220,7 @@
           
           <div class="course-footer">
             <a href="{{ .Permalink }}" class="course-btn">
-              <span class="btn-text">مشاهده دوره</span>
+              <span class="btn-text">{{ i18n "home.courses.view_course" }}</span>
               <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 18l6-6-6-6"/>
               </svg>
@@ -233,7 +232,7 @@
     </div>
     
     <div class="section-cta">
-  <a href="{{ "/courses/" | relLangURL }}" class="btn btn-primary">مشاهده همه دوره‌ها</a>
+  <a href="{{ "/courses/" | relLangURL }}" class="btn btn-primary">{{ i18n "home.courses.view_all" }}</a>
     </div>
   </div>
 </section>
@@ -241,7 +240,7 @@
 <!-- Blog Section -->
 <section class="blog-section">
   <div class="container">
-    <h2 class="section-title">جدیدترین مقالات آموزشی 🌿</h2>
+  <h2 class="section-title">{{ i18n "home.blog.title" }}</h2>
     <div class="blog-grid">
       {{ range where .Site.RegularPages "Type" "posts" | first 3 }}
         <article class="blog-card">
@@ -264,7 +263,7 @@
               </time>
             </div>
             
-            <a href="{{ .Permalink }}" class="read-more">بیشتر بخوانید ...</a>
+            <a href="{{ .Permalink }}" class="read-more">{{ i18n "home.blog.read_more" }}</a>
           </div>
         </article>
       {{ end }}

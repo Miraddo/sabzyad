@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="{{ .Site.Language.Lang }}" dir="{{ if .Site.Language.LanguageDirection }}{{ .Site.Language.LanguageDirection }}{{ else }}ltr{{ end }}" class="{{ if eq (.Site.Language.LanguageDirection | default "ltr") "rtl" }}rtl{{ end }}">
 {{ partial "head.html" . }}
 <body class="learn-page" id="learnPage">
     {{ partial "header.html" . }}
@@ -8,9 +8,9 @@
     <header class="learn-header">
         <div class="learn-header-content">
             <nav class="learn-breadcrumb">
-                <a href="{{ "/" | relLangURL }}">خانه</a>
+                <a href="{{ "/" | relLangURL }}">{{ i18n "breadcrumbs.home" }}</a>
                 <span class="separator">/</span>
-                <a href="{{ "/courses/" | relLangURL }}">دوره‌ها</a>
+                <a href="{{ "/courses/" | relLangURL }}">{{ i18n "breadcrumbs.courses" }}</a>
                 <span class="separator">/</span>
                 <a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a>
                 <span class="separator">/</span>
@@ -24,20 +24,20 @@
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
-                    فهرست دروس
+                    {{ i18n "lessons.list" }}
                 </button>
                 
                 <button class="control-btn" id="focusModeBtn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
                     </svg>
-                    حالت تمرکز
+                    {{ i18n "lessons.focus_mode" }}
                 </button>
-                <button id="sidebarReopen" class="control-btn sidebar-reopen-btn" style="display:none;" aria-label="باز کردن فهرست دروس">
+                <button id="sidebarReopen" class="control-btn sidebar-reopen-btn" style="display:none;" aria-label="{{ i18n "lessons.open_list" }}">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9,18 15,12 9,6"></polyline>
                     </svg>
-                    فهرست دروس
+                    {{ i18n "lessons.list" }}
                 </button>
             </div>
         </div>
@@ -45,9 +45,9 @@
     
     <!-- Loading Indicator -->
     <div class="loading-overlay" id="loadingIndicator" style="display: none;">
-        <div class="loading-spinner">
+            <div class="loading-spinner">
             <div class="spinner"></div>
-            <p>در حال بارگذاری...</p>
+            <p>{{ i18n "lessons.loading" }}</p>
         </div>
     </div>
     
@@ -61,20 +61,20 @@
             <div class="sidebar-header">
                 <div class="sidebar-controls">
                     <div class="sidebar-title-wrapper">
-                        <h2 class="sidebar-title-text" style="margin:0;font-size:1rem;color:#1f2937;">فهرست دروس</h2>
-                        <span class="collapsed-arrow" aria-hidden="true" title="باز کردن فهرست" style="display:none;">
+                        <h2 class="sidebar-title-text" style="margin:0;font-size:1rem;color:#1f2937;">{{ i18n "lessons.list" }}</h2>
+                        <span class="collapsed-arrow" aria-hidden="true" title="{{ i18n "lessons.open_list" }}" style="display:none;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                                 <polyline points="9,18 15,12 9,6"></polyline>
                             </svg>
                         </span>
                     </div>
-                    <button class="collapse-btn" id="collapseSidebar" aria-label="جمع کردن فهرست" aria-expanded="true">
+                    <button class="collapse-btn" id="collapseSidebar" aria-label="{{ i18n "lessons.collapse_list" }}" aria-expanded="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="11,17 6,12 11,7"></polyline>
                             <polyline points="18,17 13,12 18,7"></polyline>
                         </svg>
                     </button>
-                    <button class="collapse-btn mobile-close-btn" id="mobileCloseMenu" aria-label="بستن فهرست" style="display:none;">
+                    <button class="collapse-btn mobile-close-btn" id="mobileCloseMenu" aria-label="{{ i18n "lessons.close_list" }}" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="18" y1="6" x2="6" y2="18" />
                             <line x1="6" y1="6" x2="18" y2="18" />
@@ -85,20 +85,20 @@
             
             <div class="sidebar-content">
                 <div class="course-header">
-                    <h3 class="course-title">{{ .Parent.Title }}</h3>
+            <h3 class="course-title">{{ .Parent.Title }}</h3>
                     <div class="course-progress">
                         <div class="progress-bar">
                             <div class="progress-fill"></div>
                         </div>
                         <div class="course-progress-text">
-                            <span>پیشرفت دوره</span>
+                <span>{{ i18n "lessons.course_progress" }}</span>
                             <span>0%</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="lessons-list">
-                    <h4 class="section-title">دروس دوره</h4>
+            <h4 class="section-title">{{ i18n "lessons.course_lessons" }}</h4>
                     <div id="lessonsList">
                         <!-- Lessons will be populated by JavaScript -->
                     </div>
@@ -117,8 +117,8 @@
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                         </svg>
                     </div>
-                    <h2>یک درس را انتخاب کنید</h2>
-                    <p>برای شروع یادگیری، یکی از دروس را از فهرست سمت راست انتخاب کنید.</p>
+                    <h2>{{ i18n "lessons.pick_a_lesson" }}</h2>
+                    <p>{{ i18n "lessons.choose_from_list" }}</p>
                 </div>
             </article>
         </main>
@@ -126,35 +126,41 @@
     
     {{ partial "footer.html" . }}
     
-    <!-- Lesson Data -->
-    {{ $currentPage := . }}
-    {{ $siblings := where .Parent.Pages "Type" "lessons" }}
-    {{ $courseLessons := sort $siblings "Params.lesson_number" }}
-    <script>
-    // Hugo injected lesson data
-        
-        window.lessonData = [
-            {{ range $index, $lesson := $courseLessons }}
-            {
-                id: '{{ $lesson.File.ContentBaseName }}',
-                slug: '{{ $lesson.File.ContentBaseName }}',
-                title: '{{ $lesson.Title }}',
-                description: '{{ $lesson.Params.description | default $lesson.Summary }}',
-                duration: '{{ $lesson.Params.duration }}',
-                difficulty: '{{ $lesson.Params.difficulty }}',
-                section: '{{ $lesson.Params.section | default `بدون دسته` }}',
-                date: '{{ with $lesson.Date }}{{ .Format "2006-01-02" }}{{ end }}',
-                url: '{{ $lesson.RelPermalink }}',
-                content: `{{ $lesson.Content | safeJS }}`,
-                lessonNumber: {{ $lesson.Params.lesson_number | default (add $index 1) }},
-                resources: {{ ($lesson.Params.resources | default (slice)) | jsonify | safeJS }}
-            }{{ if not (eq $index (sub (len $courseLessons) 1)) }},{{ end }}
-            {{ end }}
-        ];
-        
-        // Set current lesson
-        window.currentLessonSlug = "{{ .File.ContentBaseName }}";
-    </script>
+        <!-- Lesson Data (JSON for safe embedding) -->
+        {{ $currentPage := . }}
+        {{ $siblings := where .Parent.Pages "Type" "lessons" }}
+        {{ $courseLessons := sort $siblings "Params.lesson_number" }}
+        <script id="lessonData" type="application/json">
+        [
+        {{- $total := len $courseLessons -}}
+        {{- range $i, $lesson := $courseLessons -}}
+        {
+            "id": {{ $lesson.File.ContentBaseName | jsonify }},
+            "slug": {{ $lesson.File.ContentBaseName | jsonify }},
+            "title": {{ $lesson.Title | jsonify }},
+            "description": {{ ($lesson.Params.description | default $lesson.Summary) | jsonify }},
+            "duration": {{ $lesson.Params.duration | jsonify }},
+            "difficulty": {{ $lesson.Params.difficulty | jsonify }},
+            "section": {{ (or $lesson.Params.section (i18n "lessons.no_category")) | jsonify }},
+            "date": {{ with $lesson.Date }}{{ .Format "2006-01-02" | jsonify }}{{ else }}null{{ end }},
+            "url": {{ $lesson.RelPermalink | jsonify }},
+            "content": {{ $lesson.Content | jsonify }},
+            "lessonNumber": {{ $lesson.Params.lesson_number | default (add $i 1) }},
+            "resources": {{ ($lesson.Params.resources | default (slice)) | jsonify }}
+        }{{ if lt (add $i 1) $total }},{{ end }}
+        {{- end -}}
+        ]
+        </script>
+        <script>
+            window.lessonData = [];
+            (function(){
+                try{
+                    const el = document.getElementById('lessonData');
+                    if(el){ window.lessonData = JSON.parse(el.textContent || '[]'); }
+                }catch(e){ window.lessonData = []; }
+            })();
+            window.currentLessonSlug = "{{ .File.ContentBaseName }}";
+        </script>
     
     <!-- Learn SPA JavaScript -->
     {{ $learnJS := resources.Get "js/learn.js" }}

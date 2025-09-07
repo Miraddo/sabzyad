@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-{{ partial "head.html" . }}
-<body>
-    {{ partial "header.html" . }}
+{{ define "main" }}
 
     {{/* Render the courses list for this section; nested course sections will use type-based template at layouts/course/section.html */}}
     {{/* BEGIN: list view (copied from courses/list.html) */}}
@@ -10,8 +6,8 @@
         <section class="page-header">
             <div class="container">
                 <div class="header-content">
-                    <h1>دوره‌های آموزشی رایگان</h1>
-                    <p>یادگیری بدون محدودیت، همه دوره‌ها کاملاً رایگان و در دسترس همگان</p>
+                    <h1>{{ i18n "courses.header_title" }}</h1>
+                    <p>{{ i18n "courses.header_subtitle" }}</p>
                     {{ $section := .CurrentSection | default . }}
                     {{ $pages := $section.RegularPages }}
                     {{ $children := $section.Sections }}
@@ -27,9 +23,9 @@
                     {{ end }}
                     {{ $allCourses := union $pagesFiltered $children }}
                     <div class="header-stats">
-                        <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-info"><div class="stat-number">{{ len $allCourses }}</div><div class="stat-label">دوره موجود</div></div></div>
-                        <div class="stat-card"><div class="stat-icon">🆓</div><div class="stat-info"><div class="stat-number">100%</div><div class="stat-label">رایگان</div></div></div>
-                        <div class="stat-card"><div class="stat-icon">⏰</div><div class="stat-info"><div class="stat-number">24/7</div><div class="stat-label">دسترسی</div></div></div>
+                        <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-info"><div class="stat-number">{{ len $allCourses }}</div><div class="stat-label">{{ i18n "courses.stats.available" }}</div></div></div>
+                        <div class="stat-card"><div class="stat-icon">🆓</div><div class="stat-info"><div class="stat-number">100%</div><div class="stat-label">{{ i18n "courses.stats.free" }}</div></div></div>
+                        <div class="stat-card"><div class="stat-icon">⏰</div><div class="stat-info"><div class="stat-number">24/7</div><div class="stat-label">{{ i18n "courses.stats.access" }}</div></div></div>
                     </div>
                 </div>
             </div>
@@ -39,21 +35,21 @@
             <div class="container">
                 <div class="filters-container">
                     <div class="filter-group">
-                        <label>دسته‌بندی:</label>
+                        <label>{{ i18n "courses.filter.category" }}</label>
                         <div class="filter-options">
-                            <a href="#" class="filter-btn active" data-filter="all">همه</a>
+                            <a href="#" class="filter-btn active" data-filter="all">{{ i18n "courses.filter.all" }}</a>
                             {{ range .Site.Taxonomies.course_categories }}
                                 <a href="#" class="filter-btn" data-filter="{{ .Page.Title }}">{{ .Page.Title }}</a>
                             {{ end }}
                         </div>
                     </div>
                     <div class="filter-group">
-                        <label>سطح:</label>
+                        <label>{{ i18n "courses.filter.level" }}</label>
                         <div class="filter-options">
-                            <a href="#" class="filter-btn" data-level="all">همه سطوح</a>
-                            <a href="#" class="filter-btn" data-level="مبتدی">مبتدی</a>
-                            <a href="#" class="filter-btn" data-level="متوسط">متوسط</a>
-                            <a href="#" class="filter-btn" data-level="پیشرفته">پیشرفته</a>
+                            <a href="#" class="filter-btn" data-level="all">{{ i18n "courses.filter.level_all" }}</a>
+                            <a href="#" class="filter-btn" data-level="{{ i18n "courses.level.beginner" }}">{{ i18n "courses.level.beginner" }}</a>
+                            <a href="#" class="filter-btn" data-level="{{ i18n "courses.level.intermediate" }}">{{ i18n "courses.level.intermediate" }}</a>
+                            <a href="#" class="filter-btn" data-level="{{ i18n "courses.level.advanced" }}">{{ i18n "courses.level.advanced" }}</a>
                         </div>
                     </div>
                 </div>
@@ -87,14 +83,14 @@
                                 {{ end }}
                             </div>
                             <div class="course-footer">
-                                <a href="{{ .Permalink }}" class="course-btn"><span class="btn-text">شروع یادگیری</span><svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
+                                <a href="{{ .Permalink }}" class="course-btn"><span class="btn-text">{{ i18n "header.start_learning" }}</span><svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a>
                             </div>
                         </div>
                         {{ end }}
                     {{ end }}
                 </div>
                 {{ if eq (len $allCourses) 0 }}
-                <div class="no-courses"><div class="no-courses-icon">📚</div><h3>هنوز دوره‌ای موجود نیست</h3><p>به زودی دوره‌های جدید اضافه خواهد شد</p></div>
+                <div class="no-courses"><div class="no-courses-icon">📚</div><h3>{{ i18n "courses.no_courses.title" }}</h3><p>{{ i18n "courses.no_courses.subtitle" }}</p></div>
                 {{ end }}
             </div>
         </section>
@@ -105,7 +101,4 @@
     </script>
     {{/* END: list view */}}
 
-    {{ partial "footer.html" . }}
-    {{ partial "scripts.html" . }}
-</body>
-</html>
+{{ end }}

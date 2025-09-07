@@ -1,10 +1,10 @@
-<div id="cookieConsent" class="cookie-consent" role="dialog" aria-live="polite" aria-label="کوکی‌ها" hidden>
+<div id="cookieConsent" class="cookie-consent" role="dialog" aria-live="polite" aria-label="{{ i18n "cookie.banner.aria" }}" hidden>
   <div class="cookie-inner">
-    <p class="cookie-text">برای بهبود تجربه شما از کوکی‌ها و ذخیره‌سازی محلی استفاده می‌کنیم. شما می‌توانید کوکی‌های اختیاری را بپذیرید یا رد کنید.</p>
+    <p class="cookie-text">{{ i18n "cookie.banner.text" }}</p>
     <div class="cookie-actions">
-      <button type="button" class="cc-btn accept" id="ccAccept">پذیرفتن</button>
-      <button type="button" class="cc-btn decline" id="ccDecline">رد</button>
-      <a href="/fa/cookies/" class="cc-link">جزئیات</a>
+      <button type="button" class="cc-btn accept" id="ccAccept">{{ i18n "cookie.banner.accept" }}</button>
+      <button type="button" class="cc-btn decline" id="ccDecline">{{ i18n "cookie.banner.decline" }}</button>
+      <a href="{{ "/cookies/" | relLangURL }}" class="cc-link">{{ i18n "cookie.banner.details" }}</a>
     </div>
   </div>
 </div>

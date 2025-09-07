@@ -5,45 +5,163 @@
 
 class LearnSPA {
     constructor() {
+        // Core state
         this.currentLessonId = null;
         this.lessons = [];
-    this.collapsedSections = new Set();
-        this.sidebar = document.getElementById('learnSidebar');
-        this.sidebarOverlay = document.getElementById('sidebarOverlay');
-        this.learnPage = document.getElementById('learnPage');
-        this.focusModeBtn = document.getElementById('focusModeBtn');
-        this.collapseSidebarBtn = document.getElementById('collapseSidebar');
-        this.mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        this.mobileCloseBtn = document.getElementById('mobileCloseMenu');
-        this.contentArea = document.getElementById('lessonContent');
-        this.loadingIndicator = document.getElementById('loadingIndicator');
-        this.reopenBtn = document.getElementById('sidebarReopen');
+        this.collapsedSections = new Set();
         
+        // Storage for non-consented sessions
+        this._memoryStore = {};
+        this._completionAnnounced = false;
+        
+        // UI state
         this.isFocusMode = false;
         this.isSidebarCollapsed = false;
         this.isMobileMenuOpen = false;
         this.isLoading = false;
+        this.wasCollapsedDesktop = false;
         
-        this.wasCollapsedDesktop = false; // remember desktop collapsed preference
-        this._completionAnnounced = false;
-
+        // DOM element cache
+        this.elements = this._cacheElements();
+        
         this.init();
+    }
+    
+    // Backwards-compatible element accessors (map legacy properties to cached elements)
+    get sidebar() { return this.elements.sidebar; }
+    get sidebarOverlay() { return this.elements.sidebarOverlay; }
+    get learnPage() { return this.elements.learnPage; }
+    get focusModeBtn() { return this.elements.focusModeBtn; }
+    get collapseSidebarBtn() { return this.elements.collapseSidebarBtn; }
+    get mobileMenuBtn() { return this.elements.mobileMenuBtn; }
+    get mobileCloseBtn() { return this.elements.mobileCloseBtn; }
+    get contentArea() { return this.elements.contentArea; }
+    get loadingIndicator() { return this.elements.loadingIndicator; }
+    get reopenBtn() { return this.elements.reopenBtn; }
+    
+    _cacheElements() {
+        return {
+            sidebar: document.getElementById('learnSidebar'),
+            sidebarOverlay: document.getElementById('sidebarOverlay'),
+            learnPage: document.getElementById('learnPage'),
+            focusModeBtn: document.getElementById('focusModeBtn'),
+            collapseSidebarBtn: document.getElementById('collapseSidebar'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            mobileCloseBtn: document.getElementById('mobileCloseMenu'),
+            contentArea: document.getElementById('lessonContent'),
+            loadingIndicator: document.getElementById('loadingIndicator'),
+            reopenBtn: document.getElementById('sidebarReopen')
+        };
+    }
+
+    // Utility methods for safe string handling
+    htmlAttr(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;');
+    }
+    
+    cssEsc(value) {
+        try {
+            if (window.CSS && CSS.escape) return CSS.escape(String(value));
+        } catch(e) { /* ignore */ }
+        // Fallback minimal escape
+        return String(value).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+    }
+    
+    // Normalize IDs coming from JSON (strip accidental wrapping quotes)
+    cleanId(value) {
+        if (value == null) return '';
+        let s = String(value).trim();
+        // Remove one layer of wrapping quotes if present
+        if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+            s = s.slice(1, -1);
+        }
+        // Also handle escaped quote wrappers (e.g., \"id\")
+        if ((s.startsWith('\\"') && s.endsWith('\\"')) || (s.startsWith("\\'") && s.endsWith("\\'"))) {
+            s = s.slice(2, -2);
+        }
+        return s;
+    }
+
+    decodeContent(val) {
+        if (val == null) return val;
+        if (typeof val !== 'string') return val;
+        
+        let str = val.trim();
+        
+        // If wrapped in quotes, try JSON.parse directly
+        if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+            try { 
+                return JSON.parse(str); 
+            } catch(_) { 
+                /* continue with other methods */ 
+            }
+        }
+        
+        // If contains unicode escapes, try parsing as a quoted JSON string
+        if (/\\u[0-9a-fA-F]{4}/.test(str)) {
+            try { 
+                return JSON.parse('"' + str.replace(/"/g, '\\"') + '"'); 
+            } catch(_) { 
+                /* continue with fallback */ 
+            }
+        }
+        
+        // Fallback: replace common encodings
+        return str
+            .replace(/\\u003c/g, '<')
+            .replace(/\\u003e/g, '>')
+            .replace(/\\u0026/g, '&');
+    }
+
+    // Progress and storage management
+    _isStorageAllowed() {
+        return (window.__optionalStorageAllowed && window.__optionalStorageAllowed()) || false;
+    }
+
+    migrateStoredProgress() {
+        if (!this._isStorageAllowed()) return;
+        
+        try {
+            const key = this.progressKey();
+            const raw = localStorage.getItem(key);
+            if (!raw) return;
+            
+            const obj = JSON.parse(raw);
+            let changed = false;
+            const normalized = {};
+            
+            for (const k of Object.keys(obj)) {
+                const nk = this.cleanId(k);
+                if (nk !== k) changed = true;
+                normalized[nk] = Boolean(obj[k]);
+            }
+            
+            if (changed) {
+                localStorage.setItem(key, JSON.stringify(normalized));
+            }
+        } catch(e) { 
+            /* ignore migration errors */ 
+        }
     }
     
     init() {
         this.loadLessonsData();
         this.bindEvents();
-        this.handleResize();
+    // Guard against missing elements when first sizing
+    try { this.handleResize(); } catch(_) {}
         this.loadPreferences();
         this.initializeCurrentLesson();
         this.updateProgress();
         this.setHeaderHeights();
-        window.addEventListener('resize', ()=> this.setHeaderHeights());
+        window.addEventListener('resize', () => this.setHeaderHeights());
     }
-    setHeaderHeights(){
-        // Only maintain --site-header-height now; learn header height made static in CSS
-    // Use fixed 42px as requested
-    document.documentElement.style.setProperty('--site-header-height', '42px');
+    
+    setHeaderHeights() {
+        // Use fixed 42px for consistent header height
+        document.documentElement.style.setProperty('--site-header-height', '42px');
     }
     
     /**
@@ -51,8 +169,39 @@ class LearnSPA {
      */
     loadLessonsData() {
         // Get lessons from the page data (Hugo template will populate this)
-        this.lessons = window.lessonData || [];
+        this.lessons = (window.lessonData || []).map(l => {
+            const id = this.cleanId(l.id);
+            const slug = this.cleanId(this.decodeContent(l.slug) ?? l.slug);
+            const title = this.decodeContent(l.title);
+            const description = this.decodeContent(l.description);
+            const duration = this.decodeContent(l.duration);
+            const difficulty = this.decodeContent(l.difficulty);
+            const section = this.decodeContent(l.section);
+            const date = this.decodeContent(l.date);
+            const url = this.decodeContent(l.url);
+            let resources = l.resources;
+            if (!Array.isArray(resources)) {
+                const r = this.decodeContent(resources);
+                try { resources = typeof r === 'string' ? JSON.parse(r) : (r || []); } catch { resources = []; }
+            }
+            return {
+                ...l,
+                id,
+                slug,
+                title,
+                description,
+                duration,
+                difficulty,
+                section,
+                date,
+                url,
+                content: this.decodeContent(l.content),
+                resources
+            };
+        });
         this.renderLessonsList();
+        // Attempt to migrate any legacy stored keys (with quotes)
+        this.migrateStoredProgress();
     }
     
     /**
@@ -67,12 +216,12 @@ class LearnSPA {
         const html = groups.map(group => {
             const isCollapsed = this.collapsedSections.has(group.section);
             const lessonsHtml = group.lessons.map(lesson => `
-                <div class="lesson-item" data-lesson-id="${lesson.id}">
+                <div class="lesson-item" data-lesson-id="${this.htmlAttr(lesson.id)}">
                     <div class="lesson-number">
                         <span class="number">${lesson.lessonNumber ?? ''}</span>
                     </div>
                     <div class="lesson-info">
-                        <div class="lesson-title" data-lesson-id="${lesson.id}">${lesson.title}</div>
+                        <div class="lesson-title" data-lesson-id="${this.htmlAttr(lesson.id)}">${lesson.title}</div>
                         ${lesson.duration ? `
                             <div class="lesson-duration">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,10 +254,12 @@ class LearnSPA {
 
         lessonsContainer.innerHTML = html;
 
-        // Restore active state after re-render
+    // Restore active state after re-render
         if (this.currentLessonId) {
             this.setActiveLesson(this.currentLessonId);
         }
+    // Recompute progress (DOM may have changed)
+    this.updateProgress();
     }
 
     /**
@@ -118,7 +269,7 @@ class LearnSPA {
         const order = [];
         const map = new Map();
         for (const l of this.lessons) {
-            const section = (l.section || 'بدون دسته').toString().trim();
+            const section = (l.section || (window.__t ? window.__t('lessons.no_category') : 'بدون دسته')).toString().trim();
             if (!map.has(section)) {
                 const bucket = { section, lessons: [] };
                 map.set(section, bucket);
@@ -133,13 +284,17 @@ class LearnSPA {
      * Initialize the current lesson based on URL or first lesson
      */
     initializeCurrentLesson() {
-    // Try to get lesson from current URL (supports trailing slash)
-    const urlPath = window.location.pathname.replace(/\/$/, '');
-    const lessonSlug = urlPath.split('/').pop();
+        // Try to get lesson from current URL (supports trailing slash)
+        const urlPath = window.location.pathname.replace(/\/$/, '');
+        const lessonSlug = urlPath.split('/').pop();
         
         let currentLesson = this.lessons.find(lesson => 
             lesson.slug === lessonSlug || lesson.id === lessonSlug
         );
+        // Fallback: template-provided slug
+        if (!currentLesson && window.currentLessonSlug) {
+            currentLesson = this.lessons.find(lesson => lesson.slug === window.currentLessonSlug || lesson.id === window.currentLessonSlug);
+        }
         
         // If no lesson found, default to first lesson
         if (!currentLesson && this.lessons.length > 0) {
@@ -194,13 +349,17 @@ class LearnSPA {
             // Mark lesson as completed (simple heuristic: visiting counts) and update progress
             this.markCompleted(lessonId);
             this.updateProgress();
+            // Small async tick to let DOM reflect 'completed' class before computing
+            setTimeout(()=> this.updateProgress(), 0);
             
         } catch (error) {
             console.error('Error loading lesson:', error);
-            this.showError('خطا در بارگذاری درس');
+            this.showError(window.__t ? window.__t('lessons.error_loading_lesson') : 'خطا در بارگذاری درس');
         } finally {
             this.isLoading = false;
             this.hideLoading();
+            // Ensure progress bar reflects latest state
+            this.updateProgress();
         }
     }
     
@@ -214,49 +373,84 @@ class LearnSPA {
         });
         
         // Add active class to current lesson
-        const activeItem = document.querySelector(`[data-lesson-id="${lessonId}"]`);
+    const activeItem = document.querySelector(`[data-lesson-id="${this.cssEsc(lessonId)}"]`);
         if (activeItem) {
             activeItem.classList.add('active');
         }
     }
 
-    /**
-     * Mark a lesson as completed (persist in localStorage)
-     */
-    markCompleted(lessonId){
-        const allow = (window.__optionalStorageAllowed && window.__optionalStorageAllowed()) || false;
-        if(!allow) return; // skip persistence until consent
+    markCompleted(lessonId) {
+        const key = this.progressKey();
+        
+        try {
+            if (this._isStorageAllowed()) {
+                const stored = JSON.parse(localStorage.getItem(key) || '{}');
+                
+                // Clean legacy quoted key if present
+                const legacy = `"${lessonId}"`;
+                if (stored[legacy]) { 
+                    delete stored[legacy]; 
+                }
+                
+                if (stored[lessonId]) return; // already marked
+                
+                stored[lessonId] = true;
+                localStorage.setItem(key, JSON.stringify(stored));
+            } else {
+                // Session-only memory tracking (no persistence)
+                if (!this._memoryStore[key]) this._memoryStore[key] = {};
+                this._memoryStore[key][lessonId] = true;
+            }
+            
+            const item = document.querySelector(`.lesson-item[data-lesson-id="${this.cssEsc(lessonId)}"]`);
+            item?.classList.add('completed');
+        } catch(e) { 
+            /* ignore storage errors */ 
+        }
+    }
+
+    calcProgress() {
+        if (!this.lessons.length) return 0;
+        
         try {
             const key = this.progressKey();
-            const stored = JSON.parse(localStorage.getItem(key) || '{}');
-            if(stored[lessonId]) return; // already marked
-            stored[lessonId] = true;
-            localStorage.setItem(key, JSON.stringify(stored));
-            const item = document.querySelector(`.lesson-item[data-lesson-id="${lessonId}"]`);
-            if(item) item.classList.add('completed');
-        } catch(e){ /* ignore */ }
+            const stored = this._isStorageAllowed()
+                ? JSON.parse(localStorage.getItem(key) || '{}')
+                : (this._memoryStore[key] || {});
+            
+            // Normalize stored keys for comparison
+            const storedIds = new Set(Object.keys(stored).map(k => this.cleanId(k)));
+            const doneCount = this.lessons.filter(l => storedIds.has(l.id)).length;
+            let pct = Math.round((doneCount / this.lessons.length) * 100);
+            
+            // Fallback: infer from DOM completed items if no storage progress
+            if (pct === 0) {
+                const completedDom = new Set(
+                    Array.from(document.querySelectorAll('.lesson-item.completed'))
+                        .map(el => el.getAttribute('data-lesson-id') || '')
+                );
+                
+                if (completedDom.size > 0) {
+                    const count = this.lessons.filter(l => completedDom.has(l.id)).length;
+                    pct = Math.round((count / this.lessons.length) * 100);
+                }
+            }
+            
+            return Math.max(0, Math.min(100, pct));
+        } catch(e) { 
+            return 0; 
+        }
     }
 
-    /** Compute progress % */
-    calcProgress(){
-        if(!this.lessons.length) return 0;
-    const allow = (window.__optionalStorageAllowed && window.__optionalStorageAllowed()) || false;
-    if(!allow) return 0; // no stored progress without consent
-    try {
-            const stored = JSON.parse(localStorage.getItem(this.progressKey()) || '{}');
-            const completed = this.lessons.filter(l=> stored[l.id]);
-            return Math.round((completed.length / this.lessons.length) * 100);
-        } catch(e){ return 0; }
-    }
-
-    /** Update progress bar UI */
-    updateProgress(){
+    updateProgress() {
         const pct = this.calcProgress();
         const fill = document.querySelector('.course-progress .progress-fill');
         const text = document.querySelector('.course-progress-text span:last-child');
-        if(fill) fill.style.width = pct + '%';
-        if(text) text.textContent = pct + '%';
-        if(pct === 100 && !this._completionAnnounced){
+        
+        if (fill) fill.style.width = pct + '%';
+        if (text) text.textContent = pct + '%';
+        
+        if (pct === 100 && !this._completionAnnounced) {
             this._completionAnnounced = true;
             this.announceCompletion();
         }
@@ -277,7 +471,7 @@ class LearnSPA {
      * Render lesson content in the main area
      */
     async renderLessonContent(lesson) {
-        if (!this.contentArea) return;
+    if (!this.contentArea) return;
         
         // If content is already available, use it
         if (lesson.content) {
@@ -309,7 +503,7 @@ class LearnSPA {
                 
             } catch (error) {
                 console.error('Error fetching lesson content:', error);
-                lesson.content = '<p>خطا در بارگذاری محتوا</p>';
+                lesson.content = `<p>${window.__t ? window.__t('lessons.error_loading_content') : 'خطا در بارگذاری محتوا'}</p>`;
                 this.contentArea.innerHTML = this.generateLessonHTML(lesson);
             }
         } else {
@@ -380,35 +574,35 @@ class LearnSPA {
     getPlaceholderContent(lesson) {
         return `
             <div class="lesson-content-placeholder">
-                <h2>محتوای درس ${lesson.title}</h2>
-                <p>این یک درس نمونه است که شامل محتوای آموزشی مفصل می‌باشد.</p>
+                <h2>${(window.__t ? window.__t('lessons.placeholder.title') : 'محتوای درس')} ${lesson.title}</h2>
+                <p>${window.__t ? window.__t('lessons.placeholder.lead') : 'این یک درس نمونه است که شامل محتوای آموزشی مفصل می‌باشد.'}</p>
                 
-                <h3>اهداف یادگیری</h3>
+                <h3>${window.__t ? window.__t('lessons.placeholder.objectives') : 'اهداف یادگیری'}</h3>
                 <ul>
-                    <li>درک مفاهیم کلیدی این درس</li>
-                    <li>تسلط بر تکنیک‌های عملی</li>
-                    <li>آماده شدن برای درس بعدی</li>
+                    <li>${window.__t ? window.__t('lessons.placeholder.obj1') : 'درک مفاهیم کلیدی این درس'}</li>
+                    <li>${window.__t ? window.__t('lessons.placeholder.obj2') : 'تسلط بر تکنیک‌های عملی'}</li>
+                    <li>${window.__t ? window.__t('lessons.placeholder.obj3') : 'آماده شدن برای درس بعدی'}</li>
                 </ul>
                 
-                <h3>محتوای درس</h3>
-                <p>در این قسمت محتوای اصلی درس قرار می‌گیرد. این محتوا می‌تواند شامل متن، تصاویر، ویدیو و مثال‌های عملی باشد.</p>
+                <h3>${window.__t ? window.__t('lessons.placeholder.content') : 'محتوای درس'}</h3>
+                <p>${window.__t ? window.__t('lessons.placeholder.content_desc') : 'در این قسمت محتوای اصلی درس قرار می‌گیرد. این محتوا می‌تواند شامل متن، تصاویر، ویدیو و مثال‌های عملی باشد.'}</p>
                 
                 <div class="code-example">
-                    <h4>مثال کد:</h4>
-                    <pre><code>print("سلام دنیا!")
+                    <h4>${window.__t ? window.__t('lessons.placeholder.code_example') : 'مثال کد:'}</h4>
+                    <pre><code>print("${window.__t ? window.__t('lessons.placeholder.hello_world') : 'سلام دنیا!'}")
 for i in range(5):
-    print(f"شماره: {i}")</code></pre>
+    print(f"${window.__t ? window.__t('lessons.placeholder.number') : 'شماره'}: {i}")</code></pre>
                 </div>
                 
-                <h3>تمرین عملی</h3>
-                <p>حال نوبت شما است تا آنچه آموخته‌اید را در عمل امتحان کنید.</p>
+                <h3>${window.__t ? window.__t('lessons.placeholder.practice') : 'تمرین عملی'}</h3>
+                <p>${window.__t ? window.__t('lessons.placeholder.practice_desc') : 'حال نوبت شما است تا آنچه آموخته‌اید را در عمل امتحان کنید.'}</p>
                 
                 <div class="lesson-resources">
-                    <h4>منابع اضافی:</h4>
+                    <h4>${window.__t ? window.__t('lessons.placeholder.resources') : 'منابع اضافی:'}</h4>
                     <ul>
-                        <li><a href="#">مستندات رسمی</a></li>
-                        <li><a href="#">ویدیوی آموزشی</a></li>
-                        <li><a href="#">تمرین‌های تکمیلی</a></li>
+                        <li><a href="#">${window.__t ? window.__t('lessons.placeholder.doc') : 'مستندات رسمی'}</a></li>
+                        <li><a href="#">${window.__t ? window.__t('lessons.placeholder.video') : 'ویدیوی آموزشی'}</a></li>
+                        <li><a href="#">${window.__t ? window.__t('lessons.placeholder.exercises') : 'تمرین‌های تکمیلی'}</a></li>
                     </ul>
                 </div>
             </div>
@@ -445,11 +639,11 @@ for i in range(5):
         const nextLesson = nextExists ? this.lessons[currentIndex + 1] : null;
 
         // Build previous button (keep space even if disabled)
-        prevContainer.innerHTML = `
-            <button type="button" class="nav-btn prev" ${!prevExists ? 'disabled aria-disabled="true"' : ''} aria-label="${prevExists ? 'درس قبلی: ' + prevLesson.title : 'اولین درس'}" ${prevExists ? `onclick="learnSPA.loadLesson('${prevLesson.id}')"` : ''}>
+    prevContainer.innerHTML = `
+            <button type="button" class="nav-btn prev" ${!prevExists ? 'disabled aria-disabled="true"' : ''} aria-label="${prevExists ? ((window.__t?window.__t('lessons.prev_lesson'):'درس قبلی') + ': ' + prevLesson.title) : (window.__t?window.__t('lessons.first_lesson'):'اولین درس')}" ${prevExists ? `onclick="learnSPA.loadLesson('${prevLesson.id}')"` : ''}>
                 ${!isRTL ? `<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>${makeArrow('prev')}</svg>` : ''}
                 <div class="nav-info">
-                    <div class="nav-label">درس قبلی</div>
+            <div class="nav-label">${window.__t ? window.__t('lessons.prev_lesson') : 'درس قبلی'}</div>
                     <div class="nav-title">${prevLesson ? prevLesson.title : '—'}</div>
                 </div>
                 ${isRTL ? `<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>${makeArrow('prev')}</svg>` : ''}
@@ -457,11 +651,11 @@ for i in range(5):
         `;
 
         // Build next button
-        nextContainer.innerHTML = `
-            <button type="button" class="nav-btn next" ${!nextExists ? 'disabled aria-disabled="true"' : ''} aria-label="${nextExists ? 'درس بعدی: ' + nextLesson.title : 'آخرین درس'}" ${nextExists ? `onclick="learnSPA.loadLesson('${nextLesson.id}')"` : ''}>
+    nextContainer.innerHTML = `
+            <button type="button" class="nav-btn next" ${!nextExists ? 'disabled aria-disabled="true"' : ''} aria-label="${nextExists ? ((window.__t?window.__t('lessons.next_lesson'):'درس بعدی') + ': ' + nextLesson.title) : (window.__t?window.__t('lessons.last_lesson'):'آخرین درس')}" ${nextExists ? `onclick="learnSPA.loadLesson('${nextLesson.id}')"` : ''}>
                 ${isRTL ? `<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>${makeArrow('next')}</svg>` : ''}
                 <div class="nav-info">
-                    <div class="nav-label">درس بعدی</div>
+            <div class="nav-label">${window.__t ? window.__t('lessons.next_lesson') : 'درس بعدی'}</div>
                     <div class="nav-title">${nextLesson ? nextLesson.title : '—'}</div>
                 </div>
                 ${!isRTL ? `<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'>${makeArrow('next')}</svg>` : ''}
@@ -497,37 +691,23 @@ for i in range(5):
         }
     }
     
-    /**
-     * Save preferences to localStorage
-     */
     showLoading() {
-        if (this.loadingIndicator) {
-            this.loadingIndicator.style.display = 'flex';
-        }
-        
-        if (this.contentArea) {
-            this.contentArea.style.opacity = '0.5';
+        this.elements.loadingIndicator?.style.setProperty('display', 'flex');
+        if (this.elements.contentArea) {
+            this.elements.contentArea.style.opacity = '0.5';
         }
     }
     
-    /**
-     * Hide loading indicator
-     */
     hideLoading() {
-        if (this.loadingIndicator) {
-            this.loadingIndicator.style.display = 'none';
-        }
-        
-        if (this.contentArea) {
-            this.contentArea.style.opacity = '1';
+        this.elements.loadingIndicator?.style.setProperty('display', 'none');
+        if (this.elements.contentArea) {
+            this.elements.contentArea.style.opacity = '1';
         }
     }
     
-    /**
-     * Show error message
-     */
     showError(message) {
         console.error(message);
+        
         let toast = document.getElementById('toast');
         if (!toast) {
             toast = document.createElement('div');
@@ -535,28 +715,42 @@ for i in range(5):
             toast.className = 'toast error';
             document.body.appendChild(toast);
         }
+        
         toast.textContent = message;
         toast.classList.add('show');
+        
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
     
-    /**
-     * Bind event listeners
-     */
     bindEvents() {
         // Focus mode toggle
-        this.focusModeBtn?.addEventListener('click', () => this.toggleFocusMode());
+    this.elements.focusModeBtn?.addEventListener('click', () => this.toggleFocusMode());
         
         // Sidebar collapse
-        this.collapseSidebarBtn?.addEventListener('click', () => this.toggleSidebarCollapse());
+    this.elements.collapseSidebarBtn?.addEventListener('click', () => this.toggleSidebarCollapse());
         
         // Mobile menu
-        this.mobileMenuBtn?.addEventListener('click', () => this.toggleMobileMenu());
-        this.mobileCloseBtn?.addEventListener('click', ()=> this.toggleMobileMenu());
+    this.elements.mobileMenuBtn?.addEventListener('click', () => this.toggleMobileMenu());
+    this.elements.mobileCloseBtn?.addEventListener('click', () => this.toggleMobileMenu());
         
         // Overlay click
-        this.sidebarOverlay?.addEventListener('click', () => this.toggleMobileMenu());
+    this.elements.sidebarOverlay?.addEventListener('click', () => this.toggleMobileMenu());
+        
+        // Sidebar reopen button
+    this.elements.reopenBtn?.addEventListener('click', () => {
+            if (this.elements.sidebar?.classList.contains('collapsed')) {
+                this.toggleSidebarCollapse();
+            }
+        });
+        
+        // Sidebar convenience click (expand when collapsed)
+        this.elements.sidebar?.addEventListener('click', (e) => {
+            if (!this.elements.sidebar.classList.contains('collapsed')) return;
+            if (!e.target.closest('#collapseSidebar')) {
+                this.toggleSidebarCollapse();
+            }
+        });
         
         // Window resize
         window.addEventListener('resize', () => this.handleResize());
@@ -564,71 +758,83 @@ for i in range(5):
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
         
-        // Lesson clicks (delegated)
+        // Browser back/forward
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.lessonId) {
+                this.loadLesson(e.state.lessonId, false);
+            } else {
+                // If no state, derive from URL
+                this.initializeCurrentLesson();
+            }
+        });
+        
+        this._bindDelegatedEvents();
+    }
+    
+    _bindDelegatedEvents() {
+        // Lesson clicks and section toggles (delegated)
         document.addEventListener('click', (e) => {
             // Toggle section collapse
             if (e.target.matches('.section-header, .section-header *')) {
-                const header = e.target.closest('.section-header');
-                const section = header?.dataset.section;
-                if (section) {
-                    if (this.collapsedSections.has(section)) {
-                        this.collapsedSections.delete(section);
-                    } else {
-                        this.collapsedSections.add(section);
-                    }
-                    this.savePreferences();
-                    this.renderLessonsList();
-                }
+                this._handleSectionToggle(e);
                 return;
             }
 
             // Lesson item click
             if (e.target.matches('.lesson-title') || e.target.closest('.lesson-item')) {
-                const lessonId = e.target.dataset.lessonId || e.target.closest('.lesson-item').dataset.lessonId;
-                if (lessonId && lessonId !== this.currentLessonId) {
-                    e.preventDefault();
-                    this.loadLesson(lessonId);
-                }
+                this._handleLessonClick(e);
+                return;
             }
 
-            // After other clicks, ensure active highlight still present if DOM changed
-            setTimeout(()=>{
-                if(this.currentLessonId){
-                    const active = document.querySelector(`.lesson-item[data-lesson-id="${this.currentLessonId}"]`);
-                    if(active && !active.classList.contains('active')){
-                        this.setActiveLesson(this.currentLessonId);
-                    }
-                }
-            },0);
+            // Ensure active state persists after DOM changes
+            this._ensureActiveState();
         });
+    }
+    
+    _handleSectionToggle(e) {
+        const header = e.target.closest('.section-header');
+        const section = header?.dataset.section;
         
-        // Browser back/forward
-        window.addEventListener('popstate', (e) => {
-            if (e.state && e.state.lessonId) {
-                this.loadLesson(e.state.lessonId, false);
+        if (section) {
+            if (this.collapsedSections.has(section)) {
+                this.collapsedSections.delete(section);
+            } else {
+                this.collapsedSections.add(section);
             }
-        });
-        this.sidebar?.addEventListener('click', (e)=>{
-            if(!this.sidebar.classList.contains('collapsed')) return;
-            // If collapsed and user clicks anywhere inside (except button) expand for convenience
-            if(!e.target.closest('#collapseSidebar')) {
-                this.toggleSidebarCollapse();
+            this.savePreferences();
+            this.renderLessonsList();
+        }
+    }
+    
+    _handleLessonClick(e) {
+        const lessonId = e.target.dataset.lessonId || e.target.closest('.lesson-item').dataset.lessonId;
+        if (lessonId && lessonId !== this.currentLessonId) {
+            e.preventDefault();
+            this.loadLesson(lessonId);
+        }
+    }
+    
+    _ensureActiveState() {
+        setTimeout(() => {
+            if (this.currentLessonId) {
+                const active = document.querySelector(`.lesson-item[data-lesson-id="${this.cssEsc(this.currentLessonId)}"]`);
+                if (active && !active.classList.contains('active')) {
+                    this.setActiveLesson(this.currentLessonId);
+                }
             }
-        });
-        this.reopenBtn?.addEventListener('click', ()=> {
-            if(this.sidebar.classList.contains('collapsed')){
-                this.toggleSidebarCollapse();
-            }
-        });
+        }, 0);
     }
     
     toggleFocusMode() {
         this.isFocusMode = !this.isFocusMode;
         this.learnPage.classList.toggle('focus-mode', this.isFocusMode);
         this.focusModeBtn.classList.toggle('active', this.isFocusMode);
+        const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>';
+        const onLabel = (window.__t ? window.__t('lessons.exit_focus_mode') : 'خروج از حالت تمرکز');
+        const offLabel = (window.__t ? window.__t('lessons.focus_mode') : 'حالت تمرکز');
         this.focusModeBtn.innerHTML = this.isFocusMode 
-            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>خروج از حالت تمرکز'
-            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>حالت تمرکز';
+            ? icon + onLabel
+            : icon + offLabel;
         // Force-close sidebar / overlay in focus mode
         if (this.isFocusMode) {
             this.isMobileMenuOpen = false;
@@ -643,25 +849,37 @@ for i in range(5):
     
     toggleSidebarCollapse() {
         this.isSidebarCollapsed = !this.isSidebarCollapsed;
+        
         if (window.innerWidth > 1024) {
             this.wasCollapsedDesktop = this.isSidebarCollapsed;
         }
-        this.sidebar.classList.toggle('collapsed', this.isSidebarCollapsed);
-        if(this.reopenBtn){
-            this.reopenBtn.style.display = (this.isSidebarCollapsed && window.innerWidth>1024) ? 'flex' : 'none';
+        
+        this.elements.sidebar?.classList.toggle('collapsed', this.isSidebarCollapsed);
+        
+        if (this.elements.reopenBtn) {
+            this.elements.reopenBtn.style.display = (
+                this.isSidebarCollapsed && window.innerWidth > 1024
+            ) ? 'flex' : 'none';
         }
+        
         this.syncCollapseButton();
         this.savePreferences();
     }
-    syncCollapseButton(){
-        if(!this.collapseSidebarBtn) return;
-        const collapsed = this.sidebar.classList.contains('collapsed');
-        this.collapseSidebarBtn.setAttribute('aria-expanded', (!collapsed).toString());
-        this.collapseSidebarBtn.title = collapsed ? 'باز کردن فهرست دروس' : 'بستن/جمع کردن فهرست';
-        const title = this.sidebar.querySelector('.sidebar-title-text');
-        const arrow = this.sidebar.querySelector('.collapsed-arrow');
-        if(title && arrow){
-            if(collapsed){
+    
+    syncCollapseButton() {
+        if (!this.elements.collapseSidebarBtn) return;
+        
+        const collapsed = this.elements.sidebar?.classList.contains('collapsed');
+        this.elements.collapseSidebarBtn.setAttribute('aria-expanded', (!collapsed).toString());
+        this.elements.collapseSidebarBtn.title = collapsed 
+            ? (window.__t ? window.__t('lessons.open_list') : 'باز کردن فهرست دروس') 
+            : (window.__t ? window.__t('lessons.collapse_list') : 'بستن/جمع کردن فهرست');
+        
+        const title = this.elements.sidebar?.querySelector('.sidebar-title-text');
+        const arrow = this.elements.sidebar?.querySelector('.collapsed-arrow');
+        
+        if (title && arrow) {
+            if (collapsed) {
                 title.style.display = 'none';
                 arrow.style.display = 'inline-flex';
             } else {
@@ -766,8 +984,8 @@ for i in range(5):
     }
     
     savePreferences() {
-    const allow = (window.__optionalStorageAllowed && window.__optionalStorageAllowed()) || false;
-    if(!allow) return; // don't persist prefs without consent
+        if (!this._isStorageAllowed()) return; // don't persist prefs without consent
+        
         const prefs = {
             focusMode: this.isFocusMode,
             sidebarCollapsed: this.isSidebarCollapsed,
@@ -777,18 +995,28 @@ for i in range(5):
     }
     
     loadPreferences() {
-    const allow = (window.__optionalStorageAllowed && window.__optionalStorageAllowed()) || false;
-    if(!allow) return; // will load after consent on next visit
-    const prefs = localStorage.getItem('learnPagePrefs');
+        if (!this._isStorageAllowed()) return; // will load after consent on next visit
+        
+        const prefs = localStorage.getItem('learnPagePrefs');
         if (prefs) {
-            const parsed = JSON.parse(prefs);
-            if (parsed.focusMode) { this.toggleFocusMode(); }
-            if (parsed.sidebarCollapsed && window.innerWidth > 1024) { this.toggleSidebarCollapse(); }
-            if (Array.isArray(parsed.collapsedSections)) { this.collapsedSections = new Set(parsed.collapsedSections); }
+            try {
+                const parsed = JSON.parse(prefs);
+                if (parsed.focusMode) { this.toggleFocusMode(); }
+                if (parsed.sidebarCollapsed && window.innerWidth > 1024) { this.toggleSidebarCollapse(); }
+                if (Array.isArray(parsed.collapsedSections)) { 
+                    this.collapsedSections = new Set(parsed.collapsedSections); 
+                }
+            } catch(e) {
+                /* ignore invalid preferences */
+            }
         }
+        
         this.syncCollapseButton();
-        if(this.reopenBtn){
-            this.reopenBtn.style.display = (this.sidebar.classList.contains('collapsed') && window.innerWidth>1024) ? 'flex' : 'none';
+        
+        if (this.elements.reopenBtn) {
+            this.elements.reopenBtn.style.display = (
+                this.elements.sidebar?.classList.contains('collapsed') && window.innerWidth > 1024
+            ) ? 'flex' : 'none';
         }
     }
     
@@ -803,7 +1031,7 @@ for i in range(5):
             toast.className = 'toast success';
             document.body.appendChild(toast);
         }
-        toast.textContent = 'آفرین! دوره را کامل کردید';
+    toast.textContent = (window.__t ? window.__t('lessons.completed') : 'آفرین! دوره را کامل کردید');
         toast.classList.add('show');
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(()=> toast.classList.remove('show'), 4000);
@@ -812,8 +1040,15 @@ for i in range(5):
 
 // Initialize when DOM is ready
 let learnSPA;
-document.addEventListener('DOMContentLoaded', () => {
-    learnSPA = new LearnSPA();
-    // Export for global access
-    window.learnSPA = learnSPA;
-});
+(function initLearnSPA(){
+    const start = () => {
+        if (window.learnSPA) return; // avoid double-init
+        learnSPA = new LearnSPA();
+        window.learnSPA = learnSPA;
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+        start();
+    }
+})();

@@ -8,6 +8,31 @@
 
   // Mobile menu functionality & rest of site scripts
   document.addEventListener('DOMContentLoaded', function() {
+    // Provide a tiny translation helper for JS strings
+    try {
+      window.__t = (key) => {
+        const el = document.querySelector(`[data-i18n-key="${key}"]`);
+        return el ? el.getAttribute('data-i18n-val') || el.textContent || '' : '';
+      };
+    } catch {}
+    // First-visit language redirect (session-scoped), default to fa
+    try {
+      const seen = sessionStorage.getItem('langRedirected:v1');
+      if(!seen){
+        const pref = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        const wantFa = !pref || pref.startsWith('fa') || pref.startsWith('ar');
+        const isFaPath = /\/(fa)(\/|$)/.test(location.pathname);
+        const isEnPath = /\/(en)(\/|$)/.test(location.pathname);
+        if(!isFaPath && !isEnPath){
+          const target = wantFa ? '/fa/' : '/en/';
+          sessionStorage.setItem('langRedirected:v1', '1');
+          location.replace(target);
+          return; // stop executing rest on this page
+        }
+        sessionStorage.setItem('langRedirected:v1', '1');
+      }
+    } catch(e) {}
+
     const optionalAllowed = window.__optionalStorageAllowed || (()=>false);
 
     const burger = document.querySelector('.navbar-burger');
@@ -39,7 +64,7 @@
     const backToTop = document.createElement('button');
     backToTop.innerHTML = '↑';
     backToTop.className = 'back-to-top';
-    backToTop.setAttribute('aria-label', 'بازگشت به بالا');
+  backToTop.setAttribute('aria-label', '{{ i18n "footer.back_to_top" }}');
     document.body.appendChild(backToTop);
 
     backToTop.addEventListener('click', () => {
@@ -69,7 +94,7 @@
     const updateToggleIcon = () => {
       if (!toggle) return;
       const isDark = root.getAttribute('data-theme') === 'dark';
-      toggle.title = isDark ? 'حالت روشن' : 'حالت تیره';
+  toggle.title = isDark ? '{{ i18n "theme.light" }}' : '{{ i18n "theme.dark" }}';
     };
     updateToggleIcon();
 
@@ -88,20 +113,59 @@
     searchOverlay.className = 'search-overlay';
     searchOverlay.innerHTML = `
       <div class="search-backdrop" data-search-close></div>
-      <div class="search-panel" role="dialog" aria-modal="true" aria-label="جستجو">
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="{{ i18n "search.title" }}">
         <div class="search-header">
-          <input id="siteSearchInput" type="search" placeholder="چی می‌خوای یاد بگیری؟" aria-label="جستجو" autocomplete="off" />
-          <button class="search-close" data-search-close aria-label="بستن">×</button>
+      <input id="siteSearchInput" type="search" placeholder="{{ i18n "search.placeholder" }}" aria-label="{{ i18n "search.title" }}" autocomplete="off" />
+      <button class="search-close" data-search-close aria-label="{{ i18n "search.close" }}">×</button>
         </div>
         <div id="siteSearchResults" class="search-results"></div>
       </div>`;
     document.body.appendChild(searchOverlay);
 
+    // Inject hidden i18n data elements for runtime JS to read
+  (function injectI18nData(){
+      const holder = document.createElement('div');
+      holder.style.display = 'none';
+      holder.innerHTML = `
+    <span data-i18n-key="lessons.no_category" data-i18n-val="{{ i18n "lessons.no_category" }}"></span>
+    <span data-i18n-key="lessons.error_loading_lesson" data-i18n-val="{{ i18n "lessons.error_loading_lesson" }}"></span>
+    <span data-i18n-key="lessons.error_loading_content" data-i18n-val="{{ i18n "lessons.error_loading_content" }}"></span>
+    <span data-i18n-key="lessons.placeholder.title" data-i18n-val="{{ i18n "lessons.placeholder.title" }}"></span>
+    <span data-i18n-key="lessons.placeholder.lead" data-i18n-val="{{ i18n "lessons.placeholder.lead" }}"></span>
+    <span data-i18n-key="lessons.placeholder.objectives" data-i18n-val="{{ i18n "lessons.placeholder.objectives" }}"></span>
+    <span data-i18n-key="lessons.placeholder.obj1" data-i18n-val="{{ i18n "lessons.placeholder.obj1" }}"></span>
+    <span data-i18n-key="lessons.placeholder.obj2" data-i18n-val="{{ i18n "lessons.placeholder.obj2" }}"></span>
+    <span data-i18n-key="lessons.placeholder.obj3" data-i18n-val="{{ i18n "lessons.placeholder.obj3" }}"></span>
+    <span data-i18n-key="lessons.placeholder.content" data-i18n-val="{{ i18n "lessons.placeholder.content" }}"></span>
+    <span data-i18n-key="lessons.placeholder.content_desc" data-i18n-val="{{ i18n "lessons.placeholder.content_desc" }}"></span>
+    <span data-i18n-key="lessons.placeholder.code_example" data-i18n-val="{{ i18n "lessons.placeholder.code_example" }}"></span>
+    <span data-i18n-key="lessons.placeholder.hello_world" data-i18n-val="{{ i18n "lessons.placeholder.hello_world" }}"></span>
+    <span data-i18n-key="lessons.placeholder.number" data-i18n-val="{{ i18n "lessons.placeholder.number" }}"></span>
+    <span data-i18n-key="lessons.placeholder.practice" data-i18n-val="{{ i18n "lessons.placeholder.practice" }}"></span>
+    <span data-i18n-key="lessons.placeholder.practice_desc" data-i18n-val="{{ i18n "lessons.placeholder.practice_desc" }}"></span>
+    <span data-i18n-key="lessons.placeholder.resources" data-i18n-val="{{ i18n "lessons.placeholder.resources" }}"></span>
+    <span data-i18n-key="lessons.placeholder.doc" data-i18n-val="{{ i18n "lessons.placeholder.doc" }}"></span>
+    <span data-i18n-key="lessons.placeholder.video" data-i18n-val="{{ i18n "lessons.placeholder.video" }}"></span>
+    <span data-i18n-key="lessons.placeholder.exercises" data-i18n-val="{{ i18n "lessons.placeholder.exercises" }}"></span>
+    <span data-i18n-key="lessons.prev_lesson" data-i18n-val="{{ i18n "lessons.prev_lesson" }}"></span>
+    <span data-i18n-key="lessons.next_lesson" data-i18n-val="{{ i18n "lessons.next_lesson" }}"></span>
+    <span data-i18n-key="lessons.first_lesson" data-i18n-val="{{ i18n "lessons.first_lesson" }}"></span>
+    <span data-i18n-key="lessons.last_lesson" data-i18n-val="{{ i18n "lessons.last_lesson" }}"></span>
+    <span data-i18n-key="lessons.completed" data-i18n-val="{{ i18n "lessons.completed" }}"></span>
+    <span data-i18n-key="lessons.open_list" data-i18n-val="{{ i18n "lessons.open_list" }}"></span>
+    <span data-i18n-key="lessons.collapse_list" data-i18n-val="{{ i18n "lessons.collapse_list" }}"></span>
+    <span data-i18n-key="lessons.focus_mode" data-i18n-val="{{ i18n "lessons.focus_mode" }}"></span>
+    <span data-i18n-key="lessons.exit_focus_mode" data-i18n-val="{{ i18n "lessons.exit_focus_mode" }}"></span>
+      `;
+      document.body.appendChild(holder);
+    })();
+
     const openBtns = document.querySelectorAll('[data-search-open]');
     const closeEls = searchOverlay.querySelectorAll('[data-search-close]');
-    const inputEl = searchOverlay.querySelector('#siteSearchInput');
-    const resultsEl = searchOverlay.querySelector('#siteSearchResults');
-    const indexUrl = (document.documentElement.lang?.startsWith('fa') ? '/fa' : '') + '/index.json';
+  const inputEl = searchOverlay.querySelector('#siteSearchInput');
+  const resultsEl = searchOverlay.querySelector('#siteSearchResults');
+  const langPrefix = (document.documentElement.lang?.startsWith('fa') ? '/fa' : (document.documentElement.lang?.startsWith('en') ? '/en' : ''));
+  const indexUrl = langPrefix + '/index.json';
     let searchIndex = [];
 
     function openSearch(){
@@ -119,12 +183,12 @@
 
     const norm = s => (s||'').toString().toLowerCase();
     function render(items){
-      if(!items.length){ resultsEl.innerHTML = '<p class="muted">نتیجه‌ای یافت نشد.</p>'; return; }
+  if(!items.length){ resultsEl.innerHTML = '<p class="muted">{{ i18n "search.no_results" }}</p>'; return; }
       resultsEl.innerHTML = items.map(it => `
         <a class="search-row" href="${it.permalink}">
           <div class="row-title">${it.title}</div>
           <div class="row-desc">${it.description||''}</div>
-          <div class="row-meta">${it.type==='posts'?'مقاله':(it.type==='lessons'?'درس':'دوره')}${it.date?` · ${it.date}`:''}</div>
+          <div class="row-meta">${it.type==='posts'?'{{ i18n "types.post" }}':(it.type==='lessons'?'{{ i18n "types.lesson" }}':'{{ i18n "types.course" }}')}${it.date?` · ${it.date}`:''}</div>
         </a>`).join('');
     }
     function doSearch(q){
@@ -142,12 +206,12 @@
       if(searchIndex.length < 2){
         // Fallback: build a lightweight index from sitemap.xml (client-side crawl)
         try {
-          const smUrl = (document.documentElement.lang?.startsWith('fa') ? '/fa' : '') + '/sitemap.xml';
+          const smUrl = langPrefix + '/sitemap.xml';
           const smResp = await fetch(smUrl);
           if(smResp.ok){
             const smText = await smResp.text();
             const urls = Array.from(smText.matchAll(/<loc>(.*?)<\/loc>/g)).map(m=> m[1])
-              .filter(u=> /\/fa\//.test(u) && !/\.xml$/.test(u) && !/\/tags\//.test(u) && !/\/categories\//.test(u));
+              .filter(u=> (langPrefix ? u.includes(langPrefix + '/') : true) && !/\.xml$/.test(u) && !/\/tags\//.test(u) && !/\/categories\//.test(u));
             const limited = urls.slice(0, 60); // cap to avoid overload
             const fetched = await Promise.all(limited.map(async rawUrl=>{
               try {

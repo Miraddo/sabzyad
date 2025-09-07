@@ -9,11 +9,11 @@
         {{ $bmc := .Params.buymeacoffee | default "https://www.buymeacoffee.com/" }}
         <a class="btn btn-coffee" href="{{ $bmc }}" target="_blank" rel="noopener">
           <i class="fa-solid fa-mug-hot"></i>
-          <span>حمایت از من</span>
+          <span>{{ i18n "about.support_me" }}</span>
         </a>
   <a class="btn btn-secondary" href="{{ "/contact/" | relLangURL }}">
           <i class="fa-regular fa-paper-plane"></i>
-          <span>تماس با من</span>
+          <span>{{ i18n "about.contact_me" }}</span>
         </a>
       </div>
     </div>
@@ -32,7 +32,7 @@
   {{ end }}
 
   {{ with site.Data.contributors }}
-    {{ partial "contributors.html" (dict "contributors" . "title" "مشارکت‌کنندگان پروژه") }}
+    {{ partial "contributors.html" (dict "contributors" . "title" (i18n "contributors.project_title")) }}
   {{ end }}
 </section>
 {{ end }}

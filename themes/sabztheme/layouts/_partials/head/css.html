@@ -4,6 +4,9 @@
 <!-- Variable weight (100..900) Vazirmatn -->
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
 
+<!-- Icons: Font Awesome (no SRI to avoid blocking in dev) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+
 <!-- Main CSS -->
 {{ $options := dict "targetPath" "css/main.css" "outputStyle" "expanded" }}
 {{ if hugo.IsProduction }}
@@ -44,10 +47,5 @@
   {{ $learnCSS = $learnCSS | resources.Minify | resources.Fingerprint }}
 {{ end }}
 <link rel="stylesheet" href="{{ $learnCSS.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $learnCSS.Data.Integrity }}"{{ end }}>
-
-
-<!-- Icons: Font Awesome (no SRI to avoid blocking in dev) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
-
 
 <!-- Critical CSS removed to avoid overriding theme variables; styles come from main.css -->

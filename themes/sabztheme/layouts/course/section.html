@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-{{ partial "head.html" . }}
-<body>
-    {{ partial "header.html" . }}
+{{ define "main" }}
 
     {{/* Collect lessons for this course (section) */}}
     {{ $lessons := where .Pages "Type" "lessons" }}
@@ -37,13 +33,13 @@
                             {{ end }}
                             <div class="meta-item">
                                 <i class="fa-solid fa-list-ol"></i>
-                                <span>{{ len $sorted }} درس</span>
+                                <span>{{ len $sorted }} {{ i18n "course.lessons" }}</span>
                             </div>
                         </div>
 
                         <div class="course-actions">
                             {{ if $first }}
-                            <a class="btn btn-primary" href="{{ $first.RelPermalink }}">شروع یادگیری</a>
+                            <a class="btn btn-primary" href="{{ $first.RelPermalink }}">{{ i18n "header.start_learning" }}</a>
                             {{ end }}
                         </div>
                     </div>
@@ -70,21 +66,21 @@
 
                 <aside class="course-sidebar">
                     <div class="sidebar-card">
-                        <h3>اطلاعات دوره</h3>
+                        <h3>{{ i18n "course.info_title" }}</h3>
                         <div class="course-stats">
                             <div class="stat-item">
-                                <span class="stat-label">تعداد دروس</span>
+                                <span class="stat-label">{{ i18n "course.info.lessons_label" }}</span>
                                 <span class="stat-value">{{ len $sorted }}</span>
                             </div>
                             {{ with .Params.difficulty }}
                             <div class="stat-item">
-                                <span class="stat-label">سطح</span>
+                                <span class="stat-label">{{ i18n "course.info.level_label" }}</span>
                                 <span class="stat-value">{{ . }}</span>
                             </div>
                             {{ end }}
                             {{ with .Params.duration }}
                             <div class="stat-item">
-                                <span class="stat-label">مدت زمان</span>
+                                <span class="stat-label">{{ i18n "course.info.duration_label" }}</span>
                                 <span class="stat-value">{{ . }}</span>
                             </div>
                             {{ end }}
@@ -97,7 +93,7 @@
                     {{ if not $contributors }}{{ $contributors = .CurrentSection.Params.contributors }}{{ end }}
                     {{ if and (not $contributors) .Parent }}{{ $contributors = .Parent.Params.contributors }}{{ end }}
                     <div class="sidebar-card">
-                        <h3>مشارکت‌کنندگان دوره</h3>
+                        <h3>{{ i18n "course.contributors.title" }}</h3>
                         {{ if and $contributors (gt (len $contributors) 0) }}
                         <div class="contributors-list">
                             {{ range $i, $c := $contributors }}
@@ -111,13 +107,13 @@
                             {{ end }}
                         </div>
                         {{ else }}
-                        <p class="contributors-empty" style="font-size:.85rem;color:var(--text-light);margin:0;">هیچ مشارکت‌کننده‌ای ثبت نشده.</p>
+                        <p class="contributors-empty" style="font-size:.85rem;color:var(--text-light);margin:0;">{{ i18n "course.contributors.empty" }}</p>
                         {{ end }}
                     </div>
 
                     {{ with .Params.tags }}
                     <div class="sidebar-card">
-                        <h3>برچسب‌ها</h3>
+                        <h3>{{ i18n "course.tags" }}</h3>
                         <div class="course-tags">
                             {{ range . }}<span class="tag"># {{ . }}</span>{{ end }}
                         </div>
@@ -126,11 +122,11 @@
 
                     {{ with .Params.references }}
                     <div class="sidebar-card references-card">
-                        <h3>منابع</h3>
+                        <h3>{{ i18n "course.references" }}</h3>
                         {{ with .free }}
                         <div class="ref-section">
                             <div class="ref-section-title">
-                                <span class="ref-badge free"><i class="fa-solid fa-gift"></i> رایگان</span>
+                                <span class="ref-badge free"><i class="fa-solid fa-gift"></i> {{ i18n "course.references.free" }}</span>
                             </div>
                             <ul class="references-list">
                                 {{ range . }}
@@ -144,7 +140,7 @@
                                                                         </span>
                                                                         <a class="ref-link" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
                                                                         <span class="ref-meta-wrap">
-                                                                            {{ with .language }}<span class="ref-lang" title="زبان">{{ . }}</span>{{ end }}
+                                                                            {{ with .language }}<span class="ref-lang" title="{{ i18n "course.references.language" }}">{{ . }}</span>{{ end }}
                                                                             {{ with .type }}<span class="ref-type">{{ . }}</span>{{ end }}
                                                                         </span>
                                                                 </li>
@@ -156,7 +152,7 @@
                         {{ with .paid }}
                         <div class="ref-section">
                             <div class="ref-section-title">
-                                <span class="ref-badge paid"><i class="fa-solid fa-coins"></i> پولی</span>
+                                <span class="ref-badge paid"><i class="fa-solid fa-coins"></i> {{ i18n "course.references.paid" }}</span>
                             </div>
                             <ul class="references-list">
                                 {{ range . }}
@@ -170,7 +166,7 @@
                                                                         </span>
                                                                         <a class="ref-link" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>
                                                                         <span class="ref-meta-wrap">
-                                                                            {{ with .language }}<span class="ref-lang" title="زبان">{{ . }}</span>{{ end }}
+                                                                            {{ with .language }}<span class="ref-lang" title="{{ i18n "course.references.language" }}">{{ . }}</span>{{ end }}
                                                                             {{ with .type }}<span class="ref-type">{{ . }}</span>{{ end }}
                                                                         </span>
                                                                 </li>
@@ -185,8 +181,4 @@
         </section>
     </main>
 
-    {{ partial "footer.html" . }}
-
-    {{ partial "scripts.html" . }}
-    </body>
-    </html>
+{{ end }}

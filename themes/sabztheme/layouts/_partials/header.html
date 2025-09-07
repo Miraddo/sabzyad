@@ -44,19 +44,36 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="navbar-actions">
-            <button class="action-btn theme-toggle" id="themeToggle" aria-label="تغییر تم" title="تغییر تم">
+            {{/* Language switcher (preserve current path when possible) */}}
+            {{ $isFA := eq .Site.Language.Lang "fa" }}
+            {{ $target := cond $isFA "en" "fa" }}
+            {{ $translations := where .AllTranslations "Lang" $target }}
+            {{ $tr := index $translations 0 }}
+            {{ $hasCounterpart := gt (len $translations) 0 }}
+            {{/* If translation exists, link to it; otherwise, try swapping the language prefix; finally fallback to target home */}}
+            {{ $candidate := replaceRE "^/(fa|en)/" (printf "/%s/" $target) .RelPermalink }}
+            {{ $fallback := printf "/%s/" $target }}
+            {{ $switchURL := cond (not (eq $tr nil)) $tr.RelPermalink (cond (ne $candidate "") $candidate $fallback) }}
+            {{ if $hasCounterpart }}
+              {{ if $isFA }}
+                <a class="action-btn" href="{{ $switchURL }}" aria-label="{{ i18n "header.switch_to_english" }}" title="English">EN</a>
+              {{ else }}
+                <a class="action-btn" href="{{ $switchURL }}" aria-label="{{ i18n "header.switch_to_persian" }}" title="{{ i18n "header.switch_to_persian" }}">فا</a>
+              {{ end }}
+            {{ end }}
+            <button class="action-btn theme-toggle" id="themeToggle" aria-label="{{ i18n "header.change_theme" }}" title="{{ i18n "header.change_theme" }}">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-moon">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
               </svg>
             </button>
-            <a class="action-btn search-btn" href="#" data-search-open aria-label="جستجو" title="جستجو">
+            <a class="action-btn search-btn" href="#" data-search-open aria-label="{{ i18n "header.search" }}" title="{{ i18n "header.search" }}">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <path d="m21 21-4.35-4.35"></path>
               </svg>
             </a>
             <a class="btn btn-primary" href="{{ "/courses/" | relLangURL }}">
-              <span>شروع یادگیری</span>
+              <span>{{ i18n "header.start_learning" }}</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"></path>
               </svg>
