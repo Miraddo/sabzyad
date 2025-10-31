@@ -185,5 +185,9 @@
   { "id": "home.courses.view_course", "translation": "View course" },
   { "id": "home.courses.view_all", "translation": "View all courses" },
   { "id": "home.blog.title", "translation": "Latest educational posts 🌿" },
-  { "id": "home.blog.read_more", "translation": "Read more ..." }
+  { "id": "home.blog.read_more", "translation": "Read more ..." },
+  { "id": "home.github.badge", "translation": "Open Source" },
+  { "id": "home.github.contribute", "translation": "Contribute on GitHub" },
+  { "id": "home.github.view", "translation": "View on GitHub" },
+  { "id": "home.github.star", "translation": "Star us" }
 ]

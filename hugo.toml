@@ -28,6 +28,7 @@ enableEmoji = true
   favicon = "/favicon.ico"
   rtl = true
   debug404 = false
+  github = "https://github.com/Miraddo/sabzyad"
 
   
   [params.social]

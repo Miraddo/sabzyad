@@ -70,6 +70,158 @@
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
+}
+
+/* GitHub Open Source Badge */
+.github-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+
+  .github-icon {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .github-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+  }
+
+  .github-badge-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+    font-weight: 700;
+  }
+
+  .github-badge-action {
+    font-size: 0.8rem;
+    color: var(--text-dark);
+    font-weight: 600;
+  }
+
+  .github-arrow {
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary-color);
+    background: rgba(16, 185, 129, 0.05);
+
+    .github-icon {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .github-arrow {
+      opacity: 1;
+      transform: translate(2px, -2px);
+    }
+
+    .github-badge-action {
+      color: var(--primary-color);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  [data-theme='dark'] & {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-light);
+
+    .github-badge-action {
+      color: var(--text-light);
+    }
+
+    &:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--primary-color);
+    }
+  }
+}
+
+// RTL Support for GitHub Badge
+[dir='rtl'] .github-badge {
+  right: auto;
+  left: 0;
+
+  .github-text {
+    align-items: flex-end;
+  }
+
+  &:hover .github-arrow {
+    transform: translate(-2px, -2px);
+  }
+}
+
+// Mobile responsive for GitHub Badge
+@media (max-width: 768px) {
+  .github-badge {
+    position: relative;
+    right: auto;
+    top: auto;
+    margin-bottom: 1rem;
+    width: auto;
+    align-self: flex-start;
+
+    .github-text {
+      display: none;
+    }
+
+    .github-arrow {
+      display: none;
+    }
+
+    &::after {
+      content: attr(aria-label);
+      display: inline;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  }
+
+  [dir='rtl'] .github-badge {
+    left: auto;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .github-badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+
+    .github-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
 }
 
 .hero-badge {

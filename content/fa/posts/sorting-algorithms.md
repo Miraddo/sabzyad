@@ -1,6 +1,6 @@
 +++
 title = "مقدمه‌ای بر الگوریتم‌های مرتب‌سازی"
-date = 2025-10-31
+date = 2025-10-13
 description = "بررسی کامل الگوریتم‌های مختلف مرتب‌سازی و مقایسه عملکرد آن‌ها"
 categories = ["الگوریتم", "برنامه‌نویسی"]
 tags = ["Algorithms", "Sorting", "Computer Science", "Programming"]

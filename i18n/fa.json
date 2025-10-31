@@ -185,5 +185,9 @@
   { "id": "home.courses.view_course", "translation": "مشاهده دوره" },
   { "id": "home.courses.view_all", "translation": "مشاهده همه دوره‌ها" },
   { "id": "home.blog.title", "translation": "جدیدترین مقالات آموزشی 🌿" },
-  { "id": "home.blog.read_more", "translation": "بیشتر بخوانید ..." }
+  { "id": "home.blog.read_more", "translation": "بیشتر بخوانید ..." },
+  { "id": "home.github.badge", "translation": "پروژه متن‌باز" },
+  { "id": "home.github.contribute", "translation": "مشارکت در GitHub" },
+  { "id": "home.github.view", "translation": "مشاهده در GitHub" },
+  { "id": "home.github.star", "translation": "ستاره بدید" }
 ]
