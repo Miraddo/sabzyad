@@ -1,6 +1,6 @@
 +++
 title = "وب‌اسکرپینگ مقدماتی"
-date = 2025-08-05
+date = 2025-10-31
 description = "requests + BeautifulSoup: استخراج داده از صفحات HTML"
 duration = "45 دقیقه"
 difficulty = "متوسط"

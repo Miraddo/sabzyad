@@ -1,6 +1,6 @@
 +++
 title = "چرا پایتون در هوش مصنوعی محبوب است؟"
-date = 2025-08-05
+date = 2025-10-31
 description = "بررسی دلایل محبوبیت زبان پایتون در حوزه هوش مصنوعی و یادگیری ماشین"
 categories = ["هوش مصنوعی", "پایتون"]
 tags = ["AI", "Machine Learning", "Python", "Programming"]

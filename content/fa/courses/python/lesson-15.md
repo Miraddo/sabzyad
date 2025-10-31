@@ -1,6 +1,6 @@
 +++
 title = "کار با API های وب"
-date = 2025-08-05
+date = 2025-10-31
 description = "GET/POST با requests، هدرها، پارامترها و خطاها"
 duration = "40 دقیقه"
 difficulty = "مبتدی تا متوسط"

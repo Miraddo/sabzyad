@@ -1,6 +1,6 @@
 +++
 title = "لاگ‌گیری و دیباگ"
-date = 2025-08-05
+date = 2025-10-31
 description = "logging، سطح‌ها، فرمت‌ها، و استفاده از pdb برای اشکال‌زدایی"
 duration = "35 دقیقه"
 difficulty = "متوسط"

@@ -1,6 +1,6 @@
 +++
 title = "تاریخ/زمان، عبارت‌های باقاعده و JSON"
-date = 2025-08-05
+date = 2025-10-31
 description = "datetime، regex (re)، سریال‌سازی و پارس JSON"
 duration = "45 دقیقه"
 difficulty = "مبتدی تا متوسط"

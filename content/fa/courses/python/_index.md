@@ -1,18 +1,16 @@
 +++
 title = "دوره آموزش پایتون"
 type = "course"
-date = 2025-08-05
+date = 2025-10-31
 description = "یادگیری برنامه‌نویسی پایتون از مبتدی تا متوسط - دوره جامع و عملی"
 difficulty = "مبتدی"
 duration = "12 ساعت"
 price = "رایگان"
 completed = true
 language = "فارسی"
-lessons = 20
-students = 1250
-rating = 4.8
+lessons = 21
 course_categories = ["برنامه‌نویسی", "پایتون", "مبتدی"]
-image = "/images/courses/python-course.jpg"
+image = "/images/courses/b-python/0000-cover.png"
 tags = ["Python", "برنامه‌نویسی", "مقدماتی"]
 
 # References (free & paid)
@@ -23,28 +21,64 @@ type = "article"
 language = "EN"
 
 [[references.free]]
-title = "آموزش مقدماتی پایتون (ویدیو)"
-url = "https://example.com/python-intro-fa"
-type = "video"
-language = "FA"
+title = "Python Tutorial - W3Schools"
+url = "https://www.w3schools.com/python/"
+type = "article"
+language = "EN"
 
 [[references.free]]
-title = "وبلاگ نکات پایتون"
+title = "Real Python Tutorials"
 url = "https://realpython.com/"
 type = "blog"
 language = "EN"
 
+[[references.free]]
+title = "Python for Everybody (Coursera)"
+url = "https://www.coursera.org/specializations/python"
+type = "video"
+language = "EN"
+
+[[references.free]]
+title = "Automate the Boring Stuff with Python"
+url = "https://automatetheboringstuff.com/"
+type = "book"
+language = "EN"
+
+[[references.free]]
+title = "FreeCodeCamp Python Course"
+url = "https://www.youtube.com/watch?v=rfscVS0vtbw"
+type = "video"
+language = "EN"
+
 [[references.paid]]
-title = "کتاب Fluent Python"
-url = "https://example.com/fluent-python"
+title = "Python Crash Course (کتاب)"
+url = "https://nostarch.com/pythoncrashcourse2e"
 type = "book"
 language = "EN"
 
 [[references.paid]]
-title = "دوره پیشرفته پایتون"
-url = "https://example.com/advanced-python-course"
+title = "Complete Python Bootcamp (Udemy)"
+url = "https://www.udemy.com/course/complete-python-bootcamp/"
 type = "video"
-language = "FA"
+language = "EN"
+
+[[references.paid]]
+title = "Python Beyond the Basics (Pluralsight)"
+url = "https://www.pluralsight.com/courses/python-beyond-basics"
+type = "video"
+language = "EN"
+
+[[references.paid]]
+title = "Fluent Python, 2nd Edition (کتاب پیشرفته)"
+url = "https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/"
+type = "book"
+language = "EN"
+
+[[references.paid]]
+title = "Learning Python, 6th Edition"
+url = "https://www.oreilly.com/library/view/learning-python-6th/9781098171292/"
+type = "book"
+language = "EN"
 
 # What students will learn
 what_you_learn = [
@@ -66,12 +100,9 @@ prerequisites = [
 username = "miraddo"
 name = "Mir Addo"
 
-[[contributors]]
-username = "octocat"
-name = "The Octocat"
 +++
 
-## درباره‌ی دوره (دوستانه و مختصر)
+## درباره‌ی دوره
 
 به دنیای پایتون خوش آمدی! اگر تا حالا برنامه‌نویسی نکرده‌ای یا چند بار شروع کرده‌ای و نیمه‌کاره رها شده، این دوره مخصوص توست. با مثال‌های ساده، تمرین‌های کوتاه و پروژه‌های کوچک، قدم‌به‌قدم جلو می‌رویم تا بدون استرس وارد دنیای کدنویسی شوی.
 

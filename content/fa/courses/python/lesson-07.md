@@ -1,6 +1,6 @@
 +++
 title = "لیست‌ها، تاپل‌ها و دیکشنری‌ها"
-date = 2025-08-05
+date = 2025-10-31
 description = "ساختارهای داده‌ی پرکاربرد در پایتون: list, tuple, dict, set"
 duration = "40 دقیقه"
 difficulty = "مبتدی"

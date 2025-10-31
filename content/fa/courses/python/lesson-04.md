@@ -1,6 +1,6 @@
 +++
 title = "ساختارهای شرطی"
-date = 2025-08-05
+date = 2025-10-31
 description = "آموزش if, elif, else و منطق شرطی در پایتون"
 duration = "30 دقیقه"
 difficulty = "مبتدی"

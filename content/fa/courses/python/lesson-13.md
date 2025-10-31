@@ -1,6 +1,6 @@
 +++
 title = "محیط‌های مجازی، مدیریت پکیج و ساخت پروژه"
-date = 2025-08-05
+date = 2025-10-31
 description = "venv، pip، فایل requirements، ساختاردهی پوشه‌ها"
 duration = "40 دقیقه"
 difficulty = "مبتدی"

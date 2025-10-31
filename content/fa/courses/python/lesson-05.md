@@ -1,6 +1,6 @@
 +++
 title = "حلقه‌ها (Loops)"
-date = 2025-08-05
+date = 2025-10-31
 description = "یادگیری حلقه‌های for و while، break و continue"
 duration = "30 دقیقه"
 difficulty = "مبتدی"

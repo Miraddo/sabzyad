@@ -1,6 +1,6 @@
 +++
 title = "اسکریپت‌های خط فرمان و بسته‌بندی"
-date = 2025-08-05
+date = 2025-10-31
 description = "argparse، ساخت CLI، و ساخت پکیج ساده با pyproject.toml"
 duration = "50 دقیقه"
 difficulty = "متوسط"

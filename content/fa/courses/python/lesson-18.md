@@ -1,6 +1,6 @@
 +++
 title = "نوشتن تست‌های واحد"
-date = 2025-08-05
+date = 2025-10-31
 description = "unittest و pytest: تست واحد، فیکسچر و ساختار تست"
 duration = "45 دقیقه"
 difficulty = "متوسط"

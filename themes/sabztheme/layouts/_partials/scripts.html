@@ -248,37 +248,40 @@
   // Progress tracking for course pages
   // (function with Jalali conversion inserted AFTER definitions below)
   // Call progress tracking on page load after defining helper
-  // Jalali (Shamsi) date conversion for Persian pages (pure JS immediate version)
+  
+  // Jalali (Shamsi) date conversion for Persian pages using date-fns-jalali library
   (function(){
     const lang = document.documentElement.lang || '';
     if(!lang.startsWith('fa')) return;
     const nodes = document.querySelectorAll('[data-date]');
     if(!nodes.length) return;
-    function toJalali(gYear,gMonth,gDay){
-      const gdm=[31,28,31,30,31,30,31,31,30,31,30,31];
-      const jdm=[31,31,31,31,31,31,30,30,30,30,30,29];
-      const leap=y=> (y%4===0&&y%100!==0)||(y%400===0);
-      let gy=gYear-1600, gm=gMonth-1, gd=gDay-1;
-      let gDayNo=365*gy+Math.floor((gy+3)/4)-Math.floor((gy+99)/100)+Math.floor((gy+399)/400);
-      for(let i=0;i<gm;i++) gDayNo+=gdm[i];
-      if(gm>1 && leap(gYear)) gDayNo++;
-      gDayNo+=gd;
-      let jDayNo=gDayNo-79;
-      const jNp=Math.floor(jDayNo/12053); jDayNo%=12053;
-      let jy=979+33*jNp+4*Math.floor(jDayNo/1461); jDayNo%=1461;
-      if(jDayNo>=366){ jy+=Math.floor((jDayNo-366)/365); jDayNo=(jDayNo-366)%365; }
-      let jm; for(jm=0; jm<11 && jDayNo>=jdm[jm]; jm++) jDayNo-=jdm[jm];
-      return {jy, jm:jm+1, jd:jDayNo+1};
-    }
-    const pad=n=> n<10?('0'+n):n;
-    nodes.forEach(el=>{
-      const iso=el.getAttribute('data-date');
-      const m=iso&&iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
-      if(!m) return;
-      const {jy,jm,jd}=toJalali(+m[1],+m[2],+m[3]);
-      el.setAttribute('data-date-original', iso);
-      el.textContent = `${jy}/${pad(jm)}/${pad(jd)}`;
-    });
+    
+    // Load date-fns-jalali from CDN
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.innerHTML = `
+      import { format } from 'https://cdn.jsdelivr.net/npm/date-fns-jalali@4.1.0-0/+esm';
+      
+      const pad = n => n < 10 ? ('0' + n) : n;
+      const nodes = document.querySelectorAll('[data-date]');
+      
+      nodes.forEach(el => {
+        const iso = el.getAttribute('data-date');
+        if(!iso) return;
+        
+        try {
+          const date = new Date(iso);
+          // Format as Jalali date: yyyy/MM/dd
+          const jalaliDate = format(date, 'yyyy/MM/dd');
+          
+          el.setAttribute('data-date-original', iso);
+          el.textContent = jalaliDate;
+        } catch(err) {
+          console.error('Date conversion error:', err);
+        }
+      });
+    `;
+    document.body.appendChild(script);
   })();
 
   // Removed dangling trackCourseProgress call (function not defined)

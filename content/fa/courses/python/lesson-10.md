@@ -1,6 +1,6 @@
 +++
 title = "مدیریت خطا و استثناها"
-date = 2025-08-05
+date = 2025-10-31
 description = "try/except/else/finally، ایجاد استثنای سفارشی"
 duration = "35 دقیقه"
 difficulty = "مبتدی"

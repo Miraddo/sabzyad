@@ -1,6 +1,6 @@
 +++
 title = "تماس با ما"
-date = 2025-08-08
+date = 2025-10-31
 telegram = "https://t.me/your_channel"
 discord = "https://discord.gg/your_invite"
 linkedin = "https://www.linkedin.com/in/your_profile"
