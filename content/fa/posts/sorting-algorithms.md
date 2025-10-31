@@ -4,6 +4,7 @@ date = 2025-10-13
 description = "بررسی کامل الگوریتم‌های مختلف مرتب‌سازی و مقایسه عملکرد آن‌ها"
 categories = ["الگوریتم", "برنامه‌نویسی"]
 tags = ["Algorithms", "Sorting", "Computer Science", "Programming"]
+image = "/images/posts/00000-algorithms.png"
 author = "تیم سبزیاد"
 +++
 
