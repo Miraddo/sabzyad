@@ -5,7 +5,7 @@ description = "کنترل نسخه با گیت و همکاری در گیت‌ه�
 difficulty = "مبتدی تا متوسط"
 duration = "4 ساعت"
 course_categories = ["ابزارها"]
-image = "/images/courses/git.jpg"
+image = "images/courses/b-git/0000-git.png"
 tags = ["Git", "GitHub"]
 +++
 
