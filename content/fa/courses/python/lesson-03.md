@@ -1,17 +1,16 @@
 +++
-title = "متغیرها و انواع داده"title = "متغیرها و انواع داده"
-date = 2025-08-05date = 2025-08-05
-description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"
-duration = "25 دقیقه"duration = "25 دقیقه"
-difficulty = "مبتدی"difficulty = "مبتدی"
-lesson_number = 3lesson_number = 3
-type = "lessons"type = "lessons"
-section = "بخش دوم: مبانی زبان پایتون"section = "بخش دوم: مبانی زبان پایتون"
-resources = [resources = [
-    { title = "مستندات متغیرها", url = "https://docs.python.org/3/tutorial/introduction.html" },    { title = "مستندات متغیرها", url = "https://docs.python.org/3/tutorial/introduction.html" },
-
-    { title = "تمرین عملی", url = "https://repl.it/languages/python3" }    { title = "تمرین عملی", url = "https://repl.it/languages/python3" }
-]]
+title = "متغیرها و انواع داده"
+date = 2025-08-05
+description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"
+duration = "25 دقیقه"
+difficulty = "مبتدی"
+lesson_number = 3
+type = "lessons"
+section = "بخش دوم: مبانی زبان پایتون"
+resources = [
+    { title = "مستندات متغیرها", url = "https://docs.python.org/3/tutorial/introduction.html" }, 
+    { title = "تمرین عملی", url = "https://repl.it/languages/python3" } 
+]
 
 +++
 

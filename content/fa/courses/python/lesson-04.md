@@ -1,16 +1,16 @@
 +++
-title = "ساختارهای شرطی"title = "ساختارهای شرطی"
-date = 2025-08-05date = 2025-08-05
-description = "آموزش if, elif, else و منطق شرطی در پایتون"description = "آموزش if, elif, else و منطق شرطی در پایتون"
-duration = "30 دقیقه"duration = "30 دقیقه"
-difficulty = "مبتدی"difficulty = "مبتدی"
-lesson_number = 4lesson_number = 4
-type = "lessons"type = "lessons"
-section = "بخش دوم: مبانی زبان پایتون"section = "بخش دوم: مبانی زبان پایتون"
-resources = [resources = [
-    { title = "Python Conditions", url = "https://docs.python.org/3/tutorial/controlflow.html" },    { title = "Python Conditions", url = "https://docs.python.org/3/tutorial/controlflow.html" },
-    { title = "Boolean Logic", url = "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not" }    { title = "Boolean Logic", url = "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not" }
-]]
+title = "ساختارهای شرطی"
+date = 2025-08-05
+description = "آموزش if, elif, else و منطق شرطی در پایتون"
+duration = "30 دقیقه"
+difficulty = "مبتدی"
+lesson_number = 4
+type = "lessons"
+section = "بخش دوم: مبانی زبان پایتون"
+resources = [
+    { title = "Python Conditions", url = "https://docs.python.org/3/tutorial/controlflow.html" },
+    { title = "Boolean Logic", url = "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not" }
+]
 +++
 
 
