@@ -1,4 +1,3 @@
-````markdown
 +++
 title = "کار با API های وب"
 date = 2025-08-05
@@ -36,4 +35,3 @@ print(r2.status_code, r2.json())
 - خطاها را با `raise_for_status()` مدیریت کن.
 - نرخ محدودیت‌ها (rate limit) را رعایت کن.
 
-````

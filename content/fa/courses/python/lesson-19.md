@@ -1,4 +1,3 @@
-````markdown
 +++
 title = "اسکریپت‌های خط فرمان و بسته‌بندی"
 date = 2025-08-05
@@ -43,4 +42,3 @@ dependencies = []
 hello = "hello.__main__:main"
 ```
 
-````
