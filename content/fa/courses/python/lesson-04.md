@@ -1,4 +1,4 @@
-++++++
++++
 title = "ساختارهای شرطی"title = "ساختارهای شرطی"
 date = 2025-08-05date = 2025-08-05
 description = "آموزش if, elif, else و منطق شرطی در پایتون"description = "آموزش if, elif, else و منطق شرطی در پایتون"
@@ -11,7 +11,7 @@ resources = [resources = [
     { title = "Python Conditions", url = "https://docs.python.org/3/tutorial/controlflow.html" },    { title = "Python Conditions", url = "https://docs.python.org/3/tutorial/controlflow.html" },
     { title = "Boolean Logic", url = "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not" }    { title = "Boolean Logic", url = "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not" }
 ]]
-++++++
++++
 
 
 

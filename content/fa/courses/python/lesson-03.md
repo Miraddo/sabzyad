@@ -1,4 +1,4 @@
-++++++
++++
 title = "متغیرها و انواع داده"title = "متغیرها و انواع داده"
 date = 2025-08-05date = 2025-08-05
 description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"
@@ -13,7 +13,7 @@ resources = [resources = [
     { title = "تمرین عملی", url = "https://repl.it/languages/python3" }    { title = "تمرین عملی", url = "https://repl.it/languages/python3" }
 ]]
 
-++++++
++++
 
 
 
