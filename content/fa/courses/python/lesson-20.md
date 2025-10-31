@@ -6,6 +6,7 @@ duration = "90 دقیقه"
 difficulty = "متوسط"
 lesson_number = 20
 type = "lessons"
+section = "بخش نهم: پروژه‌های نهایی"
 +++
 
 # پروژه‌ی نهایی: ردیاب مخارج

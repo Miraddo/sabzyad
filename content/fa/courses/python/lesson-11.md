@@ -6,6 +6,7 @@ duration = "45 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 11
 type = "lessons"
+section = "بخش پنجم: پروژه‌های عملی مبتدی"
 +++
 
 # پروژه‌ی کوچک: دفترچه مخاطبین (CLI)

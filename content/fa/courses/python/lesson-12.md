@@ -6,6 +6,7 @@ duration = "45 دقیقه"
 difficulty = "مبتدی تا متوسط"
 lesson_number = 12
 type = "lessons"
+section = "بخش ششم: برنامه‌نویسی شی‌گرا"
 resources = [
   { title = "Classes", url = "https://docs.python.org/3/tutorial/classes.html" },
   { title = "Dataclasses", url = "https://docs.python.org/3/library/dataclasses.html" }

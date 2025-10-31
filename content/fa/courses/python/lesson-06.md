@@ -6,6 +6,7 @@ duration = "35 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 6
 type = "lessons"
+section = "بخش سوم: ساختارهای داده و توابع"
 resources = [
   { title = "Docs: Defining Functions", url = "https://docs.python.org/3/tutorial/controlflow.html#defining-functions" },
   { title = "PEP 8: Naming", url = "https://peps.python.org/pep-0008/#function-and-variable-names" }

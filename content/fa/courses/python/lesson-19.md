@@ -6,6 +6,7 @@ duration = "50 دقیقه"
 difficulty = "متوسط"
 lesson_number = 19
 type = "lessons"
+section = "بخش هشتم: تست و کیفیت کد"
 resources = [
   { title = "argparse", url = "https://docs.python.org/3/library/argparse.html" },
   { title = "Packaging", url = "https://packaging.python.org/en/latest/" }

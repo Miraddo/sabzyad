@@ -6,6 +6,7 @@ duration = "15 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 1
 type = "lessons"
+section = "بخش اول: شروع سریع"
 resources = [
     { title = "دانلود پایتون", url = "https://python.org/downloads" },
     { title = "مستندات رسمی", url = "https://docs.python.org" }

@@ -6,6 +6,7 @@ duration = "40 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 13
 type = "lessons"
+section = "بخش هفتم: ابزارها و کتابخانه‌ها"
 resources = [
   { title = "venv", url = "https://docs.python.org/3/library/venv.html" },
   { title = "pip", url = "https://pip.pypa.io/en/stable/" }

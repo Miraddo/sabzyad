@@ -6,6 +6,7 @@ duration = "30 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 9
 type = "lessons"
+section = "بخش چهارم: کار با فایل‌ها و ماژول‌ها"
 resources = [
   { title = "Modules", url = "https://docs.python.org/3/tutorial/modules.html" }
 ]

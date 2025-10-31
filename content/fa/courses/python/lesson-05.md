@@ -1,112 +1,27 @@
 +++
-title = "ساختارهای کنترل"
+title = "حلقه‌ها (Loops)"
 date = 2025-08-05
-description = "یادگیری شرطی‌ها و حلقه‌ها در پایتون"
+description = "یادگیری حلقه‌های for و while، break و continue"
 duration = "30 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 5
 type = "lessons"
+section = "بخش دوم: مبانی زبان پایتون"
 resources = [
     { title = "مستندات کنترل جریان", url = "https://docs.python.org/3/tutorial/controlflow.html" },
     { title = "تمرین‌های عملی", url = "https://repl.it/languages/python3" }
 ]
 +++
 
-# ساختارهای کنترل در پایتون
+# حلقه‌ها در پایتون
 
-در این درس با شرط‌ها و حلقه‌ها کار می‌کنیم تا برنامه‌هایمان «هوشمند» و «تکرارشونده» شوند.
+در این درس با حلقه‌های for و while کار می‌کنیم تا برنامه‌هایمان بتوانند کارها را تکرار کنند و الگوریتم‌های پیچیده‌تری بسازیم.
 
 ## اهداف یادگیری
 
-- استفاده‌ی عملی از if/elif/else
 - نوشتن حلقه‌های for و while و کنترل آن‌ها با break/continue
+- کار با range و enumerate
 - طراحی الگوریتم‌های کوچک مثل بازی، جدول ضرب و بررسی عدد اول
-
-## دستورات شرطی (if, elif, else)
-
-### دستور if ساده
-
-```python
-age = 18
-
-if age >= 18:
-    print("شما بزرگسال هستید")
-```
-
-### دستور if-else
-
-```python
-temperature = 25
-
-if temperature > 30:
-    print("هوا گرم است")
-else:
-    print("هوا خنک است")
-```
-
-### دستور if-elif-else
-
-```python
-score = 85
-
-if score >= 90:
-    grade = "عالی"
-elif score >= 80:
-    grade = "خوب"
-elif score >= 70:
-    grade = "متوسط"
-elif score >= 60:
-    grade = "قابل قبول"
-else:
-    grade = "نیاز به تلاش بیشتر"
-
-print(f"نمره شما: {grade}")
-```
-
-## عملگرهای مقایسه
-
-```python
-x = 10
-y = 5
-
-# برابری
-print(x == y)  # False
-
-# نابرابری
-print(x != y)  # True
-
-# بزرگتر از
-print(x > y)   # True
-
-# کوچکتر از
-print(x < y)   # False
-
-# بزرگتر مساوی
-print(x >= y)  # True
-
-# کوچکتر مساوی
-print(x <= y)  # False
-```
-
-## عملگرهای منطقی
-
-```python
-age = 25
-has_license = True
-has_car = False
-
-# and: هر دو شرط باید درست باشد
-if age >= 18 and has_license:
-    print("می‌توانید رانندگی کنید")
-
-# or: حداقل یکی از شرط‌ها درست باشد
-if has_car or has_license:
-    print("شما تجربه رانندگی دارید")
-
-# not: نقیض شرط
-if not has_car:
-    print("شما ماشین ندارید")
-```
 
 ## حلقه for
 
@@ -315,11 +230,10 @@ for i in range(1, rows + 1):
 ## خلاصه
 
 در این درس یاد گرفتیم:
-- ✅ دستورات شرطی (if, elif, else)
-- ✅ عملگرهای مقایسه و منطقی
 - ✅ حلقه for و کاربردهای آن
 - ✅ حلقه while و کنترل آن
 - ✅ دستورات break و continue
+- ✅ کار با range و enumerate
 - ✅ حلقه‌های تودرتو
 - ✅ مثال‌های عملی و کاربردی
 

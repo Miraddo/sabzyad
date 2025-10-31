@@ -6,6 +6,7 @@ duration = "45 دقیقه"
 difficulty = "متوسط"
 lesson_number = 16
 type = "lessons"
+section = "بخش هفتم: ابزارها و کتابخانه‌ها"
 resources = [
   { title = "BeautifulSoup", url = "https://www.crummy.com/software/BeautifulSoup/bs4/doc/" }
 ]

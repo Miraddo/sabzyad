@@ -6,6 +6,7 @@ duration = "20 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 2
 type = "lessons"
+section = "بخش اول: شروع سریع"
 resources = [
     { title = "Python Tutorial", url = "https://docs.python.org/3/tutorial/" },
     { title = "Online Python Runner", url = "https://repl.it/languages/python3" }

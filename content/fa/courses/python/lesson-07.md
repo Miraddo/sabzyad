@@ -6,6 +6,7 @@ duration = "40 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 7
 type = "lessons"
+section = "بخش سوم: ساختارهای داده و توابع"
 resources = [
   { title = "Data Structures", url = "https://docs.python.org/3/tutorial/datastructures.html" }
 ]

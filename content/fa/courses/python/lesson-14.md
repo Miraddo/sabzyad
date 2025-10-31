@@ -6,6 +6,7 @@ duration = "45 دقیقه"
 difficulty = "مبتدی تا متوسط"
 lesson_number = 14
 type = "lessons"
+section = "بخش هفتم: ابزارها و کتابخانه‌ها"
 resources = [
   { title = "datetime", url = "https://docs.python.org/3/library/datetime.html" },
   { title = "re", url = "https://docs.python.org/3/library/re.html" },

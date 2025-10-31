@@ -6,6 +6,7 @@ duration = "35 دقیقه"
 difficulty = "متوسط"
 lesson_number = 17
 type = "lessons"
+section = "بخش هشتم: تست و کیفیت کد"
 resources = [
   { title = "logging", url = "https://docs.python.org/3/library/logging.html" }
 ]

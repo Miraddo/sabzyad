@@ -6,6 +6,7 @@ duration = "35 دقیقه"
 difficulty = "مبتدی"
 lesson_number = 10
 type = "lessons"
+section = "بخش چهارم: کار با فایل‌ها و ماژول‌ها"
 resources = [
   { title = "Errors and Exceptions", url = "https://docs.python.org/3/tutorial/errors.html" }
 ]

@@ -1,230 +1,448 @@
-+++
-title = "ساختارهای شرطی"
-date = 2025-08-05
-description = "آموزش if, elif, else و منطق شرطی در پایتون"
-duration = "25 دقیقه"
-difficulty = "مبتدی"
-lesson_number = 3
-type = "lessons"
-resources = [
-    { title = "Python Conditions", url = "https://docs.python.org/3/tutorial/controlflow.html" },
-    { title = "Boolean Logic", url = "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not" }
-]
-+++
+++++++
+title = "متغیرها و انواع داده"title = "متغیرها و انواع داده"
+date = 2025-08-05date = 2025-08-05
+description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"description = "آشنایی با متغیرها و انواع مختلف داده در پایتون"
+duration = "25 دقیقه"duration = "25 دقیقه"
+difficulty = "مبتدی"difficulty = "مبتدی"
+lesson_number = 3lesson_number = 3
+type = "lessons"type = "lessons"
+section = "بخش دوم: مبانی زبان پایتون"section = "بخش دوم: مبانی زبان پایتون"
+resources = [resources = [
+    { title = "مستندات متغیرها", url = "https://docs.python.org/3/tutorial/introduction.html" },    { title = "مستندات متغیرها", url = "https://docs.python.org/3/tutorial/introduction.html" },
 
-# ساختارهای شرطی (if/elif/else)
+    { title = "تمرین عملی", url = "https://repl.it/languages/python3" }    { title = "تمرین عملی", url = "https://repl.it/languages/python3" }
+]]
 
-در این درس یاد می‌گیری که چطور برنامه بر اساس شرایط تصمیم بگیرد.
+++++++
 
-## اهداف یادگیری
 
-- نوشتن شرط‌های ساده و ترکیبی
-- استفاده‌ی درست از تورفتگی (Indentation)
-- ساخت برنامه‌های تعاملی با تصمیم‌گیری هوشمند
+
+# متغیرها و انواع داده در پایتون# ساختارهای شرطی (if/elif/else)
+
+
+
+در این درس با مفهوم متغیر، انواع داده و تبدیل نوع آشنا می‌شویم؛ همان آجرهای اولیه برای ساخت هر برنامه.در این درس یاد می‌گیری که چطور برنامه بر اساس شرایط تصمیم بگیرد.
+
+
+
+## اهداف یادگیری## اهداف یادگیری
+
+
+
+- تعریف و استفاده از متغیرها- نوشتن شرط‌های ساده و ترکیبی
+
+- شناخت انواع داده‌ی پایه (int, float, str, bool, complex)- استفاده‌ی درست از تورفتگی (Indentation)
+
+- انجام عملیات مهم روی اعداد و رشته‌ها- ساخت برنامه‌های تعاملی با تصمیم‌گیری هوشمند
+
+- تبدیل نوع و تشخیص نوع متغیرها
 
 ## مقدمه
 
+## تعریف متغیر
+
 ساختارهای شرطی به برنامه اجازه می‌دهند تا بر اساس شرایط مختلف، تصمیمات متفاوتی بگیرد.
+
+متغیر در پایتون به سادگی تعریف می‌شود:
 
 ## ساده‌ترین شرط: if
 
 ```python
-age = 18
 
-if age >= 18:
-    print("شما بزرگسال هستید")
+name = "علی"```python
+
+age = 25age = 18
+
+height = 175.5
+
+is_student = Trueif age >= 18:
+
+```    print("شما بزرگسال هستید")
+
 ```
+
+## انواع داده‌ها
 
 ### نکته مهم: Indentation
-در پایتون، بلوک کد با تورفتگی (indentation) مشخص می‌شود:
 
-```python
-if True:
+### انواع عددیدر پایتون، بلوک کد با تورفتگی (indentation) مشخص می‌شود:
+
+- **int**: اعداد صحیح
+
+- **float**: اعداد اعشاری```python
+
+- **complex**: اعداد مختلطif True:
+
     print("این خط در داخل if است")
-    print("این خط هم در داخل if است")
-print("این خط خارج از if است")
-```
+
+```python    print("این خط هم در داخل if است")
+
+# اعداد صحیحprint("این خط خارج از if است")
+
+x = 10```
+
+y = -5
 
 ## if-else
 
-```python
-age = int(input("سن خود را وارد کنید: "))
+# اعداد اعشاری
 
-if age >= 18:
-    print("شما می‌توانید رای دهید")
-else:
+pi = 3.14159```python
+
+temperature = -2.5age = int(input("سن خود را وارد کنید: "))
+
+
+
+# اعداد مختلطif age >= 18:
+
+z = 3 + 4j    print("شما می‌توانید رای دهید")
+
+```else:
+
     print("شما هنوز نمی‌توانید رای دهید")
-```
 
-## if-elif-else
+### رشته‌ها (String)```
 
-```python
-score = int(input("نمره خود را وارد کنید: "))
 
-if score >= 90:
-    grade = "عالی"
-elif score >= 80:
-    grade = "خوب"
-elif score >= 70:
+
+```python## if-elif-else
+
+first_name = "احمد"
+
+last_name = 'محمدی'```python
+
+full_name = first_name + " " + last_namescore = int(input("نمره خود را وارد کنید: "))
+
+
+
+# رشته چند خطیif score >= 90:
+
+message = """این یک رشته    grade = "عالی"
+
+چند خطی است کهelif score >= 80:
+
+در پایتون معتبر است"""    grade = "خوب"
+
+```elif score >= 70:
+
     grade = "متوسط"
-elif score >= 60:
+
+### نوع بولین (Boolean)elif score >= 60:
+
     grade = "قابل قبول"
-else:
-    grade = "مردود"
+
+```pythonelse:
+
+is_valid = True    grade = "مردود"
+
+is_complete = False
 
 print(f"نمره شما: {grade}")
-```
 
-## عمل‌گرهای مقایسه
+# مقایسه‌ها```
 
-```python
+x = 10
+
+y = 5## عمل‌گرهای مقایسه
+
+result = x > y  # True
+
+``````python
+
 a = 10
-b = 5
 
-print(a == b)   # مساوی؟ False
+## عملیات بر روی متغیرهاb = 5
+
+
+
+### عملیات ریاضیprint(a == b)   # مساوی؟ False
+
 print(a != b)   # نامساوی؟ True
-print(a > b)    # بزرگتر؟ True
-print(a < b)    # کوچکتر؟ False
-print(a >= b)   # بزرگتر مساوی؟ True
+
+```pythonprint(a > b)    # بزرگتر؟ True
+
+a = 10print(a < b)    # کوچکتر؟ False
+
+b = 3print(a >= b)   # بزرگتر مساوی؟ True
+
 print(a <= b)   # کوچکتر مساوی؟ False
-```
+
+# جمع```
+
+sum_result = a + b  # 13
 
 ## عمل‌گرهای منطقی
 
-### and (و)
-```python
-age = 25
-has_license = True
+# تفریق  
 
-if age >= 18 and has_license:
-    print("می‌توانید رانندگی کنید")
+diff = a - b  # 7### and (و)
+
+```python
+
+# ضربage = 25
+
+product = a * b  # 30has_license = True
+
+
+
+# تقسیمif age >= 18 and has_license:
+
+division = a / b  # 3.333...    print("می‌توانید رانندگی کنید")
+
 ```
 
-### or (یا)
+# تقسیم صحیح
+
+floor_div = a // b  # 3### or (یا)
+
 ```python
-day = "شنبه"
+
+# باقیماندهday = "شنبه"
+
+remainder = a % b  # 1
 
 if day == "جمعه" or day == "شنبه":
-    print("امروز تعطیل است")
+
+# توان    print("امروز تعطیل است")
+
+power = a ** b  # 1000```
+
 ```
 
 ### not (نقیض)
-```python
+
+### عملیات بر روی رشته‌ها```python
+
 is_raining = False
 
-if not is_raining:
-    print("هوا بارانی نیست")
+```python
+
+greeting = "سلام"if not is_raining:
+
+name = "دنیا"    print("هوا بارانی نیست")
+
 ```
 
-## ترکیب شرایط پیچیده
+# ترکیب رشته‌ها
 
-```python
-age = 20
+message = greeting + " " + name + "!"## ترکیب شرایط پیچیده
+
+
+
+# تکرار رشته```python
+
+repeated = "پایتون " * 3  # "پایتون پایتون پایتون "age = 20
+
 income = 50000
-has_job = True
+
+# طول رشتهhas_job = True
+
+length = len(message)
 
 if (age >= 18 and income > 30000) or (age >= 21 and has_job):
-    print("مشمول دریافت وام هستید")
-else:
+
+# تبدیل به حروف بزرگ    print("مشمول دریافت وام هستید")
+
+upper_case = message.upper()else:
+
     print("شرایط وام را ندارید")
-```
 
-## شرط در یک خط (Ternary Operator)
+# تبدیل به حروف کوچک```
 
-```python
+lower_case = message.lower()
+
+```## شرط در یک خط (Ternary Operator)
+
+
+
+## تبدیل نوع داده```python
+
 age = 17
-status = "بزرگسال" if age >= 18 else "نابالغ"
-print(status)
-```
+
+```pythonstatus = "بزرگسال" if age >= 18 else "نابالغ"
+
+# تبدیل به عدد صحیحprint(status)
+
+num_str = "123"```
+
+num_int = int(num_str)
 
 ## کار با رشته‌ها در شرایط
 
-```python
+# تبدیل به عدد اعشاری
+
+float_num = float("3.14")```python
+
 name = input("نام خود را وارد کنید: ")
 
-if name:  # اگر رشته خالی نباشد
-    print(f"سلام {name}")
-else:
-    print("نام وارد نشده")
+# تبدیل به رشته
 
-# بررسی محتوای رشته
+str_num = str(456)if name:  # اگر رشته خالی نباشد
+
+    print(f"سلام {name}")
+
+# تبدیل به بولینelse:
+
+bool_val = bool(1)  # True    print("نام وارد نشده")
+
+bool_val2 = bool(0)  # False
+
+```# بررسی محتوای رشته
+
 if "علی" in name:
-    print("نام شما حاوی 'علی' است")
+
+## تشخیص نوع متغیر    print("نام شما حاوی 'علی' است")
+
 ```
 
-## مثال عملی: سیستم ورود
+```python
+
+x = 42## مثال عملی: سیستم ورود
+
+print(type(x))  # <class 'int'>
 
 ```python
-print("=== سیستم ورود ===")
+
+y = 3.14print("=== سیستم ورود ===")
+
+print(type(y))  # <class 'float'>
 
 username = input("نام کاربری: ")
-password = input("رمز عبور: ")
+
+z = "سلام"password = input("رمز عبور: ")
+
+print(type(z))  # <class 'str'>
 
 # اطلاعات صحیح (در برنامه واقعی از دیتابیس استفاده می‌شود)
-correct_username = "admin"
-correct_password = "123456"
 
-if username == correct_username and password == correct_password:
+# بررسی نوع متغیرcorrect_username = "admin"
+
+if isinstance(x, int):correct_password = "123456"
+
+    print("x یک عدد صحیح است")
+
+```if username == correct_username and password == correct_password:
+
     print("✅ ورود موفقیت‌آمیز!")
-    print("خوش آمدید!")
+
+## قوانین نام‌گذاری متغیر    print("خوش آمدید!")
+
 elif username == correct_username:
-    print("❌ رمز عبور اشتباه است")
-else:
-    print("❌ نام کاربری یافت نشد")
-```
 
-## مثال عملی: ماشین حساب پیشرفته
+1. **شروع با حرف یا _**: نام متغیر باید با حرف یا underscore شروع شود    print("❌ رمز عبور اشتباه است")
 
-```python
-print("=== ماشین حساب ===")
-print("عملیات موجود: +، -، *، /")
+2. **بدون فاصله**: نمی‌توان از فاصله استفاده کردelse:
 
-num1 = float(input("عدد اول: "))
-operator = input("عملیات (+، -، *، /): ")
-num2 = float(input("عدد دوم: "))
+3. **حساس به حروف**: `Name` و `name` متفاوت هستند    print("❌ نام کاربری یافت نشد")
 
-if operator == "+":
+4. **بدون کلمات رزرو**: نمی‌توان از کلمات رزرو Python استفاده کرد```
+
+
+
+```python## مثال عملی: ماشین حساب پیشرفته
+
+# صحیح
+
+user_name = "احمد"```python
+
+age2 = 25print("=== ماشین حساب ===")
+
+_private_var = "خصوصی"print("عملیات موجود: +، -، *، /")
+
+
+
+# غلطnum1 = float(input("عدد اول: "))
+
+# 2age = 25        # شروع با عددoperator = input("عملیات (+، -، *، /): ")
+
+# user-name = ""   # استفاده از خط تیره  num2 = float(input("عدد دوم: "))
+
+# class = ""       # کلمه رزرو
+
+```if operator == "+":
+
     result = num1 + num2
-    print(f"{num1} + {num2} = {result}")
+
+## تمرین عملی    print(f"{num1} + {num2} = {result}")
+
 elif operator == "-":
-    result = num1 - num2
+
+حال نوبت شما است! کد زیر را امتحان کنید:    result = num1 - num2
+
     print(f"{num1} - {num2} = {result}")
-elif operator == "*":
-    result = num1 * num2
-    print(f"{num1} × {num2} = {result}")
-elif operator == "/":
-    if num2 != 0:
-        result = num1 / num2
+
+```pythonelif operator == "*":
+
+# تعریف متغیرها    result = num1 * num2
+
+student_name = "مریم احمدی"    print(f"{num1} × {num2} = {result}")
+
+math_score = 18.5elif operator == "/":
+
+physics_score = 17    if num2 != 0:
+
+chemistry_score = 19        result = num1 / num2
+
         print(f"{num1} ÷ {num2} = {result}")
-    else:
-        print("❌ خطا: تقسیم بر صفر امکان‌پذیر نیست")
-else:
+
+# محاسبه میانگین    else:
+
+total_score = math_score + physics_score + chemistry_score        print("❌ خطا: تقسیم بر صفر امکان‌پذیر نیست")
+
+average = total_score / 3else:
+
     print("❌ عملیات نامعتبر")
-```
 
-## nested if (شرط تو در تو)
+# نمایش نتیجه```
 
-```python
-weather = input("هوا چطور است؟ (آفتابی/بارانی/برفی): ")
+print(f"نام دانش‌آموز: {student_name}")
 
-if weather == "آفتابی":
+print(f"میانگین نمرات: {average:.2f}")## nested if (شرط تو در تو)
+
+
+
+# بررسی قبولی```python
+
+is_passed = average >= 12weather = input("هوا چطور است؟ (آفتابی/بارانی/برفی): ")
+
+print(f"وضعیت: {'قبول' if is_passed else 'مردود'}")
+
+```if weather == "آفتابی":
+
     temperature = int(input("دما چند درجه است؟ "))
-    if temperature > 25:
-        print("هوای عالی برای پیک‌نیک!")
-    else:
-        print("کمی سرد است، لباس گرم بپوشید")
-elif weather == "بارانی":
-    print("چتر را فراموش نکنید!")
-elif weather == "برفی":
-    print("مراقب سرما باشید!")
-else:
-    print("وضعیت هوا مشخص نیست")
-```
 
-## بررسی نوع داده
+### تمرین تکمیلی    if temperature > 25:
+
+        print("هوای عالی برای پیک‌نیک!")
+
+یک برنامه بنویس که مبلغ خرید و درصد تخفیف را از کاربر بگیرد، قیمت نهایی را محاسبه کند و با جداکننده‌ی هزارگان نمایش دهد.    else:
+
+        print("کمی سرد است، لباس گرم بپوشید")
+
+راهنما: از `float`, محاسبه‌ی درصد و فرمت `{:,.0f}` استفاده کن.elif weather == "بارانی":
+
+    print("چتر را فراموش نکنید!")
+
+## خلاصهelif weather == "برفی":
+
+    print("مراقب سرما باشید!")
+
+در این درس یاد گرفتیم:else:
+
+- ✅ تعریف متغیر در پایتون    print("وضعیت هوا مشخص نیست")
+
+- ✅ انواع مختلف داده (int, float, str, bool)```
+
+- ✅ عملیات بر روی متغیرها
+
+- ✅ تبدیل نوع داده## بررسی نوع داده
+
+- ✅ قوانین نام‌گذاری متغیر
 
 ```python
-value = input("یک مقدار وارد کنید: ")
+
+در درس بعدی با ساختارهای شرطی (if/elif/else) آشنا خواهیم شد.value = input("یک مقدار وارد کنید: ")
+
 
 if value.isdigit():
     print("این یک عدد است")

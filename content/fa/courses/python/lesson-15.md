@@ -6,6 +6,7 @@ duration = "40 دقیقه"
 difficulty = "مبتدی تا متوسط"
 lesson_number = 15
 type = "lessons"
+section = "بخش هفتم: ابزارها و کتابخانه‌ها"
 resources = [
   { title = "requests", url = "https://requests.readthedocs.io/en/latest/" }
 ]
