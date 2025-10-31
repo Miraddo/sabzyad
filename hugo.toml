@@ -1,4 +1,4 @@
-baseURL = 'https://blog.sabzyad.com'
+baseURL = 'https://sabzyad.com'
 theme = "sabztheme"
 defaultContentLanguage = "fa"
 defaultContentLanguageInSubdir = true
